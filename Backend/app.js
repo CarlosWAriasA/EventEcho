@@ -1,8 +1,12 @@
 import express from 'express';
-import { PORT } from './config/constants.js';
+//import { PORT } from './config/constants.js';
 
 // Creamos una instancia de express
+
+
+//Modifique el Port porque a la hora de iniciarlo no lo encontraba, lo declare aqui en vez de extraerlo de un modulo
 const app = express();
+const PORT = 3000;
 
 // Definimos una ruta
 app.get('/', (req, res) => {
