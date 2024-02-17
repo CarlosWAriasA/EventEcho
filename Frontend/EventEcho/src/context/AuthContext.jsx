@@ -3,7 +3,6 @@ import { USER_TOKEN } from "../utils/constans";
 
 export const AuthContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export function AuthProvider({ children }) {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

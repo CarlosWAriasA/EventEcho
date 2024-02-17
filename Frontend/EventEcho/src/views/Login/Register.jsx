@@ -1,4 +1,4 @@
-import { Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 import { useState } from "react";
 
 function Register() {
@@ -98,21 +98,10 @@ function Register() {
           </div>
           <button
             type="submit"
-            className="text-black px-8 font-normal h-10 justify-center py-0 mt-4 w-full"
-            style={{ backgroundColor: "#dbe2e4" }}
+            className="text-black px-8 font-normal h-10 justify-center py-0 mt-4 w-full bg-yellow-400 rounded-lg"
           >
             Register
           </button>
-          <div className="mt-3">
-            <a href="/">
-              <button
-                type="button"
-                className="text-black font-normal h-10 justify-center py-0 hover:bg-yellow-400 bg-yellow-500 w-full flex "
-              >
-                <ArrowLeft size={24} style={{ marginTop: "5px" }} />
-              </button>
-            </a>
-          </div>
         </form>
       </div>
     </div>
