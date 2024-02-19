@@ -1,19 +1,27 @@
-import express from 'express';
-//import { PORT } from './config/constants.js';
+const express = require("express");
+const bodyParser = require("body-parser");
+const connection = require("./connection/connection");
+const dotenv = require("dotenv");
+const authRoutes = require("./router/login");
+const registerRoutes = require("./router/register");
+const cors = require("cors");
 
-// Creamos una instancia de express
-
-
-//Modifique el Port porque a la hora de iniciarlo no lo encontraba, lo declare aqui en vez de extraerlo de un modulo
 const app = express();
-const PORT = 3000;
+dotenv.config();
 
-// Definimos una ruta
-app.get('/', (req, res) => {
-  res.send('Home Page!');
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors())
+
+app.get("/", (req, res) => {
+   res.json({ working: "THE APP IS WORKING" });
 });
 
-// Iniciamos el servidor en el puerto 3000
-app.listen(PORT, () => {
-  console.log(`Servidor activo en http://localhost:${PORT}`);
+app.use("/api/", authRoutes);
+app.use("/api/", registerRoutes);
+
+app.listen(process.env.PORT, () => {
+   console.log(`Server is running on port ${process.env.PORT}`);
 });
+
+module.exports = app;
