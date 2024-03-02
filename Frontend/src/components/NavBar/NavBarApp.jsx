@@ -1,5 +1,5 @@
-import { CircleUserRound, LogOut, UserRound } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { CircleUserRound, LogOut, UserRound, ArrowBigLeft } from "lucide-react";
+import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -7,6 +7,8 @@ const NavbarApp = () => {
   const optionsRef = useRef(null);
   const { logout } = useContext(AuthContext);
   const [showOptions, setShowOptions] = useState(false);
+  const location = useLocation();
+  const isEventDetail = location.pathname === "/event-detail";
 
   const handleIconClick = (event) => {
     event.preventDefault();
@@ -47,36 +49,55 @@ const NavbarApp = () => {
             <div className="text-black ml-10 text-lg mt-2">EventEcho</div>
           </NavLink>
         </li>
-        <li ref={optionsRef}>
-          <div className="mr-10 mt-2">
-            <CircleUserRound
-              className="hover:cursor-pointer select-none"
-              color="black"
-              onClick={handleIconClick}
-              size={25}
-            />
-          </div>
-          {showOptions && (
-            <div className="absolute right-12 w-44 bg-gray-800 rounded-md ">
-              <ul>
-                <li
-                  onClick={handleProfileClick}
-                  className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
-                >
-                  <UserRound size={18} />
-                  Profile
-                </li>
-                <li
-                  onClick={handleLogoutClick}
-                  className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
-                >
-                  <LogOut size={18} color="red" />
-                  Log Out
-                </li>
-              </ul>
+        {isEventDetail ? (
+          <li>
+            <NavLink to={"/"}>
+              <div className="mr-10 mt-3">
+                <ArrowBigLeft
+                  className="hover:cursor-pointer select-none"
+                  color="black"
+                  size={30}
+                  style={{
+                    borderRadius: "50%",
+                    padding: "2px",
+                    backgroundColor: "yellow",
+                  }}
+                />
+              </div>
+            </NavLink>
+          </li>
+        ) : (
+          <li ref={optionsRef}>
+            <div className="mr-10 mt-2">
+              <CircleUserRound
+                className="hover:cursor-pointer select-none"
+                color="black"
+                onClick={handleIconClick}
+                size={25}
+              />
             </div>
-          )}
-        </li>
+            {showOptions && (
+              <div className="absolute right-12 w-44 bg-gray-800 rounded-md ">
+                <ul>
+                  <li
+                    onClick={handleProfileClick}
+                    className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
+                  >
+                    <UserRound size={18} />
+                    Profile
+                  </li>
+                  <li
+                    onClick={handleLogoutClick}
+                    className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
+                  >
+                    <LogOut size={18} color="red" />
+                    Log Out
+                  </li>
+                </ul>
+              </div>
+            )}
+          </li>
+        )}
       </ul>
     </nav>
   );
