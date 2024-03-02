@@ -1,6 +1,5 @@
 import { Mail, Lock } from "lucide-react";
 import { useState } from "react";
-import "../../App.css";
 import { USER_TOKEN } from "../../utils/constans";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -11,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
 
   return (
-    <div className="flex justify-center">
+    <div>
       <div>
         <div
           style={{
@@ -66,22 +65,10 @@ function Login() {
           </div>
           <button
             type="submit"
-            className="text-black px-8 font-normal h-10 justify-center py-0 w-full"
-            style={{ backgroundColor: "#dbe2e4" }}
+            className="text-black px-8 font-normal h-10 justify-center py-0 w-full bg-yellow-400 rounded-lg"
           >
             Sign In
           </button>
-          <div className="mt-2 mb-2 text-gray-400 hover:text-white hover:cursor-pointer">
-            <span>Or</span>
-          </div>
-          <a href="/register">
-            <button
-              type="button"
-              className="text-black px-8 font-normal h-10 justify-center py-0 hover:bg-yellow-400 bg-yellow-500 w-full"
-            >
-              Register
-            </button>
-          </a>
         </form>
       </div>
     </div>

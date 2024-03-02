@@ -1,4 +1,3 @@
-import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import { router as authRouter } from "./routes/AuthRoutes.jsx";
 import { router as appRouter } from "./routes/AppRoutes.jsx";
