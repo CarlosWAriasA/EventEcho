@@ -1,7 +1,7 @@
 import { LayoutGrid } from "lucide-react";
 import Card from "../../components/Card/Card";
 
-function HomePage() {
+export function HomePage() {
   const cardData = [
     { id: 1, title: "Card 1", content: "Content for card 1" },
     { id: 2, title: "Card 2", content: "Content for card 2" },

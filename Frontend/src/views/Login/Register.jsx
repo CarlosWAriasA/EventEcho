@@ -1,5 +1,11 @@
-import { Mail, Lock, User } from "lucide-react";
 import { useState } from "react";
+import ButtonForm from './components/ButtonForm'
+import TextInput from './components/InputForm'
+import Box from '@mui/material/Box'
+import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import MailRoundedIcon from '@mui/icons-material/MailRounded';
+import LockRoundedIcon from '@mui/icons-material/LockRounded';
+import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 
 function Register() {
   const [newUser, setNewUser] = useState({
@@ -10,101 +16,68 @@ function Register() {
   });
 
   return (
-    <div>
-      <div>
+      <Box
+        sx={{
+          display: "grid",
+          maxWidth: '100%',
+          minWidth: '90%',
+          gridTemplateRows: '1px',
+          rowGap: '1rem'
+        }}
+      >
         <div
           style={{
+            position: 'relative',
             width: "35px",
-            height: "10px",
+            height: "8px",
             backgroundColor: "#dbe2e4",
-            marginBottom: "4px",
+            bottomBottom: '1rem',
             borderRadius: "2px",
           }}
         ></div>
         <h1 className="text-4xl text-white font-bold mb-6 text-start">
           Register
         </h1>
-        <form>
-          <div className="relative my-4">
-            {newUser?.userName === "" && (
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <User size={24} color="black" />
-              </span>
-            )}
-            <input
+        {/* <form> */}
+            <TextInput
+              id={'name'}
+              type={'text'}
+              label={'Name'}
               value={newUser?.userName}
-              onChange={(e) =>
-                setNewUser((prev) => ({ ...prev, userName: e.target.value }))
-              }
-              type="text"
-              id="name"
-              className="bg-white text-black p-2 rounded-md w-72"
-              placeholder="       User name"
+              onChange={(e) => setNewUser((prev) => ({...prev, userName: e.target.value}))}
+              icon={<BadgeRoundedIcon/>}
+
             />
-          </div>
-          <div className="relative my-4">
-            {newUser?.email === "" && (
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <Mail size={24} color="black" />
-              </span>
-            )}
-            <input
+            <TextInput
+              id={'email'}
+              type={'email'}
+              label={'Email'}
               value={newUser?.email}
-              onChange={(e) =>
-                setNewUser((prev) => ({ ...prev, email: e.target.value }))
-              }
-              type="email"
-              id="email"
-              className="bg-white text-black p-2 rounded-md w-72"
-              placeholder="       Email Address"
+              onChange={(e) => setNewUser((prev) => ({ ...prev, email: e.target.value}))}
+              icon={<MailRoundedIcon/>}
             />
-          </div>
-          <div className="relative mt-4">
-            {newUser?.password === "" && (
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <Lock size={24} color="black" />
-              </span>
-            )}
-            <input
+            <TextInput
+              id={'password'}
+              type={'password'}
+              label={'Password'}
               value={newUser?.password}
-              onChange={(e) =>
-                setNewUser((prev) => ({ ...prev, password: e.target.value }))
-              }
-              type="password"
-              id="password"
-              className="bg-white text-black p-2 rounded-md w-72"
-              placeholder="       Password"
+              onChange={(e) => setNewUser((prev) => ({ ...prev, password: e.target.value}))}
+              icon={<LockRoundedIcon/>}
             />
-          </div>
-          <div className="relative mt-4">
-            {newUser?.confirmPassword === "" && (
-              <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                <Lock size={24} color="black" />
-              </span>
-            )}
-            <input
-              value={newUser?.confirmPassword}
-              onChange={(e) =>
-                setNewUser((prev) => ({
-                  ...prev,
-                  confirmPassword: e.target.value,
-                }))
-              }
-              type="password"
-              id="confirm-password"
-              className="bg-white text-black p-2 rounded-md w-72"
-              placeholder="       Confirm Password"
-            />
-          </div>
-          <button
-            type="submit"
-            className="text-black px-8 font-normal h-10 justify-center py-0 mt-4 w-full bg-yellow-400 rounded-lg"
-          >
-            Register
-          </button>
-        </form>
-      </div>
-    </div>
+          <TextInput
+            id={'confirm-password'}
+            type={'password'}
+            value={newUser?.confirmPassword}
+            onChange={(e) => setNewUser((prev) => ({...prev, confirmPassword: e.target.value}))}
+            label={'Confirm Password'}
+            icon={<KeyRoundedIcon/>}
+
+          />
+          <ButtonForm
+          label={'Register'}
+          />
+        {/* </form> */}
+      </Box>
   );
 }
 
