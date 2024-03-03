@@ -20,7 +20,9 @@ export function AuthProvider({ children }) {
     try {
       setIsLoading(true);
       const userToken = localStorage.getItem(USER_TOKEN);
-      setUserToken(userToken);
+      if (userToken !== null) {
+        setUserToken(userToken);
+      }
     } catch (error) {
       console.error(`Function is Logged In error: ${error}`);
     } finally {
@@ -31,6 +33,10 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     isLoggedIn();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(USER_TOKEN, userToken);
+  }, [userToken]);
 
   return (
     <AuthContext.Provider
