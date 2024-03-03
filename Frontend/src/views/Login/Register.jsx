@@ -1,19 +1,100 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import ButtonForm from './components/ButtonForm'
 import TextInput from './components/InputForm'
 import Box from '@mui/material/Box'
+import { useNavigate } from 'react-router-dom'
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import { LoadingContext } from '../../context/LoadingContext'
+import ToastHelper from '../../utils/toastHelper'
+import RequestHelper from '../../utils/requestHelper'
 
 function Register() {
+  const navigate = useNavigate();
+  const { setIsLoading } = useContext(LoadingContext);
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     userName: "",
+    lastName: "",
+    name: "",
   });
+
+  const cleanUser = () => {
+    setNewUser({
+      email: "",
+      password: "",
+      confirmPassword: "",
+      userName: "",
+      lastName: "",
+      name: "",
+    });
+  };
+
+  const validateUser = () => {
+    if (!newUser.name) {
+      ToastHelper.error("The Name is required.");
+      return false;
+    }
+
+    if (!newUser.lastName) {
+      ToastHelper.error("The Last Name is required.");
+      return false;
+    }
+
+    if (!newUser.userName) {
+      ToastHelper.error("The User Name is required.");
+      return false;
+    }
+
+    if (!newUser.email) {
+      ToastHelper.error("The Email is required.");
+      return false;
+    }
+
+    if (!newUser.password) {
+      ToastHelper.error("The Password is required.");
+      return false;
+    }
+
+    if (!newUser.confirmPassword) {
+      ToastHelper.error("The Confirm Password is required.");
+      return false;
+    }
+
+    if (newUser.password !== newUser.confirmPassword) {
+      ToastHelper.error("The passwords do not match.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const registerUser = async (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      if (validateUser()) {
+        const result = await RequestHelper.post("register", {
+          name: newUser.name,
+          lastName: newUser.lastName,
+          username: newUser.userName,
+          email: newUser.email,
+          password: newUser.password,
+        });
+        ToastHelper.success(result.msg);
+        cleanUser();
+        navigate("/");
+      }
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
       <Box
