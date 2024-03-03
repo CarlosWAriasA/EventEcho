@@ -1,13 +1,56 @@
 import { Mail, Lock } from "lucide-react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { USER_TOKEN } from "../../utils/constans";
-import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import ToastHelper from "../../utils/toastHelper";
+import RequestHelper from "../../utils/requestHelper";
+import { LoadingContext } from "../../context/LoadingContext";
 
 function Login() {
   const { setUserToken } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setIsLoading } = useContext(LoadingContext);
+
+  const cleanUser = () => {
+    setEmail("");
+    setPassword("");
+  };
+
+  const validateUser = () => {
+    if (!email) {
+      ToastHelper.error("The Email is required.");
+      return false;
+    }
+
+    if (!password) {
+      ToastHelper.error("The Password is required.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const login = async (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      if (validateUser()) {
+        const result = await RequestHelper.post("login", {
+          email: email,
+          password: password,
+        });
+        localStorage.setItem(USER_TOKEN, result.token);
+        setUserToken(result.token);
+        ToastHelper.success("Usuario logueado exitosamente");
+        cleanUser();
+      }
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -24,12 +67,7 @@ function Login() {
         <h1 className="text-4xl text-white font-bold mb-6 text-start">
           Sing In
         </h1>
-        <form
-          onSubmit={() => {
-            setUserToken("hola");
-            localStorage.setItem(USER_TOKEN, "hola");
-          }}
-        >
+        <form onSubmit={login}>
           <div className="relative my-4">
             {email === "" && (
               <span className="absolute inset-y-0 left-0 flex items-center pl-2">
