@@ -45,7 +45,7 @@ function Login() {
         });
         localStorage.setItem(USER_TOKEN, result.token);
         setUserToken(result.token);
-        ToastHelper.success("Usuario logueado exitosamente");
+        ToastHelper.success("Usuario logueado exitosamente", "bottom-right");
         cleanUser();
       }
     } catch (error) {

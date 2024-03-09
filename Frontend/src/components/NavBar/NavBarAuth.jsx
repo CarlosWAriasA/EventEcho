@@ -23,7 +23,7 @@ const NavbarAuth = () => {
             </NavLink>
           ) : (
             <NavLink to="/register">
-              <div className="text-white mr-10 text-lg mt-4">Registro</div>
+              <div className="text-white mr-10 text-lg mt-4">Registrarse</div>
             </NavLink>
           )}
         </li>

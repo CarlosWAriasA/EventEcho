@@ -9,6 +9,7 @@ import {
 import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { Tooltip } from "react-tooltip";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
@@ -58,16 +59,24 @@ const NavbarApp = () => {
         </li>
         <li className="flex gap-6 content-center pt-3">
           <NavLink to={"/home"}>
-            <div className="">
+            <div
+              id="events"
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Mis eventos"
+            >
               <CalendarCheck
                 className="hover:cursor-pointer select-none"
                 color="black"
                 size={25}
+                xlinkTitle="hola"
               />
             </div>
           </NavLink>
           <NavLink to={"/home"}>
-            <div className="">
+            <div
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Notificaciones"
+            >
               <Bell
                 className="hover:cursor-pointer select-none"
                 color="black"
@@ -93,7 +102,12 @@ const NavbarApp = () => {
             </NavLink>
           ) : (
             <div>
-              <div className="mr-10" ref={optionsRef}>
+              <div
+                className="mr-10"
+                ref={optionsRef}
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Mi Cuenta"
+              >
                 <CircleUserRound
                   className="hover:cursor-pointer select-none"
                   color="black"
@@ -127,6 +141,7 @@ const NavbarApp = () => {
           )}
         </li>
       </ul>
+      <Tooltip id="tooltip" />
     </nav>
   );
 };

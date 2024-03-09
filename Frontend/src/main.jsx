@@ -7,10 +7,10 @@ import { LoadingProvider } from "./context/LoadingContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <LoadingProvider>
+    <LoadingProvider>
+      <AuthProvider>
         <App />
-      </LoadingProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </LoadingProvider>
   </React.StrictMode>
 );

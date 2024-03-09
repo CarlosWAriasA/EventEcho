@@ -1,18 +1,20 @@
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, useContext } from "react";
 import { USER_TOKEN } from "../utils/constans";
+import { LoadingContext } from "./LoadingContext";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoading: loading } = useContext(LoadingContext);
 
   const logout = () => {
-    setIsLoading(true);
-    setUserToken(null);
+    loading(true);
     localStorage.setItem(USER_TOKEN, null);
     setTimeout(() => {
-      setIsLoading(false);
+      setUserToken(null);
+      loading(false);
     }, 1000);
   };
 
@@ -20,13 +22,15 @@ export function AuthProvider({ children }) {
     try {
       setIsLoading(true);
       const userToken = localStorage.getItem(USER_TOKEN);
-      if (userToken !== null) {
+      if (userToken) {
         setUserToken(userToken);
       }
     } catch (error) {
       console.error(`Function is Logged In error: ${error}`);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -34,18 +38,13 @@ export function AuthProvider({ children }) {
     isLoggedIn();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(USER_TOKEN, userToken);
-  }, [userToken]);
-
   return (
     <AuthContext.Provider
       value={{
         logout,
-        isLoading,
         userToken,
         setUserToken,
-        setIsLoading,
+        isLoading,
       }}
     >
       {children}
