@@ -1,4 +1,4 @@
-const { verificarToken } = require('../authHelper');
+const { verificarToken } = require('../util/authHelper');
 
 const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
