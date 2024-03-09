@@ -5,7 +5,6 @@ import EventDetail from "../views/Events/EventDetail";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
     element: <LayoutApp />,
     children: [
       { path: "/home", element: <HomePage /> },

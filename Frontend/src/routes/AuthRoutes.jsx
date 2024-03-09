@@ -5,11 +5,11 @@ import LayoutAuth from "../components/layout/LayoutAuth";
 
 export const router = createBrowserRouter([
   {
-    path: "",
     element: <LayoutAuth />,
     children: [
       { path: "/register", element: <Register /> },
       { path: "/login", element: <Login /> },
+      { path: "/*", element: <Login /> },
     ],
   },
 ]);

@@ -102,7 +102,7 @@ const NavbarApp = () => {
                 />
               </div>
               {showOptions && (
-                <div className="absolute right-12 w-44 bg-gray-800 rounded-md ">
+                <div className="absolute right-12 w-44 top-11 bg-gray-800 rounded-md ">
                   <ul>
                     <NavLink to={"account-settings"}>
                       <li

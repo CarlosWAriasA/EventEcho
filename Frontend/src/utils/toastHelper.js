@@ -4,7 +4,7 @@ const ToastHelper = {
   error: (message) => {
     toast.dismiss();
     toast(message, {
-      position: "top-right",
+      position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -19,7 +19,7 @@ const ToastHelper = {
   success: (message) => {
     toast.dismiss();
     toast(message, {
-      position: "top-right",
+      position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
