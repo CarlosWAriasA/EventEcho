@@ -1,15 +1,15 @@
-import { Clock, MapPin, UserRound } from "lucide-react";
+import { CircleUserRound, Clock, MapPin, UserRound } from "lucide-react";
 
 function EventDetail() {
   const defaultImageUrl = "/images/default-image.jpg";
   return (
-    <main className="bg-white h-full pl-16 pt-16 text-black">
+    <main className="bg-white h-full pl-16 pt-16 text-black overflow-y-auto">
       <div className="flex gap-6">
         <img
           src={defaultImageUrl}
           alt="Card"
           className="object-cover mb-4"
-          style={{ width: "50%", maxHeight: "25em", height: "25em" }}
+          style={{ width: "50%", maxHeight: "22em", height: "25em" }}
         />
         <div>
           <h2
@@ -74,8 +74,21 @@ function EventDetail() {
           </p>
         </div>
       </div>
-      <div style={{ fontSize: "3em" }}>Lorem Ipsum</div>
-      <div style={{ fontSize: "1em" }}>Lorem Ipsum</div>
+      <div className="mb-2" style={{ fontSize: "2em" }}>
+        Comentarios
+      </div>
+      <div
+        className="mb-10 p-8"
+        style={{ width: "50%", height: "22em", backgroundColor: "#394867" }}
+      >
+        <div className="flex gap-2">
+          <CircleUserRound size={25} style={{ marginTop: "3px" }} />
+          <div>
+            <p className="m-0 p-0 text-lg">Lorem ipsum</p>
+            <p className="m-0 p-0">Lorem ipsum</p>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-tooltip/dist/react-tooltip.css";
 import Loading from "./components/Loading/Loading.jsx";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   const { userToken } = useContext(AuthContext);

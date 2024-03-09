@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 const ToastHelper = {
-  error: (message, position = "top-center") => {
+  error: (message, position = "bottom-right") => {
     toast.dismiss();
     toast(message, {
       position: position,
@@ -16,7 +16,7 @@ const ToastHelper = {
     });
   },
 
-  success: (message, position = "top-center") => {
+  success: (message, position = "bottom-right") => {
     toast.dismiss();
     toast(message, {
       position: position,
@@ -25,7 +25,6 @@ const ToastHelper = {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
       theme: "dark",
       type: "success",
     });

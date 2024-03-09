@@ -23,12 +23,12 @@ function Login() {
 
   const validateUser = () => {
     if (!email) {
-      ToastHelper.error("El Correo Electronico es requerido.");
+      ToastHelper.error("El Correo Electronico es requerido.", "top-center");
       return false;
     }
 
     if (!password) {
-      ToastHelper.error("La Contraseña es requerida.");
+      ToastHelper.error("La Contraseña es requerida.", "top-center");
       return false;
     }
 
@@ -45,7 +45,7 @@ function Login() {
         });
         localStorage.setItem(USER_TOKEN, result.token);
         setUserToken(result.token);
-        ToastHelper.success("Usuario logueado exitosamente", "bottom-right");
+        ToastHelper.success("Usuario logueado exitosamente");
         cleanUser();
       }
     } catch (error) {
@@ -73,10 +73,19 @@ function Login() {
             <TextInput
               id={"email"}
               type={"email"}
+              className="rounded-lg w-72"
               label={"Correo Electronico"}
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               icon={<MailRoundedIcon fontSize="medium" />}
+              sx={{
+                background: "rgb(248, 250, 229, 0.8)",
+                "& .MuiFilledInput-underline:after": {
+                  borderBottomColor: "#FAEF5D",
+                  height: "5rem",
+                  borderRadius: "0 0 10px 10px",
+                },
+              }}
             />
           </Box>
         </div>
@@ -84,16 +93,32 @@ function Login() {
           <TextInput
             type={"password"}
             label={"Contraseña"}
+            className="rounded-lg w-72"
             id={"password"}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
+            sx={{
+              background: "rgb(248, 250, 229, 0.8)",
+              "& .MuiFilledInput-underline:after": {
+                borderBottomColor: "#FAEF5D",
+                height: "5rem",
+                borderRadius: "0 0 10px 10px",
+              },
+            }}
             icon={<HttpsRoundedIcon />}
           />
         </div>
         <div className="mb-4 flex justify-end text-gray-400 hover:text-white hover:cursor-pointer">
           <span style={{ marginTop: "1rem" }}>Olvidaste la Contraseña?</span>
         </div>
-        <ButtonForm onClick={login} label="Iniciar Sesion" />
+        <ButtonForm
+          onClick={login}
+          label="Iniciar Sesion"
+          className={
+            "text-black px-8 font-normal h-10 justify-center py-0 w-full rounded-lg"
+          }
+          style={{ backgroundColor: "#FAEF5D", color: "#212A3E" }}
+        />
       </div>
     </div>
   );

@@ -2,9 +2,9 @@ import {
   CircleUserRound,
   LogOut,
   UserRound,
-  ArrowBigLeft,
   Bell,
   CalendarCheck,
+  ListChecks,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
@@ -62,13 +62,25 @@ const NavbarApp = () => {
             <div
               id="events"
               data-tooltip-id="tooltip"
+              data-tooltip-content="Administrar Eventos"
+            >
+              <ListChecks
+                className="hover:cursor-pointer select-none"
+                color="black"
+                size={25}
+              />
+            </div>
+          </NavLink>
+          <NavLink to={"/event-edit"}>
+            <div
+              id="events"
+              data-tooltip-id="tooltip"
               data-tooltip-content="Mis eventos"
             >
               <CalendarCheck
                 className="hover:cursor-pointer select-none"
                 color="black"
                 size={25}
-                xlinkTitle="hola"
               />
             </div>
           </NavLink>
@@ -87,13 +99,17 @@ const NavbarApp = () => {
           </NavLink>
           {isEventDetail ? (
             <NavLink to={"/"}>
-              <div className="mr-10">
-                <ArrowBigLeft
-                  className="hover:cursor-pointer select-none"
+              <div
+                className="mr-10"
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Volver Atras"
+              >
+                <LogOut
                   color="black"
-                  size={30}
+                  size={25}
+                  fill="yellow"
                   style={{
-                    borderRadius: "50%",
+                    borderRadius: "30%",
                     padding: "2px",
                     backgroundColor: "yellow",
                   }}
@@ -105,7 +121,7 @@ const NavbarApp = () => {
               <div
                 className="mr-10"
                 ref={optionsRef}
-                data-tooltip-id="tooltip"
+                data-tooltip-id={"tooltip"}
                 data-tooltip-content="Mi Cuenta"
               >
                 <CircleUserRound
@@ -132,7 +148,7 @@ const NavbarApp = () => {
                       className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
                     >
                       <LogOut size={18} color="red" />
-                      Cerrar Sesion
+                      Cerrar Sesión
                     </li>
                   </ul>
                 </div>

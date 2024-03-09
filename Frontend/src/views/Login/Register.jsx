@@ -23,6 +23,15 @@ function Register() {
     name: "",
   });
 
+  const sx = {
+    background: "rgb(248, 250, 229, 0.8)",
+    "& .MuiFilledInput-underline:after": {
+      borderBottomColor: "#FAEF5D",
+      height: "5rem",
+      borderRadius: "0 0 10px 10px",
+    },
+  };
+
   const cleanUser = () => {
     setNewUser({
       email: "",
@@ -36,27 +45,27 @@ function Register() {
 
   const validateUser = () => {
     if (!newUser.userName) {
-      ToastHelper.error("El Nombre es requerido.");
+      ToastHelper.error("El Nombre es requerido.", "top-center");
       return false;
     }
 
     if (!newUser.email) {
-      ToastHelper.error("El Correo Electronico es requerido.");
+      ToastHelper.error("El Correo Electronico es requerido.", "top-center");
       return false;
     }
 
     if (!newUser.password) {
-      ToastHelper.error("La Contraseña es requerida.");
+      ToastHelper.error("La Contraseña es requerida.", "top-center");
       return false;
     }
 
     if (!newUser.confirmPassword) {
-      ToastHelper.error("Confirmar Contraseña es requerido.");
+      ToastHelper.error("Confirmar Contraseña es requerido.", "top-center");
       return false;
     }
 
     if (newUser.password !== newUser.confirmPassword) {
-      ToastHelper.error("Las Contraseñas no son iguales.");
+      ToastHelper.error("Las Contraseñas no son iguales.", "top-center");
       return false;
     }
 
@@ -112,31 +121,37 @@ function Register() {
         id={"name"}
         type={"text"}
         label={"Nombre"}
+        className="rounded-lg w-72"
         value={newUser?.userName}
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, userName: e.target.value }))
         }
         icon={<BadgeRoundedIcon />}
+        sx={sx}
       />
       <TextInput
         id={"email"}
         type={"email"}
         label={"Correo Electronico"}
+        className="rounded-lg w-72"
         value={newUser?.email}
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, email: e.target.value }))
         }
         icon={<MailRoundedIcon />}
+        sx={sx}
       />
       <TextInput
         id={"password"}
         type={"password"}
         label={"Contraseña"}
         value={newUser?.password}
+        className="rounded-lg w-72"
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, password: e.target.value }))
         }
         icon={<LockRoundedIcon />}
+        sx={sx}
       />
       <TextInput
         id={"confirm-password"}
@@ -146,9 +161,15 @@ function Register() {
           setNewUser((prev) => ({ ...prev, confirmPassword: e.target.value }))
         }
         label={"Confirmar Contraseña"}
+        className="rounded-lg w-72"
         icon={<KeyRoundedIcon />}
+        sx={sx}
       />
-      <ButtonForm onClick={registerUser} label={"Registrarse"} />
+      <ButtonForm
+        onClick={registerUser}
+        label={"Registrarse"}
+        style={{ backgroundColor: "#FAEF5D", color: "#212A3E" }}
+      />
     </Box>
   );
 }

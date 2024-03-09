@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ToastHelper from "../../utils/toastHelper";
 
 function AccountSettings() {
   const [user, setUser] = useState({
@@ -8,6 +9,14 @@ function AccountSettings() {
     age: "",
     description: "",
   });
+
+  const guardarCambios = () => {
+    try {
+      ToastHelper.success("Guardado exitosamente");
+    } catch (error) {
+      ToastHelper.error(error);
+    }
+  };
 
   return (
     <main className="bg-white h-full text-black pt-10 pl-16">
@@ -34,7 +43,7 @@ function AccountSettings() {
               />
             </div>
             <div className="flex flex-col w-80">
-              <label>Email</label>
+              <label>Correo Electronico</label>
               <input
                 className="border p-2 rounded-md border-gray-500"
                 placeholder="Email"
@@ -48,7 +57,7 @@ function AccountSettings() {
           </div>
           <div className="flex gap-20 mt-5">
             <div className="flex flex-col w-64">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Contraseña</label>
               <input
                 id="password"
                 className="border p-2 rounded-md border-gray-500"
@@ -86,7 +95,10 @@ function AccountSettings() {
             </div>
           </div>
           <div className="mt-5">
-            <button className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900">
+            <button
+              onClick={guardarCambios}
+              className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900"
+            >
               Guardar Cambios
             </button>
           </div>
