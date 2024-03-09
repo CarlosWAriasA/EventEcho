@@ -110,7 +110,7 @@ const NavbarApp = () => {
                         className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
                       >
                         <UserRound size={18} />
-                        Profile
+                        Cuenta
                       </li>
                     </NavLink>
                     <li
@@ -118,7 +118,7 @@ const NavbarApp = () => {
                       className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
                     >
                       <LogOut size={18} color="red" />
-                      Log Out
+                      Cerrar Sesion
                     </li>
                   </ul>
                 </div>

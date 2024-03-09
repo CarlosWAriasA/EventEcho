@@ -36,27 +36,27 @@ function Register() {
 
   const validateUser = () => {
     if (!newUser.userName) {
-      ToastHelper.error("The Name is required.");
+      ToastHelper.error("El Nombre es requerido.");
       return false;
     }
 
     if (!newUser.email) {
-      ToastHelper.error("The Email is required.");
+      ToastHelper.error("El Correo Electronico es requerido.");
       return false;
     }
 
     if (!newUser.password) {
-      ToastHelper.error("The Password is required.");
+      ToastHelper.error("La Contraseña es requerida.");
       return false;
     }
 
     if (!newUser.confirmPassword) {
-      ToastHelper.error("The Confirm Password is required.");
+      ToastHelper.error("Confirmar Contraseña es requerido.");
       return false;
     }
 
     if (newUser.password !== newUser.confirmPassword) {
-      ToastHelper.error("The passwords do not match.");
+      ToastHelper.error("Las Contraseñas no son iguales.");
       return false;
     }
 
@@ -106,12 +106,12 @@ function Register() {
         }}
       ></div>
       <h1 className="text-4xl text-white font-bold mb-6 text-start">
-        Register
+        Registro
       </h1>
       <TextInput
         id={"name"}
         type={"text"}
-        label={"Name"}
+        label={"Nombre"}
         value={newUser?.userName}
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, userName: e.target.value }))
@@ -121,7 +121,7 @@ function Register() {
       <TextInput
         id={"email"}
         type={"email"}
-        label={"Email"}
+        label={"Correo Electronico"}
         value={newUser?.email}
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, email: e.target.value }))
@@ -131,7 +131,7 @@ function Register() {
       <TextInput
         id={"password"}
         type={"password"}
-        label={"Password"}
+        label={"Contraseña"}
         value={newUser?.password}
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, password: e.target.value }))
@@ -145,10 +145,10 @@ function Register() {
         onChange={(e) =>
           setNewUser((prev) => ({ ...prev, confirmPassword: e.target.value }))
         }
-        label={"Confirm Password"}
+        label={"Confirmar Contraseña"}
         icon={<KeyRoundedIcon />}
       />
-      <ButtonForm onClick={registerUser} label={"Register"} />
+      <ButtonForm onClick={registerUser} label={"Registrarse"} />
     </Box>
   );
 }

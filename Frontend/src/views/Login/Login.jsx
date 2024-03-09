@@ -23,13 +23,12 @@ function Login() {
 
   const validateUser = () => {
     if (!email) {
-      console.log("toas");
-      ToastHelper.error("The Email is required.");
+      ToastHelper.error("El Correo Electronico es requerido.");
       return false;
     }
 
     if (!password) {
-      ToastHelper.error("The Password is required.");
+      ToastHelper.error("La Contraseña es requerida.");
       return false;
     }
 
@@ -38,7 +37,6 @@ function Login() {
 
   const login = async () => {
     try {
-      console.log("on login");
       setIsLoading(true);
       if (validateUser()) {
         const result = await RequestHelper.post("login", {
@@ -75,7 +73,7 @@ function Login() {
             <TextInput
               id={"email"}
               type={"email"}
-              label={"Email"}
+              label={"Correo Electronico"}
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               icon={<MailRoundedIcon fontSize="medium" />}
@@ -85,7 +83,7 @@ function Login() {
         <div className="relative mt-4">
           <TextInput
             type={"password"}
-            label={"Password"}
+            label={"Contraseña"}
             id={"password"}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
@@ -93,9 +91,9 @@ function Login() {
           />
         </div>
         <div className="mb-4 flex justify-end text-gray-400 hover:text-white hover:cursor-pointer">
-          <span style={{ marginTop: "1rem" }}>Forgot Password?</span>
+          <span style={{ marginTop: "1rem" }}>Olvidaste la Contraseña?</span>
         </div>
-        <ButtonForm onClick={login} label="Sign in" />
+        <ButtonForm onClick={login} label="Iniciar Sesion" />
       </div>
     </div>
   );

@@ -12,8 +12,8 @@ function AccountSettings() {
   return (
     <main className="bg-white h-full text-black pt-10 pl-16">
       <div className="flex flex-col gap-4">
-        <h2 className="text-lg " style={{ fontSize: "50px" }}>
-          Account Settings
+        <h2 className="text-lg " style={{ fontSize: "45px" }}>
+          Configuración de la Cuenta
         </h2>
         <div className="w-16 h-3 bg-yellow-400 rounded-sm"></div>
       </div>
