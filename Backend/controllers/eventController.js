@@ -34,6 +34,31 @@ const getAllEvents = async (req, res) => {
     }
 };
 
+// Obtener todos los eventos asociados a un usuario
+const getAllEventsByUserId = async (req, res) => {
+    try {
+        // Extraer el ID del usuario del token JWT
+        const userId = req.user.userId;
+
+        // Buscar al usuario por su ID
+        const user = await Usuario.findByPk(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Obtener todos los eventos asociados al usuario
+        const events = await Event.findAll({
+            where: { userId: userId }
+        });
+
+        res.status(200).json(events);
+    } catch (error) {
+        console.error('Error al obtener los eventos del usuario:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    }
+};
+
 
 // Crear un nuevo evento
 const createEvent = async (req, res) => {
@@ -143,4 +168,4 @@ const deleteEvent = async (req, res) => {
         res.status(500).json({ message: 'Error del servidor' });
     }
 };
-module.exports = { getEventById, getAllEvents, createEvent, updateEvent, deleteEvent };
+module.exports = { getEventById, getAllEvents, getAllEventsByUserId, createEvent, updateEvent, deleteEvent };

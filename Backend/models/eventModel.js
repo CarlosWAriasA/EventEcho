@@ -48,7 +48,7 @@ const Event = sequelize.define('Event', {
 
 // Define la asociación muchos a muchos con el modelo de Usuario
 Event.associate = (models) => {
-  Event.belongsToMany(models.Usuario, { through: 'UserEvent' });
+  Event.belongsTo(models.Usuario, { foreignKey: 'userId' });
 };
 
 
