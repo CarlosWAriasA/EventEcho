@@ -7,6 +7,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
 import "./Event.css";
 import { MapContainer, TileLayer } from "react-leaflet";
+import { NavLink } from "react-router-dom";
 
 function EventEdit() {
   const [event, setEvent] = useState({
@@ -90,9 +91,11 @@ function EventEdit() {
               <button className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900 w-36">
                 Guardar
               </button>
-              <button className="border border-blue-950 p-2 w-36 rounded-lg hover:bg-blue-950 hover:text-white">
-                Cancelar
-              </button>
+              <NavLink to={"/event-admin"}>
+                <button className="border border-blue-950 p-2 w-36 rounded-lg hover:bg-blue-950 hover:text-white">
+                  Cancelar
+                </button>
+              </NavLink>
             </div>
           </div>
         </div>

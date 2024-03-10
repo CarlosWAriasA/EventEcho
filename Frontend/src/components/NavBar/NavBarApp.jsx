@@ -58,7 +58,7 @@ const NavbarApp = () => {
           </NavLink>
         </li>
         <li className="flex gap-6 content-center pt-3">
-          <NavLink to={"/home"}>
+          <NavLink to={"/event-admin"}>
             <div
               id="events"
               data-tooltip-id="tooltip"
@@ -71,7 +71,7 @@ const NavbarApp = () => {
               />
             </div>
           </NavLink>
-          <NavLink to={"/event-edit"}>
+          <NavLink to={"/home"}>
             <div
               id="events"
               data-tooltip-id="tooltip"
