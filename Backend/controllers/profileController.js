@@ -1,8 +1,10 @@
+const jwt = require('jsonwebtoken');
 const Profile = require('../models/usuarioModel');
 
 const getProfileById = async (req, res) => {
     try {
-        const userId = req.params.userId;
+         // Extraer el ID del usuario del token JWT
+        const userId = req.user.userId;
         const profile = await Profile.findByPk(userId);
         
         if (!profile) {
