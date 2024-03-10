@@ -4,18 +4,109 @@ import BoyIcon from "@mui/icons-material/Boy";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import "./Event.css";
-import { MapContainer, TileLayer } from "react-leaflet";
-import { NavLink } from "react-router-dom";
+import {
+  MapContainer,
+  TileLayer,
+  useMapEvents,
+  Marker,
+  Popup,
+} from "react-leaflet";
+import { NavLink, useNavigate } from "react-router-dom";
+import RequestHelper from "../../utils/requestHelper";
+import ToastHelper from "../../utils/toastHelper";
+import { LoadingContext } from "../../context/LoadingContext";
 
 function EventEdit() {
+  const { setIsLoading } = useContext(LoadingContext);
   const [event, setEvent] = useState({
     name: "",
     amountPeople: "",
     date: "",
     description: "",
+    latitud: "",
+    longitud: "",
+    location: "",
   });
+  const [clickedPosition, setClickedPosition] = useState(null);
+  const navigate = useNavigate();
+
+  async function fetchCity() {
+    if (!clickedPosition) return;
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${clickedPosition.lat}&lon=${clickedPosition.lng}&format=json`
+    );
+    const data = await response.json();
+
+    setEvent((prev) => ({
+      ...prev,
+      location: data.address.city ?? data.address.country,
+    }));
+  }
+
+  useEffect(() => {
+    fetchCity();
+  }, [clickedPosition]);
+
+  const validateUser = () => {
+    if (!event.name) {
+      ToastHelper.error("El Nombre del Evento es requerido.");
+      return false;
+    }
+
+    if (!event.amountPeople) {
+      ToastHelper.error("La Cantidad de Personas es requerida.");
+      return false;
+    }
+
+    if (!event.date) {
+      ToastHelper.error("La Fecha es requerida.");
+      return false;
+    }
+
+    if (!clickedPosition?.lat || !clickedPosition.lng) {
+      ToastHelper.error("La Localizacion es requerida.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const createEvent = async () => {
+    try {
+      setIsLoading(true);
+      if (validateUser()) {
+        const result = await RequestHelper.post("events", {
+          title: event.name,
+          description: event.description,
+          date: event.date,
+          image: "",
+          attendees: event.amountPeople,
+          location: event.location,
+          longitud: clickedPosition.lng,
+          latitud: clickedPosition.lat,
+        });
+        ToastHelper.success(result.message);
+        navigate("/event-admin");
+      }
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  function handleClick(event) {
+    setClickedPosition(event.latlng);
+  }
+
+  function ClickHandler() {
+    useMapEvents({
+      click: handleClick,
+    });
+    return null;
+  }
 
   return (
     <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
@@ -76,11 +167,11 @@ function EventEdit() {
                 className="rounded-lg "
                 style={{ width: "38em" }}
                 label={"Descripción"}
-                value={event.amountPeople}
+                value={event.description}
                 onChange={(e) =>
                   setEvent((prev) => ({
                     ...prev,
-                    amountPeople: e.target.value,
+                    description: e.target.value,
                   }))
                 }
                 multiline
@@ -88,7 +179,10 @@ function EventEdit() {
               />
             </div>
             <div className="flex gap-5 mt-5">
-              <button className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900 w-36">
+              <button
+                onClick={createEvent}
+                className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900 w-36"
+              >
                 Guardar
               </button>
               <NavLink to={"/event-admin"}>
@@ -113,6 +207,16 @@ function EventEdit() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
+              <ClickHandler />{" "}
+              {clickedPosition && (
+                <Marker position={clickedPosition}>
+                  <Popup>
+                    Latitude: {clickedPosition.lat}
+                    <br />
+                    Longitude: {clickedPosition.lng}
+                  </Popup>
+                </Marker>
+              )}
             </MapContainer>
           </div>
         </div>

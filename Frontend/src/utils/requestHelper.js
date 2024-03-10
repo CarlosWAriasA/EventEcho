@@ -1,9 +1,14 @@
-import { URL_BASE } from "./constans";
+import { URL_BASE, USER_TOKEN } from "./constans";
 
 const RequestHelper = {
   get: async function (url) {
     try {
-      const response = await fetch(URL_BASE + url);
+      const token = localStorage.getItem(USER_TOKEN);
+      const response = await fetch(URL_BASE + url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -16,10 +21,12 @@ const RequestHelper = {
 
   post: async function (url, data) {
     try {
+      const token = localStorage.getItem(USER_TOKEN);
       const response = await fetch(URL_BASE + url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
