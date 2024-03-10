@@ -6,6 +6,7 @@ const registerRoutes = require("./router/register");
 const homeRouter = require('./router/homeRouter');
 const eventRouter = require('./router/eventRouter');
 const profileRouter = require('./router/profileRouter')
+const userRouter = require('./router/userRouter');
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use("/api/", registerRoutes);
 
 app.use('/', homeRouter);
 app.use('/api/events/', eventRouter);
+app.use('/api/registro-evento/', userRouter);
 app.use('/api/profile/', profileRouter);
 
 const PORT = process.env.PORT || 5000;

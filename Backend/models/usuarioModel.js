@@ -1,6 +1,7 @@
-// usuarioModel.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../connection/connection');
+const Event = require('./eventModel');
+const UserEvent = require('./UserEvent');
 
 const Usuario = sequelize.define('Usuario', {
     id: {
@@ -32,12 +33,21 @@ const Usuario = sequelize.define('Usuario', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    tipo_usuario: {
+        type: DataTypes.ENUM('organizador', 'usuario'), // Enumeración para definir el tipo de usuario
+        allowNull: false,
+        defaultValue: 'usuario' // Valor por defecto
     }
 },
-{
-    tableName: 'tbl_usuario',
-    timestamps: false
-}
-);
+    {
+        tableName: 'tbl_usuario',
+        timestamps: false
+    });
+
+// Define la asociación muchos a muchos con el modelo de Evento
+Usuario.associate = (models) => {
+    Usuario.belongsToMany(models.Event, { through: 'UserEvent' });
+};
 
 module.exports = Usuario;

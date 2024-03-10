@@ -1,5 +1,9 @@
+const jwt = require('jsonwebtoken');
 const Event = require('../models/eventModel');
+const Usuario = require('../models/usuarioModel');
+const UserEvent = require('../models/UserEvent');
 
+// Obtener un evento por su ID
 const getEventById = async (req, res) => {
     try {
         const eventId = req.params.eventId;
@@ -11,15 +15,18 @@ const getEventById = async (req, res) => {
         
         res.status(200).json(event);
     } catch (error) {
-        // Maneja los errores de forma adecuada
         console.error('Error al obtener el evento:', error);
         res.status(500).json({ message: 'Error del servidor' });
     }
 };
 
+// Obtener todos los eventos
 const getAllEvents = async (req, res) => {
     try {
-        const events = await Event.findAll();
+        // Obtener todos los eventos con la información de los usuarios asociados
+        const events = await Event.findAll({
+        });
+        
         res.status(200).json(events);
     } catch (error) {
         console.error('Error al obtener todos los eventos:', error);
@@ -27,4 +34,113 @@ const getAllEvents = async (req, res) => {
     }
 };
 
-module.exports = { getEventById, getAllEvents };
+
+// Crear un nuevo evento
+const createEvent = async (req, res) => {
+
+     // Esperar a que se resuelva la promesa para obtener el tipo de usuario
+     const tipoUsuario = await req.user.tipo_usuario;
+
+
+    // Verificar si el usuario es un organizador
+    if (tipoUsuario !== 'organizador') {
+        return res.status(403).json({ message: 'No tienes permiso para crear eventos' });
+    }
+
+    try {
+        const { title, description, date, image, attendees, location, longitud, latitud } = req.body;
+
+         // Extraer el ID del usuario del token JWT
+         const userId = req.user.userId;
+
+         // Crear el evento en la base de datos
+         const event = await Event.create({
+             title,
+             description,
+             date,
+             image,
+             attendees,
+             location,
+             longitud,
+             latitud,
+             userId
+         });
+
+        res.status(201).json({ message: 'Evento creado exitosamente', event });
+    } catch (error) {
+        console.error('Error al crear un nuevo evento:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    }
+};
+
+// Actualizar un evento existente
+const updateEvent = async (req, res) => {
+
+    // Esperar a que se resuelva la promesa para obtener el tipo de usuario
+    const tipoUsuario = await req.user.tipo_usuario;
+
+    // Verificar si el usuario es un organizador
+    if (tipoUsuario !== 'organizador') {
+        return res.status(403).json({ message: 'No tienes permiso para actualizar eventos', user: req.user});
+    }
+
+    try {
+        const eventId = req.params.eventId;
+        const { title, description, date, image, attendees, location, longitud, latitud } = req.body;
+
+        // Buscar el evento en la base de datos
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Evento no encontrado' });
+        }
+
+        // Actualizar los datos del evento
+        event.title = title;
+        event.description = description;
+        event.date = date;
+        event.image = image;
+        event.attendees = attendees;
+        event.location = location;
+        event.longitud = longitud;
+        event.latitud = latitud;
+
+        // Guardar los cambios en la base de datos
+        await event.save();
+
+        res.status(200).json({ message: 'Evento actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar el evento:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    }
+};
+
+// Eliminar un evento existente
+const deleteEvent = async (req, res) => {
+
+     // Esperar a que se resuelva la promesa para obtener el tipo de usuario
+     const tipoUsuario = await req.user.tipo_usuario;
+
+    // Verificar si el usuario es un organizador
+    if (tipoUsuario !== 'organizador') {
+        return res.status(403).json({ message: 'No tienes permiso para eliminar eventos' });
+    }
+
+    try {
+        const eventId = req.params.eventId;
+
+        // Buscar el evento en la base de datos
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Evento no encontrado' });
+        }
+
+        // Eliminar el evento de la base de datos
+        await event.destroy();
+
+        res.status(200).json({ message: 'Evento eliminado exitosamente' });
+    } catch (error) {
+        console.error('Error al eliminar el evento:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    }
+};
+module.exports = { getEventById, getAllEvents, createEvent, updateEvent, deleteEvent };

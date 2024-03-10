@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const Usuario = require('../models/usuarioModel');
 
 const registrarUsuario = async (req, res) => {
-    const { name, lastName, username, email, password } = req.body;
+    const { name, lastName, username, email, password, tipo_usuario } = req.body;
 
     try {
         // Verificar si el usuario ya existe en la base de datos
@@ -24,7 +24,8 @@ const registrarUsuario = async (req, res) => {
             lastName,
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            tipo_usuario // Añadir el nuevo campo userType
         });
 
         console.log('Registrado');

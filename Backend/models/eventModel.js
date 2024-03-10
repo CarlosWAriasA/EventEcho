@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../connection/connection');
+const UserEvent = require('./UserEvent');
+const Usuario = require('./usuarioModel');
 
 const Event = sequelize.define('Event', {
   id: {
@@ -26,10 +28,28 @@ const Event = sequelize.define('Event', {
   },
   location: {
     type: DataTypes.STRING(255)
+  },
+  longitud: { // Nuevo campo para longitud
+    type: DataTypes.DECIMAL(10, 8),
+    allowNull: false
+  },
+  latitud: { // Nuevo campo para latitud
+    type: DataTypes.DECIMAL(10, 8),
+    allowNull: false
+  },
+  userId: { // Nuevo campo para el ID del usuario organizador
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
-  tableName: 'events', // Nombre de la tabla en la base de datos
+  tableName: 'events',
   timestamps: false // Opcional: Desactiva el registro automático de campos createdAt y updatedAt
 });
+
+// Define la asociación muchos a muchos con el modelo de Usuario
+Event.associate = (models) => {
+  Event.belongsToMany(models.Usuario, { through: 'UserEvent' });
+};
+
 
 module.exports = Event;
