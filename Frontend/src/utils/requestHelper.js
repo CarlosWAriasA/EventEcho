@@ -9,6 +9,7 @@ const RequestHelper = {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -36,6 +37,27 @@ const RequestHelper = {
       return await response.json();
     } catch (error) {
       console.error("Error making POST request:", error);
+      throw error;
+    }
+  },
+
+  put: async function (url, data) {
+    try {
+      const token = localStorage.getItem(USER_TOKEN);
+      const response = await fetch(URL_BASE + url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw response;
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error making PUT request:", error);
       throw error;
     }
   },

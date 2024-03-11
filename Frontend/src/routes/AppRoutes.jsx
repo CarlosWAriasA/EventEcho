@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/event-detail", element: <EventDetail /> },
       { path: "/account-settings", element: <AccountSettings /> },
-      { path: "/event-edit", element: <EventEdit /> },
+      { path: "/event-edit/:Id?", element: <EventEdit /> },
       { path: "/event-admin", element: <EventAdmin /> },
       { path: "/home", element: <HomePage /> },
       { path: "/", element: <HomePage /> },

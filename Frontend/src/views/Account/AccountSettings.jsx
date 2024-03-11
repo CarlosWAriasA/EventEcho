@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import ToastHelper from "../../utils/toastHelper";
+import { LoadingContext } from "../../context/LoadingContext";
+import RequestHelper from "../../utils/requestHelper";
 
 function AccountSettings() {
   const [user, setUser] = useState({
@@ -9,6 +11,24 @@ function AccountSettings() {
     age: "",
     description: "",
   });
+  const { setIsLoading } = useContext(LoadingContext);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  const loadUser = async () => {
+    try {
+      setIsLoading(true);
+
+      const result = await RequestHelper.get("profile");
+      setUser((prev) => ({ ...prev, name: result.name, email: result.email }));
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const guardarCambios = () => {
     try {
@@ -45,8 +65,10 @@ function AccountSettings() {
             <div className="flex flex-col w-80">
               <label>Correo Electronico</label>
               <input
-                className="border p-2 rounded-md border-gray-500"
+                className="border p-2 rounded-md border-gray-500 bg-gray-500"
                 placeholder="Email"
+                disabled
+                style={{ opacity: 0.5, cursor: "not-allowed" }}
                 type="email"
                 value={user.email}
                 onChange={(e) =>
@@ -60,9 +82,12 @@ function AccountSettings() {
               <label htmlFor="password">Contraseña</label>
               <input
                 id="password"
-                className="border p-2 rounded-md border-gray-500"
+                className="border p-2 rounded-md border-gray-500 bg-gray-500"
+                value={"123456"}
                 placeholder="Contraseña"
                 type="password"
+                style={{ opacity: 0.5, cursor: "not-allowed" }}
+                disabled
               />
             </div>
             <div className="flex flex-col w-32">

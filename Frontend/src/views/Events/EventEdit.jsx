@@ -13,13 +13,15 @@ import {
   Marker,
   Popup,
 } from "react-leaflet";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
+import dayjs from "dayjs";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
+  const { Id } = useParams();
   const [event, setEvent] = useState({
     name: "",
     amountPeople: "",
@@ -32,6 +34,39 @@ function EventEdit() {
   const [clickedPosition, setClickedPosition] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (parseInt(Id) > 0) {
+      loadEvent(parseInt(Id));
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCity();
+  }, [clickedPosition]);
+
+  const loadEvent = async (id) => {
+    try {
+      setIsLoading(true);
+      const result = await RequestHelper.get(`events/${id}`);
+      setEvent((prev) => ({
+        ...prev,
+        name: result.title,
+        amountPeople: result.attendees,
+        description: result.description,
+        date: dayjs(result.date),
+      }));
+
+      setClickedPosition({
+        lat: parseFloat(result.latitud ?? 0),
+        lng: parseFloat(result.longitud ?? 0),
+      });
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   async function fetchCity() {
     if (!clickedPosition) return;
     const response = await fetch(
@@ -41,13 +76,9 @@ function EventEdit() {
 
     setEvent((prev) => ({
       ...prev,
-      location: data.address.city ?? data.address.country,
+      location: data?.address?.city ?? data.address?.country,
     }));
   }
-
-  useEffect(() => {
-    fetchCity();
-  }, [clickedPosition]);
 
   const validateUser = () => {
     if (!event.name) {
@@ -77,17 +108,30 @@ function EventEdit() {
     try {
       setIsLoading(true);
       if (validateUser()) {
-        const result = await RequestHelper.post("events", {
-          title: event.name,
-          description: event.description,
-          date: event.date,
-          image: "",
-          attendees: event.amountPeople,
-          location: event.location,
-          longitud: clickedPosition.lng,
-          latitud: clickedPosition.lat,
-        });
-        ToastHelper.success(result.message);
+        if (Id > 0) {
+          await RequestHelper.put(`events/${Id}`, {
+            title: event.name,
+            description: event.description,
+            date: event.date,
+            image: "",
+            attendees: event.amountPeople,
+            location: event.location,
+            longitud: clickedPosition.lng,
+            latitud: clickedPosition.lat,
+          });
+        } else {
+          await RequestHelper.post("events", {
+            title: event.name,
+            description: event.description,
+            date: event.date,
+            image: "",
+            attendees: event.amountPeople,
+            location: event.location,
+            longitud: clickedPosition.lng,
+            latitud: clickedPosition.lat,
+          });
+        }
+        ToastHelper.success("Guardado exitosamente");
         navigate("/event-admin");
       }
     } catch (error) {
@@ -114,7 +158,7 @@ function EventEdit() {
         <div>
           <div>
             <h1 className="font-bold" style={{ fontSize: "3em" }}>
-              Crea tu Propio Evento
+              {Id ? "Actualizar Evento" : "Crea tu Propio Evento"}
             </h1>
             <div className="w-24 h-3 bg-yellow-400 rounded-sm"></div>
           </div>

@@ -4,7 +4,7 @@ import {
   CircleUserRound,
   PersonStanding,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,48 +13,62 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { TableVirtuoso } from "react-virtuoso";
-import { forwardRef } from "react";
+import { forwardRef, useContext, useEffect, useState } from "react";
+import { LoadingContext } from "../../context/LoadingContext";
+import RequestHelper from "../../utils/requestHelper";
+import ToastHelper from "../../utils/toastHelper";
 
 function EventAdmin() {
-  const sample = [
-    ["Carlos Arias", "Jarabacoa", "20/90", "24/08/2024"],
-    ["Maria Maria", "Constanza", "20/100", "24/08/2024"],
-    ["Juan Juan", "La Vega", "10/10", "24/08/2024"],
-    ["Pedro Pedro", "Santiago", "5/8", "24/08/2024"],
-    ["Jose Jose", "Samana", "100/105", "24/08/2024"],
-  ];
+  const { setIsLoading } = useContext(LoadingContext);
+  const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
-  function createData(id, dessert, calories, fat, carbs) {
-    return { id, dessert, calories, fat, carbs };
-  }
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  const loadEvents = async () => {
+    try {
+      setIsLoading(true);
+      const result = await RequestHelper.get("events/user");
+      const events = result?.map((e) => ({
+        id: e.id,
+        name: e.title,
+        location: e.location,
+        amount: `${0}/${e.attendees}`,
+        people: e.attendees,
+        date: new Date(e.date).toLocaleDateString(),
+      }));
+      setEvents(events);
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const columns = [
     {
       width: 200,
       label: "Nombre del Evento",
-      dataKey: "dessert",
+      dataKey: "name",
     },
     {
       width: 150,
       label: "Localidad",
-      dataKey: "calories",
+      dataKey: "location",
     },
     {
       width: 150,
       label: "Cantidad/Limite",
-      dataKey: "fat",
+      dataKey: "amount",
     },
     {
       width: 100,
       label: "Fecha",
-      dataKey: "carbs",
+      dataKey: "date",
     },
   ];
-
-  const rows = Array.from({ length: 200 }, (_, index) => {
-    const randomSelection = sample[Math.floor(Math.random() * sample.length)];
-    return createData(index, ...randomSelection);
-  });
 
   const VirtuosoTableComponents = {
     Scroller: forwardRef((props, ref) => (
@@ -91,6 +105,10 @@ function EventAdmin() {
     );
   }
 
+  const handleClick = (eventId) => {
+    navigate(`/event-edit/${eventId}`);
+  };
+
   function rowContent(_index, row) {
     return (
       <>
@@ -98,6 +116,8 @@ function EventAdmin() {
           <TableCell
             key={column.dataKey}
             align={column.numeric || false ? "right" : "left"}
+            onClick={() => handleClick(row.id)}
+            className="hover:cursor-pointer"
           >
             {row[column.dataKey]}
           </TableCell>
@@ -136,7 +156,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Total de Eventos</p>
-              <p>7</p>
+              <p>{events.length}</p>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <PersonStanding
@@ -149,7 +169,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Total de Personas</p>
-              <p>80</p>
+              <p>{events.reduce((a, e) => a + e.people, 0)}</p>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <ChevronsRight
@@ -162,13 +182,13 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Eventos Proximos</p>
-              <p>4</p>
+              <p>{events.length}</p>
             </div>
           </div>
         </div>
         <Paper className="w-10/12 h-3/5 mt-10">
           <TableVirtuoso
-            data={rows}
+            data={events}
             components={VirtuosoTableComponents}
             fixedHeaderContent={fixedHeaderContent}
             itemContent={rowContent}

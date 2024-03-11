@@ -10,6 +10,8 @@ import KeyRoundedIcon from "@mui/icons-material/KeyRounded";
 import { LoadingContext } from "../../context/LoadingContext";
 import ToastHelper from "../../utils/toastHelper";
 import RequestHelper from "../../utils/requestHelper";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 function Register() {
   const navigate = useNavigate();
@@ -21,7 +23,9 @@ function Register() {
     userName: "",
     lastName: "",
     name: "",
+    role: "Usuario",
   });
+  const roles = ["Usuario", "Organizador"];
 
   const sx = {
     background: "rgb(248, 250, 229, 0.8)",
@@ -64,6 +68,11 @@ function Register() {
       return false;
     }
 
+    if (!newUser.role) {
+      ToastHelper.error("El Rol es requerido", "top-center");
+      return false;
+    }
+
     if (newUser.password !== newUser.confirmPassword) {
       ToastHelper.error("Las Contraseñas no son iguales.", "top-center");
       return false;
@@ -82,6 +91,7 @@ function Register() {
           username: newUser.userName,
           email: newUser.email,
           password: newUser.password,
+          tipo_usuario: newUser.role.toLowerCase(),
         });
         ToastHelper.success(result.msg);
         cleanUser();
@@ -165,6 +175,20 @@ function Register() {
         icon={<KeyRoundedIcon />}
         sx={sx}
       />
+      <Select
+        value={newUser.role}
+        onChange={(e) =>
+          setNewUser((prev) => ({ ...prev, role: e.target.value }))
+        }
+        className="rounded-lg w-72"
+        sx={sx}
+      >
+        {roles.map((role) => (
+          <MenuItem key={role} value={role}>
+            {role}
+          </MenuItem>
+        ))}
+      </Select>
       <ButtonForm
         onClick={registerUser}
         label={"Registrarse"}
