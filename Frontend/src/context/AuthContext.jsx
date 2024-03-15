@@ -1,12 +1,14 @@
 import { useState, createContext, useEffect, useContext } from "react";
 import { USER_TOKEN } from "../utils/constans";
 import { LoadingContext } from "./LoadingContext";
+import RequestHelper from "../utils/requestHelper";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null);
   const { setIsLoading: loading } = useContext(LoadingContext);
 
   const logout = () => {
@@ -19,18 +21,31 @@ export function AuthProvider({ children }) {
   };
 
   const isLoggedIn = async () => {
+    const startTime = Date.now();
     try {
-      setIsLoading(true);
       const userToken = localStorage.getItem(USER_TOKEN);
-      if (userToken) {
-        setUserToken(userToken);
+      if (userToken && userToken !== "null") {
+        setIsLoading(true);
+        const result = await RequestHelper.get("profile");
+        if (result) {
+          setUser(result);
+          setUserToken(userToken);
+        } else {
+          setUserToken(null);
+          localStorage.setItem(USER_TOKEN, null);
+        }
       }
     } catch (error) {
       console.error(`Function is Logged In error: ${error}`);
     } finally {
-      setTimeout(() => {
+      const remainingTime = 1000 - (Date.now() - startTime);
+      if (remainingTime > 0) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, remainingTime);
+      } else {
         setIsLoading(false);
-      }, 1000);
+      }
     }
   };
 
@@ -45,6 +60,8 @@ export function AuthProvider({ children }) {
         userToken,
         setUserToken,
         isLoading,
+        user,
+        setUser,
       }}
     >
       {children}
