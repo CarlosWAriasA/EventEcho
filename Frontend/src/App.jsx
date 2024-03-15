@@ -1,5 +1,5 @@
 import { RouterProvider } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext.jsx";
 import { router as authRouter } from "./routes/AuthRoutes.jsx";
 import { router as appRouter } from "./routes/AppRoutes.jsx";
@@ -10,24 +10,9 @@ import Loading from "./components/Loading/Loading.jsx";
 import "leaflet/dist/leaflet.css";
 
 function App() {
-  const { userToken } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
+  const { userToken, isLoading } = useContext(AuthContext);
 
-  // este useEffect es para que cuando el usuario refresque la pagina
-  // y este logueado no se vea el login por un milisegundo
-  useEffect(() => {
-    const handleload = () => {
-      setLoading(false);
-    };
-
-    window.addEventListener("load", handleload);
-
-    return () => {
-      window.removeEventListener("load", handleload);
-    };
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
