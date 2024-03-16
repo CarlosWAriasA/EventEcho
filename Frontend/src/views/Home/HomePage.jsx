@@ -1,15 +1,37 @@
 import { LayoutGrid } from "lucide-react";
 import Card from "../../components/Card/Card";
+import { LoadingContext } from "../../context/LoadingContext";
+import { useContext, useState, useEffect } from "react";
+import RequestHelper from "../../utils/requestHelper";
+import ToastHelper from "../../utils/toastHelper";
 
 export function HomePage() {
-  const cardData = [
-    { id: 1, title: "Card 1", content: "Content for card 1" },
-    { id: 2, title: "Card 2", content: "Content for card 2" },
-    { id: 3, title: "Card 3", content: "Content for card 3" },
-    { id: 4, title: "Card 4", content: "Content for card 4" },
-    { id: 5, title: "Card 5", content: "Content for card 5" },
-    { id: 6, title: "Card 6", content: "Content for card 6" },
-  ];
+  const { setIsLoading } = useContext(LoadingContext);
+  const [events, setEvents] = useState([]);
+
+  const loadEvents = async () => {
+    try {
+      setIsLoading(true);
+      const result = await RequestHelper.get("events");
+      const events = result?.map((e) => ({
+        id: e.id,
+        name: e.title,
+        location: e.location,
+        amount: `${0}/${e.attendees}`,
+        people: e.attendees,
+        date: new Date(e.date).toLocaleDateString(),
+      }));
+      setEvents(events);
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
 
   return (
     <div className="bg-white h-full overflow-y-auto text-black">
@@ -42,8 +64,13 @@ export function HomePage() {
           </div>
         </div>
         <div className="mt-10 mb-36 grid grid-cols-3 gap-4 mr-10 ml-10">
-          {cardData.map((card) => (
-            <Card key={card.id} title={card.title} content={card.content} />
+          {events.map((card) => (
+            <Card
+              key={card.id}
+              id={card.id}
+              title={card.name}
+              content={card.location}
+            />
           ))}
         </div>
       </div>

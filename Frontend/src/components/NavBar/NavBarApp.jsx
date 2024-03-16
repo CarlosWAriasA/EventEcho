@@ -16,7 +16,7 @@ const NavbarApp = () => {
   const { logout, user } = useContext(AuthContext);
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
-  const isEventDetail = location.pathname === "/event-detail";
+  const isEventDetail = location.pathname.includes("/event-detail");
 
   const handleIconClick = (event) => {
     event.preventDefault();

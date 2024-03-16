@@ -19,14 +19,10 @@ function AccountSettings() {
 
   const loadUser = async () => {
     try {
-      setIsLoading(true);
-
       const result = await RequestHelper.get("profile");
       setUser((prev) => ({ ...prev, name: result.name, email: result.email }));
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
-    } finally {
-      setIsLoading(false);
     }
   };
 

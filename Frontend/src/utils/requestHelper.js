@@ -61,14 +61,16 @@ const RequestHelper = {
     }
   },
 
-  delete: async function (url) {
+  delete: async function (url, data) {
     try {
       const token = localStorage.getItem(USER_TOKEN);
       const response = await fetch(URL_BASE + url, {
         method: "DELETE",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(data),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

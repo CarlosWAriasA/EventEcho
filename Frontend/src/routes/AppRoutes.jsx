@@ -5,13 +5,13 @@ import EventDetail from "../views/Events/EventDetail";
 import AccountSettings from "../views/Account/AccountSettings";
 import EventEdit from "../views/Events/EventEdit";
 import EventAdmin from "../views/Events/EventAdmin";
-import EventList from "../views/Events/EventList"
+import EventList from "../views/Events/EventList";
 
 export const router = createBrowserRouter([
   {
     element: <LayoutApp />,
     children: [
-      { path: "/event-detail", element: <EventDetail /> },
+      { path: "/event-detail/:Id", element: <EventDetail /> },
       { path: "/account-settings", element: <AccountSettings /> },
       { path: "/event-edit/:Id?", element: <EventEdit /> },
       { path: "/event-admin", element: <EventAdmin /> },

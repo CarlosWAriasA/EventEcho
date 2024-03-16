@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
 
-const Card = ({ title, content, imageUrl }) => {
+const Card = ({ id, title, content, imageUrl }) => {
   // Default image URL
   const defaultImageUrl = "/images/default-image.jpg";
 
   return (
-    <NavLink to={"event-detail"}>
+    <NavLink to={`event-detail/${id}`}>
       <div className="m-2 p-4 bg-white rounded-lg shadow-md hover:cursor-pointer">
         <img
           src={imageUrl || defaultImageUrl}
