@@ -1,10 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../connection/connection");
-const UserEvent = require("./UserEvent");
-const Usuario = require("./usuarioModel");
 
 const Event = sequelize.define(
-  "Event",
+  "Evento",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -52,10 +50,5 @@ const Event = sequelize.define(
     timestamps: false, // Opcional: Desactiva el registro automático de campos createdAt y updatedAt
   }
 );
-
-// Define la asociación muchos a muchos con el modelo de Usuario
-Event.associate = (models) => {
-  Event.belongsTo(models.Usuario, { foreignKey: "userId" });
-};
 
 module.exports = Event;

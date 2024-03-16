@@ -4,11 +4,6 @@ const eventController = require("../controllers/eventController");
 const userEventController = require("../controllers/userEventController");
 const { authenticateToken } = require("../middleware/authMiddleware");
 
-// Define la ruta GET para obtener todos los eventos
-router.get("/", authenticateToken, eventController.getAllEvents);
-router.get("/user", authenticateToken, eventController.getAllEventsByUserId);
-router.get("/:eventId", authenticateToken, eventController.getEventById);
-
 // Rutas para registrar usuarios a eventos y eliminarlos
 router.get(
   "/events-user",
@@ -32,5 +27,10 @@ router.delete(
 router.post("/", authenticateToken, eventController.createEvent);
 router.put("/:eventId", authenticateToken, eventController.updateEvent);
 router.delete("/:eventId", authenticateToken, eventController.deleteEvent);
+
+// Define la ruta GET para obtener todos los eventos
+router.get("/", authenticateToken, eventController.getAllEvents);
+router.get("/user", authenticateToken, eventController.getAllEventsByUserId);
+router.get("/:eventId", authenticateToken, eventController.getEventById);
 
 module.exports = router;

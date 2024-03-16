@@ -1,27 +1,45 @@
 const UserEvent = require("../models/UserEvent");
 const Event = require("../models/eventModel");
+const User = require("../models/usuarioModel");
 
 // Controller to get all events for a user
 const getUserEvents = async (req, res) => {
-  // por hacer
-};
-
-// Controller to add a user event registration
-const addUserEvent = async (req, res) => {
-  const { eventId, userId } = req.body;
+  const userId = req.user.userId;
 
   try {
-    // Check if the user event registration already exists
+    const userEvents = await UserEvent.findAll({
+      where: { userId },
+      include: [{ model: Event }, { model: User }],
+    });
+
+    return res.status(200).json(userEvents);
+  } catch (error) {
+    console.error("Error getting user events:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const addUserEvent = async (req, res) => {
+  const userId = req.user.userId;
+  const { eventId } = req.body;
+
+  try {
+    const eventExist = await Event.findOne({ where: { id: eventId } });
+
+    if (!eventExist) {
+      return res.status(200).json({ ok: false, msg: "Este Evento no existe" });
+    }
+
     const existingUserEvent = await UserEvent.findOne({
       where: { eventId, userId },
     });
     if (existingUserEvent) {
-      return res
-        .status(400)
-        .json({ error: "User event registration already exists" });
+      return res.status(200).json({
+        ok: false,
+        msg: "Este Usuario ya esta inscrito en este evento",
+      });
     }
 
-    // Create a new user event registration
     const newUserEvent = await UserEvent.create({ eventId, userId });
     return res.status(201).json(newUserEvent);
   } catch (error) {
@@ -30,26 +48,25 @@ const addUserEvent = async (req, res) => {
   }
 };
 
-// Controller to delete a user event registration
 const deleteUserEvent = async (req, res) => {
-  const { eventId, userId } = req.body;
+  const userId = req.user.userId;
+  const { eventId } = req.body;
 
   try {
-    // Find the user event registration to delete
     const userEventToDelete = await UserEvent.findOne({
       where: { eventId, userId },
     });
     if (!userEventToDelete) {
-      return res
-        .status(404)
-        .json({ error: "User event registration not found" });
+      return res.status(200).json({
+        ok: false,
+        msg: "Este usuario no esta inscrito en este evento",
+      });
     }
 
-    // Delete the user event registration
     await userEventToDelete.destroy();
     return res
       .status(200)
-      .json({ message: "User event registration deleted successfully" });
+      .json({ message: "Ya no esta registrado en este evento" });
   } catch (error) {
     console.error("Error deleting user event:", error);
     return res.status(500).json({ error: "Internal server error" });

@@ -1,7 +1,5 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../connection/connection");
-const Event = require("./eventModel");
-const Usuario = require("./usuarioModel");
 
 const UserEvent = sequelize.define(
   "UserEvent",
@@ -25,10 +23,5 @@ const UserEvent = sequelize.define(
     timestamps: false,
   }
 );
-
-UserEvent.associate = (models) => {
-  UserEvent.belongsTo(models.Event, { foreignKey: "eventId" });
-  UserEvent.belongsTo(models.Usuario, { foreignKey: "userId" });
-};
 
 module.exports = UserEvent;
