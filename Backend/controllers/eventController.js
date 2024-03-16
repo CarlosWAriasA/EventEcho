@@ -83,21 +83,25 @@ const createEvent = async (req, res) => {
       latitud,
     } = req.body;
 
-    // Extraer el ID del usuario del token JWT
-    const userId = req.user.userId;
+      // Extraer el ID del usuario del token JWT
+      const userId = req.user.userId;
 
-    // Crear el evento en la base de datos
-    const event = await Event.create({
-      title,
-      description,
-      date,
-      image,
-      attendees,
-      location,
-      longitud,
-      latitud,
-      userId,
-    });
+      // Si se subió una imagen, obtener la ruta/nombre del archivo
+      const imageUrls = req.files ? req.files.map(file => file.path) : [];
+      console.log(req.files);
+
+      // Crear el evento en la base de datos
+      const event = await Event.create({
+          title,
+          description,
+          date,
+          image: imageUrls, // Guardar la ruta de la imagenes en la base de datos,
+          attendees,
+          location,
+          longitud,
+          latitud,
+          userId
+      });
 
     res.status(201).json({ message: "Evento creado exitosamente", event });
   } catch (error) {
