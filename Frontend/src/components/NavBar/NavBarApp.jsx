@@ -13,11 +13,11 @@ import { Tooltip } from "react-tooltip";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
   const isEventDetail = location.pathname === "/event-detail";
-
+  console.log(user);
   const handleIconClick = (event) => {
     event.preventDefault();
     setShowOptions(!showOptions);
@@ -58,19 +58,21 @@ const NavbarApp = () => {
           </NavLink>
         </li>
         <li className="flex gap-6 content-center pt-3">
-          <NavLink to={"/event-admin"}>
-            <div
-              id="events"
-              data-tooltip-id="tooltip"
-              data-tooltip-content="Administrar Eventos"
-            >
-              <ListChecks
-                className="hover:cursor-pointer select-none"
-                color="black"
-                size={25}
-              />
-            </div>
-          </NavLink>
+          {user?.tipo_usuario === "organizador" && (
+            <NavLink to={"/event-admin"}>
+              <div
+                id="events"
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Administrar Eventos"
+              >
+                <ListChecks
+                  className="hover:cursor-pointer select-none"
+                  color="black"
+                  size={25}
+                />
+              </div>
+            </NavLink>
+          )}
           <NavLink to={"/event-list"}>
             <div
               id="events"

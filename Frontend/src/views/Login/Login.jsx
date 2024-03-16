@@ -11,7 +11,7 @@ import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
 
 function Login() {
-  const { setUserToken } = useContext(AuthContext);
+  const { setUserToken, setUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setIsLoading } = useContext(LoadingContext);
@@ -44,6 +44,8 @@ function Login() {
           password: password,
         });
         localStorage.setItem(USER_TOKEN, result.token);
+        const user = await RequestHelper.get("profile");
+        setUser(user);
         setUserToken(result.token);
         ToastHelper.success("Usuario logueado exitosamente");
         cleanUser();
