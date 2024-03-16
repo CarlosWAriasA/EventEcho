@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./router/login");
@@ -30,6 +31,7 @@ app.use("/api/profile/", profileRouter);
 
 app.use("/api/", userEventsRouter);
 
+
 //Ruta de los usuarios
 app.use('/api/usuarios/', userRoutes);
 
@@ -43,13 +45,15 @@ app.use((req, res, next) => {
 });
 
 
+
+
 const PORT = process.env.PORT || 5000;
 
 defineAssociations();
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ok ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
   });
 });
 
