@@ -21,7 +21,8 @@ const Event = sequelize.define(
       allowNull: false,
     },
     image: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.JSON,
+      allowNull: false,
     },
     attendees: {
       type: DataTypes.INTEGER,

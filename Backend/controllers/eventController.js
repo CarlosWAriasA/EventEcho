@@ -93,14 +93,15 @@ const createEvent = async (req, res) => {
       const userId = req.user.userId;
 
       // Si se subió una imagen, obtener la ruta/nombre del archivo
-      const imageUrl = req.file ? req.file.path : null;
+      const imageUrls = req.files ? req.files.map(file => file.path) : [];
+      console.log(req.files);
 
       // Crear el evento en la base de datos
       const event = await Event.create({
           title,
           description,
           date,
-          image: imageUrl, // Guardar la ruta de la imagen en la base de datos,
+          image: imageUrls, // Guardar la ruta de la imagenes en la base de datos,
           attendees,
           location,
           longitud,
