@@ -6,6 +6,12 @@ const { authenticateToken } = require("../middleware/authMiddleware");
 
 // Rutas para registrar usuarios a eventos y eliminarlos
 router.get(
+  "/events-user/:eventId",
+  authenticateToken,
+  userEventController.getUserIsRegister
+);
+
+router.get(
   "/events-user",
   authenticateToken,
   userEventController.getUserEvents

@@ -2,7 +2,31 @@ const UserEvent = require("../models/UserEvent");
 const Event = require("../models/eventModel");
 const User = require("../models/usuarioModel");
 
-// Controller to get all events for a user
+const getUserIsRegister = async (req, res) => {
+  const userId = req.user.userId;
+  const { eventId } = req.params;
+  try {
+    const eventExist = await Event.findOne({ where: { id: eventId } });
+
+    if (!eventExist) {
+      return res.status(200).json({ ok: false, msg: "Este Evento no existe" });
+    }
+
+    const userEvents = await UserEvent.findOne({
+      where: { userId, eventId },
+    });
+
+    if (userEvents) {
+      return res.status(200).json({ ok: true, isRegister: true });
+    } else {
+      return res.status(200).json({ ok: true, isRegister: false });
+    }
+  } catch (error) {
+    console.error("Error getting user events:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const getUserEvents = async (req, res) => {
   const userId = req.user.userId;
 
@@ -51,8 +75,14 @@ const addUserEvent = async (req, res) => {
 const deleteUserEvent = async (req, res) => {
   const userId = req.user.userId;
   const { eventId } = req.body;
-
+  console.log(eventId);
   try {
+    const eventExist = await Event.findOne({ where: { id: eventId } });
+
+    if (!eventExist) {
+      return res.status(200).json({ ok: false, msg: "Este Evento no existe" });
+    }
+
     const userEventToDelete = await UserEvent.findOne({
       where: { eventId, userId },
     });
@@ -73,4 +103,9 @@ const deleteUserEvent = async (req, res) => {
   }
 };
 
-module.exports = { addUserEvent, deleteUserEvent, getUserEvents };
+module.exports = {
+  addUserEvent,
+  deleteUserEvent,
+  getUserEvents,
+  getUserIsRegister,
+};
