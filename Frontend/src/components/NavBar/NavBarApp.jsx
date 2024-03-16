@@ -17,7 +17,7 @@ const NavbarApp = () => {
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
   const isEventDetail = location.pathname === "/event-detail";
-  console.log(user);
+
   const handleIconClick = (event) => {
     event.preventDefault();
     setShowOptions(!showOptions);

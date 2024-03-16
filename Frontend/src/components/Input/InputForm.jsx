@@ -34,15 +34,9 @@ export default function TextInput({
         },
       }}
       InputProps={
-        icon ? (
-          {
-            endAdornment: (
-              <InputAdornment position="end">{icon}</InputAdornment>
-            ),
-          }
-        ) : (
-          <></>
-        )
+        icon && {
+          endAdornment: <InputAdornment position="end">{icon}</InputAdornment>,
+        }
       }
       style={style}
       sx={sx}

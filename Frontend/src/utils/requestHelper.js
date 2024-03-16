@@ -9,7 +9,6 @@ const RequestHelper = {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -58,6 +57,25 @@ const RequestHelper = {
       return await response.json();
     } catch (error) {
       console.error("Error making PUT request:", error);
+      throw error;
+    }
+  },
+
+  delete: async function (url) {
+    try {
+      const token = localStorage.getItem(USER_TOKEN);
+      const response = await fetch(URL_BASE + url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error making DELETE request:", error);
       throw error;
     }
   },
