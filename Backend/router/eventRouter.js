@@ -30,7 +30,7 @@ router.delete(
 );
 
 // Rutas para Organizadores (Eventos)
-router.post("/", authenticateToken, eventController.createEvent);
+router.post("/", authenticateToken,  eventController.upload.single('image'), eventController.createEvent);
 router.put("/:eventId", authenticateToken, eventController.updateEvent);
 router.delete("/:eventId", authenticateToken, eventController.deleteEvent);
 

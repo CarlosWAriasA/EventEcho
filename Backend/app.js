@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./router/login");
@@ -29,13 +30,16 @@ app.use("/api/profile/", profileRouter);
 
 app.use("/api/", userEventsRouter);
 
+// para servir imagenes estaticas
+app.use('/api/uploads/', express.static(path.join(__dirname, 'uploads')));
+
 const PORT = process.env.PORT || 5000;
 
 defineAssociations();
 
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ok ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
   });
 });
 

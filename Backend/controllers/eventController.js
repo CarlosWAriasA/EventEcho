@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const multer = require('multer');
+const path = require('path');
 const Event = require("../models/eventModel");
 const Usuario = require("../models/usuarioModel");
 const UserEvent = require("../models/UserEvent");
@@ -59,50 +61,57 @@ const getAllEventsByUserId = async (req, res) => {
   }
 };
 
+// Configurar Multer para guardar archivos en una carpeta específica
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Guardar archivos en la carpeta "uploads"
+  },
+  filename: function (req, file, cb) {
+      cb(null, file.originalname); // Asignar el nombre original del archivo
+  }
+});
+
+// Crear el middleware de Multer
+const upload = multer({ storage: storage });
+
 // Crear un nuevo evento
 const createEvent = async (req, res) => {
+
   // Esperar a que se resuelva la promesa para obtener el tipo de usuario
   const tipoUsuario = await req.user.tipo_usuario;
 
+
   // Verificar si el usuario es un organizador
-  if (tipoUsuario !== "organizador") {
-    return res
-      .status(403)
-      .json({ message: "No tienes permiso para crear eventos" });
+  if (tipoUsuario !== 'organizador') {
+      return res.status(403).json({ message: 'No tienes permiso para crear eventos' });
   }
 
   try {
-    const {
-      title,
-      description,
-      date,
-      image,
-      attendees,
-      location,
-      longitud,
-      latitud,
-    } = req.body;
+      const { title, description, date, attendees, location, longitud, latitud } = req.body;
 
-    // Extraer el ID del usuario del token JWT
-    const userId = req.user.userId;
+      // Extraer el ID del usuario del token JWT
+      const userId = req.user.userId;
 
-    // Crear el evento en la base de datos
-    const event = await Event.create({
-      title,
-      description,
-      date,
-      image,
-      attendees,
-      location,
-      longitud,
-      latitud,
-      userId,
-    });
+      // Si se subió una imagen, obtener la ruta/nombre del archivo
+      const imageUrl = req.file ? req.file.path : null;
 
-    res.status(201).json({ message: "Evento creado exitosamente", event });
+      // Crear el evento en la base de datos
+      const event = await Event.create({
+          title,
+          description,
+          date,
+          image: imageUrl, // Guardar la ruta de la imagen en la base de datos,
+          attendees,
+          location,
+          longitud,
+          latitud,
+          userId
+      });
+
+      res.status(201).json({ message: 'Evento creado exitosamente', event });
   } catch (error) {
-    console.error("Error al crear un nuevo evento:", error);
-    res.status(500).json({ message: "Error del servidor" });
+      console.error('Error al crear un nuevo evento:', error);
+      res.status(500).json({ message: 'Error del servidor' });
   }
 };
 
@@ -195,6 +204,7 @@ module.exports = {
   getEventById,
   getAllEvents,
   getAllEventsByUserId,
+  upload,
   createEvent,
   updateEvent,
   deleteEvent,
