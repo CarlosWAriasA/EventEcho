@@ -32,15 +32,6 @@ app.use("/api/", userEventsRouter);
 //Ruta de los usuarios
 app.use('/api/', userRoutes);
 
-
-//Solo para Probar que las Rutas no estan Mal
-app.use((req, res, next) => {
-  res.status(404).json({
-      ok: false,
-      msg: 'Ruta no encontrada'
-  });
-});
-
 // para servir imagenes estaticas
 app.use('/api/uploads/', express.static(path.join(__dirname, 'uploads')));
 
