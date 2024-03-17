@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 const { Op } = require('sequelize');
 const moment = require('moment');
 const multer = require('multer');
@@ -111,8 +113,11 @@ const storage = multer.diskStorage({
       cb(null, 'uploads/'); // Guardar archivos en la carpeta "uploads"
   },
   filename: function (req, file, cb) {
-      cb(null, file.originalname); // Asignar el nombre original del archivo
-  }
+    const uniqueFilename = uuidv4(); // Generar un UUID único
+    const fileExtension = path.extname(file.originalname); // Obtener la extensión del archivo original
+    const finalFilename = `${uniqueFilename}${fileExtension}`; // Combinar el UUID único con la extensión
+    cb(null, finalFilename); // Asignar el nombre único del archivo
+}
 });
 
 // Crear el middleware de Multer
@@ -177,16 +182,9 @@ const updateEvent = async (req, res) => {
 
   try {
     const eventId = req.params.eventId;
-    const {
-      title,
-      description,
-      date,
-      image,
-      attendees,
-      location,
-      longitud,
-      latitud,
-    } = req.body;
+    const { title, description, date, attendees, location, longitud, latitud } = req.body;
+
+    console.log(req.files);
 
     // Buscar el evento en la base de datos
     const event = await Event.findByPk(eventId);
@@ -198,11 +196,21 @@ const updateEvent = async (req, res) => {
     event.title = title;
     event.description = description;
     event.date = date;
-    event.image = image;
     event.attendees = attendees;
     event.location = location;
     event.longitud = longitud;
     event.latitud = latitud;
+
+    // Actualizar las imágenes si se proporcionan nuevas imágenes
+    if (req.files && req.files.length > 0) {
+      // Eliminar las imágenes antiguas si existen
+      if (event.image) {
+        fs.unlinkSync(event.image);
+      }
+
+      // Guardar las rutas de las nuevas imágenes
+      event.image = req.files.map(file => file.path);
+    }
 
     // Guardar los cambios en la base de datos
     await event.save();
@@ -235,6 +243,17 @@ const deleteEvent = async (req, res) => {
       return res.status(404).json({ message: "Evento no encontrado" });
     }
 
+    // Eliminar las imágenes asociadas al evento del servidor
+    if (event.image) {
+      if (Array.isArray(event.image)) {
+        event.image.forEach(imagePath => {
+          fs.unlinkSync(imagePath);
+        });
+      } else {
+        fs.unlinkSync(event.image);
+      }
+    }
+
     // Eliminar el evento de la base de datos
     await UserEvent.destroy({ where: { eventId: eventId } });
     await event.destroy();
@@ -245,6 +264,9 @@ const deleteEvent = async (req, res) => {
     res.status(500).json({ message: "Error del servidor" });
   }
 };
+
+
+
 module.exports = {
   getEventById,
   getAllEvents,
