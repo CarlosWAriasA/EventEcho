@@ -1,6 +1,7 @@
 import TextInput from "../../components/Input/InputForm";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import BoyIcon from "@mui/icons-material/Boy";
+import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -21,6 +22,7 @@ import dayjs from "dayjs";
 import { Trash2 } from "lucide-react";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import blobsToFiles from "../../utils/blobToFile";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -36,6 +38,8 @@ function EventEdit() {
   });
   const [clickedPosition, setClickedPosition] = useState(null);
   const [modalDelete, setModalDelete] = useState(false);
+  const [modalImageUpload, setModalImageUpload] = useState(false);
+  const [images, setImages] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +57,9 @@ function EventEdit() {
     try {
       setIsLoading(true);
       const result = await RequestHelper.get(`events/${id}`);
+      const imageUrls = JSON.parse(result.image).map((image) => `${image}`);
+      const images = [];
+
       setEvent((prev) => ({
         ...prev,
         name: result.title,
@@ -60,6 +67,18 @@ function EventEdit() {
         description: result.description,
         date: dayjs(result.date),
       }));
+
+      if (imageUrls.length > 0) {
+        imageUrls.forEach(async (i) => {
+          const blob = await RequestHelper.get(i, "image");
+          images.push(
+            new File([blob], `image_${images.length}.jpg`, {
+              type: "image/jpeg",
+            })
+          );
+        });
+        setImages(images);
+      }
 
       setClickedPosition({
         lat: parseFloat(result.latitud ?? 0),
@@ -92,7 +111,7 @@ function EventEdit() {
     }));
   }
 
-  const validateUser = () => {
+  const validateEvent = () => {
     if (!event.name) {
       ToastHelper.error("El Nombre del Evento es requerido.");
       return false;
@@ -105,6 +124,11 @@ function EventEdit() {
 
     if (!event.date) {
       ToastHelper.error("La Fecha es requerida.");
+      return false;
+    }
+
+    if (images.length < 1) {
+      ToastHelper.error("Al menos una imagen es requerida");
       return false;
     }
 
@@ -132,29 +156,25 @@ function EventEdit() {
   const createEvent = async () => {
     try {
       setIsLoading(true);
-      if (validateUser()) {
+      if (validateEvent()) {
+        const formData = new FormData();
+
+        formData.append("title", event.name);
+        formData.append("description", event.description);
+        formData.append("date", event.date);
+        formData.append("attendees", event.amountPeople);
+        formData.append("location", event.location);
+        formData.append("longitud", clickedPosition.lng);
+        formData.append("latitud", clickedPosition.lat);
+        console.log(images);
+        for (const file of images) {
+          formData.append("images", file);
+        }
+
         if (Id > 0) {
-          await RequestHelper.put(`events/${Id}`, {
-            title: event.name,
-            description: event.description,
-            date: event.date,
-            image: "",
-            attendees: event.amountPeople,
-            location: event.location,
-            longitud: clickedPosition.lng,
-            latitud: clickedPosition.lat,
-          });
+          await RequestHelper.put(`events/${Id}`, formData, true);
         } else {
-          await RequestHelper.post("events", {
-            title: event.name,
-            description: event.description,
-            date: event.date,
-            image: "",
-            attendees: event.amountPeople,
-            location: event.location,
-            longitud: clickedPosition.lng,
-            latitud: clickedPosition.lat,
-          });
+          await RequestHelper.post("events", formData, true);
         }
         ToastHelper.success("Guardado exitosamente");
         navigate("/event-admin");
@@ -177,9 +197,82 @@ function EventEdit() {
     return null;
   }
 
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const files = Array.from(event.dataTransfer.files);
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+
+    const remainingSlots = 4 - images.length;
+    const toProcess = imageFiles.slice(0, remainingSlots);
+
+    setImages((prevImages) => [...prevImages, ...toProcess]);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleFileSelect = (event) => {
+    const files = Array.from(event.target.files);
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+
+    const remainingSlots = 4 - images.length;
+    const toProcess = imageFiles.slice(0, remainingSlots);
+
+    // Guardar las imágenes como objetos File en el estado
+    setImages((prevImages) => [...prevImages, ...toProcess]);
+  };
+
+  const closeModal = () => {
+    setModalImageUpload(false);
+  };
+
+  const handleDeleteImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
   return (
     <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
       <div className="flex gap-52">
+        {modalImageUpload && (
+          <Modal show={modalImageUpload} size="md" onClose={closeModal} popup>
+            <Modal.Header>Cargar Imágenes</Modal.Header>
+            <Modal.Body>
+              <label
+                htmlFor="fileInput"
+                className="custom-file-upload"
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+              >
+                Seleccionar o Soltar Imágenes
+                <input
+                  className="p-8 border-4 border-dashed border-gray-500"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  multiple
+                  id="fileInput"
+                />
+              </label>
+              <div className="ml-7">
+                {images.map((imageUrl, index) => (
+                  <div key={index} className="image-container">
+                    <img
+                      src={URL.createObjectURL(imageUrl)}
+                      alt={`Imagen ${index + 1}`}
+                    />
+                    <button
+                      onClick={() => handleDeleteImage(index)}
+                      className="delete-button"
+                    >
+                      X
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Modal.Body>
+          </Modal>
+        )}
         {modalDelete && (
           <Modal
             show={modalDelete}
@@ -242,7 +335,7 @@ function EventEdit() {
                 />
               </div>
             </div>
-            <div className="mt-5">
+            <div className="flex gap-8 mt-5">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   className="w-72"
@@ -256,6 +349,13 @@ function EventEdit() {
                   }
                 />
               </LocalizationProvider>
+              <div
+                className="rounded-lg w-72 border border-gray-300 p-2 flex items-center justify-between cursor-pointer"
+                onClick={() => setModalImageUpload(true)}
+              >
+                <span>Imagenes ({images?.length})</span>
+                <KeyboardDoubleArrowUpIcon />
+              </div>
             </div>
             <div className="mt-5">
               <TextInput

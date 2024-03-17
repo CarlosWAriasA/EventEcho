@@ -1,0 +1,14 @@
+export default function blobsToFiles(blobs) {
+  try {
+    const files = blobs.map((blob, index) => {
+      const file = new File([blob], `image_${index}.jpg`, {
+        type: "image/jpeg",
+      });
+      return file;
+    });
+    return files;
+  } catch (error) {
+    console.error("Error al convertir blobs en archivos:", error);
+    throw error;
+  }
+}
