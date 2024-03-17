@@ -6,6 +6,7 @@ import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import Button from "../../components/Button/Button";
 import { AuthContext } from "../../context/AuthContext";
+import { Carousel } from "flowbite-react";
 
 function EventDetail() {
   const { Id } = useParams();
@@ -21,6 +22,7 @@ function EventDetail() {
   });
   const { setIsLoading } = useContext(LoadingContext);
   const [isRegister, setIsRegister] = useState(false);
+  const [images, setImages] = useState([]);
 
   const loadEvent = async (id) => {
     const startTime = Date.now();
@@ -28,6 +30,11 @@ function EventDetail() {
       setIsLoading(true);
       const result = await RequestHelper.get(`events/${id}`);
       const isRegister = await RequestHelper.get(`events/events-user/${id}`);
+      const imageUrls = result.image
+        ? JSON.parse(result.image).map((image) => `${image}`)
+        : [];
+      const images = [];
+
       if (isRegister.isRegister) {
         setIsRegister(true);
       } else {
@@ -43,6 +50,17 @@ function EventDetail() {
         location: result.location,
         userId: result.userId,
       }));
+      if (imageUrls.length > 0) {
+        for (const imageUrl of imageUrls) {
+          const blob = await RequestHelper.get(imageUrl, "image");
+          images.push(
+            new File([blob], `image_${images.length}.jpg`, {
+              type: "image/jpeg",
+            })
+          );
+        }
+        setImages(images);
+      }
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {
@@ -84,15 +102,34 @@ function EventDetail() {
   }, [Id]);
 
   const defaultImageUrl = "/images/default-image.jpg";
+
   return (
     <main className="bg-white h-full pl-16 pt-16 text-black overflow-y-auto">
       <div className="flex gap-6">
-        <img
-          src={defaultImageUrl}
-          alt="Card"
-          className="object-cover mb-4"
-          style={{ width: "50%", maxHeight: "22em", height: "25em" }}
-        />
+        {images.length > 0 ? (
+          <div
+            className="h-56 sm:h-64 xl:h-80 2xl:h-96"
+            style={{ width: "50%" }}
+          >
+            <Carousel slideInterval={5000}>
+              {images.map((image, i) => (
+                <img
+                  key={image.name + i}
+                  src={URL.createObjectURL(image)}
+                  className="object-cover mb-4"
+                  alt="..."
+                />
+              ))}
+            </Carousel>
+          </div>
+        ) : (
+          <img
+            src={defaultImageUrl}
+            alt="Imagen por defecto"
+            className="object-cover mb-4"
+            style={{ width: "50%", maxHeight: "22em", height: "25em" }}
+          />
+        )}
         <div>
           <h2
             style={{
@@ -169,7 +206,7 @@ function EventDetail() {
           </p>
         </div>
       </div>
-      <div className="mb-2" style={{ fontSize: "2em" }}>
+      <div className="mb-2 mt-10" style={{ fontSize: "2em" }}>
         Comentarios
       </div>
       <div

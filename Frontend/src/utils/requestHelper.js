@@ -25,7 +25,7 @@ const RequestHelper = {
         contentType &&
         contentType.startsWith("image")
       ) {
-        return await response.blob(); // Retornar los datos de la imagen como un blob
+        return await response.blob();
       } else {
         throw new Error("Unsupported response type");
       }

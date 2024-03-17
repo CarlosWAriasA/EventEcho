@@ -44,3 +44,17 @@
   justify-content: center;
   align-items: center;
 }
+
+.custom-button {
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: gray;
+}

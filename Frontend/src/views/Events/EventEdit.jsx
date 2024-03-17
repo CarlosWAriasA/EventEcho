@@ -22,7 +22,6 @@ import dayjs from "dayjs";
 import { Trash2 } from "lucide-react";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import blobsToFiles from "../../utils/blobToFile";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -57,7 +56,10 @@ function EventEdit() {
     try {
       setIsLoading(true);
       const result = await RequestHelper.get(`events/${id}`);
-      const imageUrls = JSON.parse(result.image).map((image) => `${image}`);
+
+      const imageUrls = result.image
+        ? JSON.parse(result.image).map((image) => `${image}`)
+        : [];
       const images = [];
 
       setEvent((prev) => ({
@@ -85,6 +87,7 @@ function EventEdit() {
         lng: parseFloat(result.longitud ?? 0),
       });
     } catch (error) {
+      console.log(error);
       ToastHelper.error("Ha ocurrido un error");
     } finally {
       const remainingTime = 200 - (Date.now() - startTime);
@@ -166,7 +169,7 @@ function EventEdit() {
         formData.append("location", event.location);
         formData.append("longitud", clickedPosition.lng);
         formData.append("latitud", clickedPosition.lat);
-        console.log(images);
+
         for (const file of images) {
           formData.append("images", file);
         }

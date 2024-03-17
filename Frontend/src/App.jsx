@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-tooltip/dist/react-tooltip.css";
 import Loading from "./components/Loading/Loading.jsx";
 import "leaflet/dist/leaflet.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   const { userToken, isLoading } = useContext(AuthContext);
