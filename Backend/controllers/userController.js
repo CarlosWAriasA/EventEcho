@@ -136,4 +136,4 @@ const editarUsuario = async (req, res) => {
 //     }
 // };
 
-module.exports = { registrarUsuario, editarUsuario, obtenerUsuario, obtenerTodosUsuarios };
+module.exports = { registrarUsuario, editarUsuario, obtenerUsuario };
