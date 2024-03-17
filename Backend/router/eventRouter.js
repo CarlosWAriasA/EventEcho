@@ -30,8 +30,18 @@ router.delete(
 );
 
 // Rutas para Organizadores (Eventos)
-router.post("/", authenticateToken,  eventController.upload.array('images', 4), eventController.createEvent);
-router.put("/:eventId", authenticateToken, eventController.updateEvent);
+router.post(
+  "/",
+  authenticateToken,
+  eventController.upload.array("images", 4),
+  eventController.createEvent
+);
+router.put(
+  "/:eventId",
+  authenticateToken,
+  eventController.upload.array("images", 4),
+  eventController.updateEvent
+);
 router.delete("/:eventId", authenticateToken, eventController.deleteEvent);
 
 // Define la ruta GET para obtener todos los eventos
