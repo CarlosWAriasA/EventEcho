@@ -7,7 +7,6 @@ const registerRoutes = require("./router/register");
 const homeRouter = require("./router/homeRouter");
 const eventRouter = require("./router/eventRouter");
 const profileRouter = require("./router/profileRouter");
-const userRouter = require("./router/userRouter");
 const userEventsRouter = require("./router/userEventsRouter");
 const sequelize = require("./connection/connection");
 const defineAssociations = require("./connection/associations");
@@ -25,7 +24,6 @@ app.use("/api/", registerRoutes);
 
 app.use("/", homeRouter);
 app.use("/api/events/", eventRouter);
-app.use("/api/registro-evento/", userRouter);
 app.use("/api/profile/", profileRouter);
 
 app.use("/api/", userEventsRouter);

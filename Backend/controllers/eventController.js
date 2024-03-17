@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const { Op } = require('sequelize');
+const moment = require('moment');
 const multer = require('multer');
 const path = require('path');
 const Event = require("../models/eventModel");
@@ -58,6 +60,48 @@ const getAllEventsByUserId = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener los eventos del usuario:", error);
     res.status(500).json({ message: "Error del servidor" });
+  }
+};
+
+const getAllEventsByOrganizerId = async (req, res) => {
+  try {
+      // Obtener el ID del usuario organizador del token JWT
+      const userId = req.user.userId;
+
+      // Obtener todos los eventos del usuario organizador
+      const allEvents = await Event.findAll({
+          where: { userId: userId }
+      });
+
+      // Obtener la suma de personas en todos los eventos
+      const totalAttendees = allEvents.reduce((sum, event) => sum + event.attendees, 0);
+
+      // Calcular el total de eventos
+      const totalEvents = allEvents.length;
+
+      // Obtener la fecha actual
+      const currentDate = moment();
+
+      // Obtener los eventos próximos del usuario organizador
+      const upcomingEvents = await Event.findAll({
+          where: {
+              userId: userId,
+              date: { [Op.gt]: currentDate }
+          },
+          order: [['date', 'ASC']],
+          limit: 5
+      });
+
+      // Devolver la respuesta con todas las informaciones
+      res.status(200).json({
+          allEvents: allEvents,
+          totalAttendees: totalAttendees,
+          totalEvents: totalEvents,
+          upcomingEvents: upcomingEvents
+      });
+  } catch (error) {
+      console.error('Error al obtener los eventos del usuario:', error);
+      res.status(500).json({ message: 'Error del servidor' });
   }
 };
 
@@ -205,6 +249,7 @@ module.exports = {
   getEventById,
   getAllEvents,
   getAllEventsByUserId,
+  getAllEventsByOrganizerId,
   upload,
   createEvent,
   updateEvent,
