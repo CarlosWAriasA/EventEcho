@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const Usuario = require('../models/usuarioModel');
+const { enviarCorreo } = require('./correoControlador');
 
 const registrarUsuario = async (req, res) => {
     const { name, lastName, username, email, password, tipo_usuario } = req.body;
@@ -27,6 +28,16 @@ const registrarUsuario = async (req, res) => {
             password: hashedPassword,
             tipo_usuario // Añadir el nuevo campo userType
         });
+
+         // Enviar correo electrónico de registro
+         const destinatario = email;
+         const asunto = '¡Bienvenido a nuestro sitio!';
+         const plantillaNombre = 'registro.html';
+         const datos = {
+           nombre: name,
+         };
+ 
+         await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
 
         console.log('Registrado');
         return res.status(200).json({
