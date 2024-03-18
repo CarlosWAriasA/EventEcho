@@ -1,4 +1,7 @@
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const Usuario = require('../models/usuarioModel');
 const { enviarCorreo } = require('./correoControlador');
 
@@ -29,15 +32,15 @@ const registrarUsuario = async (req, res) => {
             tipo_usuario // Añadir el nuevo campo userType
         });
 
-         // Enviar correo electrónico de registro
-         const destinatario = email;
-         const asunto = '¡Bienvenido a nuestro sitio!';
-         const plantillaNombre = 'registro.html';
-         const datos = {
-           nombre: name,
-         };
- 
-         await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
+        // Enviar correo electrónico de registro
+        const destinatario = email;
+        const asunto = '¡Bienvenido a nuestro sitio!';
+        const plantillaNombre = 'registro.html';
+        const datos = {
+            nombre: name,
+        };
+
+        await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
 
         console.log('Registrado');
         return res.status(200).json({
@@ -85,10 +88,24 @@ const obtenerUsuario = async (req, res) => {
     }
 };
 
-//EDITAR USUARIOS
+// Configurar Multer para guardar archivos en una carpeta específica
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/profiles/'); // Guardar archivos en la carpeta "uploads/profiles"
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Asignar un nombre único al archivo
+    }
+});
+
+// Crear el middleware de Multer
+const upload = multer({ storage: storage });
+
 const editarUsuario = async (req, res) => {
-    const { id } = req.params;
-    const { name, lastName, username, email, password,tipo_usuario } = req.body;
+    // Extraer el ID del usuario desde el token JWT
+    const id = req.user.userId;
+    
+    const { name, lastName, username, email, password, tipo_usuario } = req.body;
 
     try {
         // Verificar si el usuario existe en la base de datos
@@ -101,6 +118,9 @@ const editarUsuario = async (req, res) => {
             });
         }
 
+        // Obtener la ruta de la imagen anterior, si existe
+        const imagenAnterior = usuarioExistente.profileImage;
+
         // Actualizar los campos del usuario
         await usuarioExistente.update({
             name,
@@ -108,10 +128,17 @@ const editarUsuario = async (req, res) => {
             username,
             email,
             password,
-            tipo_usuario
+            tipo_usuario,
+            profileImage: req.file ? req.file.path : null // Guardar la ruta de la nueva imagen de perfil si se proporciona una nueva imagen
         });
 
         console.log('Usuario actualizado');
+
+        // Eliminar la imagen anterior del servidor si existe y se proporciona una nueva imagen
+        if (req.file && imagenAnterior) {
+            fs.unlinkSync(imagenAnterior);
+        }
+
         return res.status(200).json({
             ok: true,
             msg: 'El usuario ha sido actualizado con éxito'
@@ -147,4 +174,4 @@ const editarUsuario = async (req, res) => {
 //     }
 // };
 
-module.exports = { registrarUsuario, editarUsuario, obtenerUsuario };
+module.exports = { registrarUsuario, upload, editarUsuario, obtenerUsuario };

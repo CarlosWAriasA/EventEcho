@@ -177,7 +177,6 @@ const createEvent = async (req, res) => {
     await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
 
     res.status(201).json({ message: 'Evento creado exitosamente', event });
-    res.status(201).json({ message: "Evento creado exitosamente", event });
   } catch (error) {
     console.error("Error al crear un nuevo evento:", error);
     res.status(500).json({ message: "Error del servidor" });
