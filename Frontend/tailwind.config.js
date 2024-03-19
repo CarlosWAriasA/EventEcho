@@ -13,5 +13,5 @@ export default {
     extend: {},
   },
   darkMode: "class",
-  plugins: [require("flowbite/plugin"), nextui()],
+  plugins: [nextui()],
 };

@@ -4,16 +4,9 @@ import BoyIcon from "@mui/icons-material/Boy";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useState, useContext, useEffect } from "react";
 import "./Event.css";
-import {
-  MapContainer,
-  TileLayer,
-  useMapEvents,
-  Marker,
-  Popup,
-} from "react-leaflet";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
@@ -23,6 +16,7 @@ import { Trash2 } from "lucide-react";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
+import Mapa from "../../components/Mapa/Mapa";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -48,10 +42,6 @@ function EventEdit() {
     }
   }, [Id]);
 
-  useEffect(() => {
-    fetchCity();
-  }, [clickedPosition]);
-
   const loadEvent = async (id) => {
     const startTime = Date.now();
     try {
@@ -67,6 +57,7 @@ function EventEdit() {
         amountPeople: result.attendees,
         description: result.description,
         date: dayjs(result.date),
+        location: result.location,
       }));
 
       if (imageUrls.length > 0) {
@@ -99,17 +90,24 @@ function EventEdit() {
     }
   };
 
-  async function fetchCity() {
-    if (!clickedPosition) return;
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${clickedPosition.lat}&lon=${clickedPosition.lng}&format=json`
-    );
-    const data = await response.json();
+  async function fetchCity(lat, lng) {
+    setIsLoading(true);
+    try {
+      if (!clickedPosition) return;
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+      );
+      const data = await response.json();
 
-    setEvent((prev) => ({
-      ...prev,
-      location: data?.address?.city ?? data.address?.country,
-    }));
+      setEvent((prev) => ({
+        ...prev,
+        location: data?.display_name,
+      }));
+    } catch (error) {
+      //
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const validateEvent = () => {
@@ -187,17 +185,6 @@ function EventEdit() {
     }
   };
 
-  function handleClick(event) {
-    setClickedPosition(event.latlng);
-  }
-
-  function ClickHandler() {
-    useMapEvents({
-      click: handleClick,
-    });
-    return null;
-  }
-
   return (
     <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
       <div className="flex gap-52">
@@ -273,7 +260,7 @@ function EventEdit() {
             </div>
             <div className="flex gap-8 mt-5">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
+                <DateTimePicker
                   className="w-72"
                   label="Fecha"
                   value={event.date}
@@ -339,26 +326,11 @@ function EventEdit() {
             <p className="flex justify-end text-xl font-bold mb-4">
               Localización
             </p>
-            <MapContainer
-              center={[18.8137633, -69.5430503]}
-              zoom={7.5}
-              style={{ height: "400px", zIndex: 1 }}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <ClickHandler />{" "}
-              {clickedPosition && (
-                <Marker position={clickedPosition}>
-                  <Popup>
-                    Latitude: {clickedPosition.lat}
-                    <br />
-                    Longitude: {clickedPosition.lng}
-                  </Popup>
-                </Marker>
-              )}
-            </MapContainer>
+            <Mapa
+              value={clickedPosition}
+              setValue={setClickedPosition}
+              onClick={fetchCity}
+            />
           </div>
         </div>
       </div>

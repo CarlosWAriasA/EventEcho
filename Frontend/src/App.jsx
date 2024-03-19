@@ -9,7 +9,6 @@ import "react-tooltip/dist/react-tooltip.css";
 import Loading from "./components/Loading/Loading.jsx";
 import "leaflet/dist/leaflet.css";
 
-
 function App() {
   const { userToken, isLoading } = useContext(AuthContext);
 

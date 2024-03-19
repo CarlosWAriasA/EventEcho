@@ -1,4 +1,5 @@
 import { Modal } from "flowbite-react";
+import { useRef, useEffect } from "react";
 
 function UploadImageModal({
   showModal,
@@ -7,6 +8,8 @@ function UploadImageModal({
   setImages,
   maxImages = 4,
 }) {
+  const modalRef = useRef(null);
+
   const handleDrop = (event) => {
     event.preventDefault();
     const files = Array.from(event.dataTransfer.files);
@@ -36,8 +39,28 @@ function UploadImageModal({
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
+  const handleCloseModal = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      setShowModal(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleCloseModal);
+
+    return () => {
+      document.removeEventListener("mousedown", handleCloseModal);
+    };
+  }, [handleCloseModal]);
+
   return (
-    <Modal show={showModal} size="md" onClose={() => setShowModal(false)} popup>
+    <Modal
+      show={showModal}
+      size="md"
+      onClose={() => setShowModal(false)}
+      popup
+      ref={modalRef}
+    >
       <Modal.Header>Cargar Imágenes</Modal.Header>
       <Modal.Body>
         <label

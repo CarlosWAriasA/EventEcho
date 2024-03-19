@@ -25,6 +25,7 @@ function AccountSettings() {
     setIsLoading(true);
     try {
       const result = await RequestHelper.get("profile");
+
       setUser({
         age: result.age,
         description: result.description,
@@ -51,8 +52,8 @@ function AccountSettings() {
         age: user.age,
         description: user.description,
       };
-
-      await RequestHelper.put("usuarios", updatedUser);
+      console.log(updatedUser);
+      await RequestHelper.put("profile", updatedUser);
       ToastHelper.success("Guardado exitosamente");
     } catch (error) {
       console.log(error);

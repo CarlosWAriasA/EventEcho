@@ -145,7 +145,7 @@ function EventDetail() {
               fill="yellow"
               size={35}
             />
-            <p className="text-gray-400 m-0 pt-1">{event.location}</p>
+            <p className="text-gray-400 m-0 pt-1 max-w-72">{event.location}</p>
           </div>
           <div className="flex gap-2 mt-3">
             <Clock

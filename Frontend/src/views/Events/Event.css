@@ -6,6 +6,10 @@
 .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-error {
   color: black !important;
 }
+.css-1anqmj6-MuiPopper-root-MuiPickersPopper-root {
+  max-height: 200px;
+  height: 200px;
+}
 
 .image-container {
   position: relative;

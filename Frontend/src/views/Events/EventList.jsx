@@ -16,7 +16,6 @@ const EventList = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
 
-
   useEffect(() => {
     loadEvents();
   }, []);
@@ -26,15 +25,15 @@ const EventList = () => {
     try {
       setIsLoading(true);
       const result = await RequestHelper.get("events/events-user");
-      const formatData = result.map(async event => {
+      const formatData = result.map(async (event) => {
         const imageUrls = event.image ? event.image : [];
 
         if (imageUrls.length > 0) {
           for (const imageUrl of imageUrls) {
             try {
               const blob = await RequestHelper.get(imageUrl, "image");
-              console.log(blob)
-              event.photo =   new File([blob], `image_${images.length}.jpg`, {
+              console.log(blob);
+              event.photo = new File([blob], `image_${images.length}.jpg`, {
                 type: "image/jpeg",
               });
               images.push(
@@ -43,20 +42,19 @@ const EventList = () => {
                 })
               );
             } catch (error) {
-              console.log(error)
+              console.log(error);
             }
-
           }
-          console.log(images)
+          console.log(images);
           setImages(images);
         }
 
         return event;
       });
-      console.log(result)
+      console.log(result);
       setEvents(result);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       ToastHelper.error("Ha ocurrido un error");
     } finally {
       const remainingTime = 500 - (Date.now() - startTime);
@@ -138,22 +136,20 @@ const EventList = () => {
           className="flex flex-col columns-6 max-w-screen-xl w-3/4 bg-blue-500 p-8 ml-10 mt-10"
           style={{ backgroundColor: "#FCFCFC" }}
         >
-
-        {events && events.length > 0 ? (
-          events.map((card) => (
-          <Card
-            key={card.id}
-            title={card.title}
-            imageUrl={card.photo && URL.createObjectURL(card.photo) }
-            content={card.description}
-            place={card.location}
-            time={card.date}
-          ></Card>
-        ))
-        ) : (
-          <h1 className="">No tiene ningun evento inscrito.</h1>
-        )
-        }
+          {events && events.length > 0 ? (
+            events.map((card) => (
+              <Card
+                key={card.id}
+                title={card.title}
+                imageUrl={card.photo && URL.createObjectURL(card.photo)}
+                content={card.description}
+                place={card.location}
+                time={card.date}
+              ></Card>
+            ))
+          ) : (
+            <h1 className="">No tiene ningun evento inscrito.</h1>
+          )}
         </div>
       </div>
     </main>
