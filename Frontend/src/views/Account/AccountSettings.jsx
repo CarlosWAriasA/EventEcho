@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
 import RequestHelper from "../../utils/requestHelper";
+import { SquarePen } from "lucide-react";
+import UploadImageModal from "../../components/Modal/UploadImageModal";
 
 function AccountSettings() {
   const [user, setUser] = useState({
@@ -12,30 +14,65 @@ function AccountSettings() {
     description: "",
   });
   const { setIsLoading } = useContext(LoadingContext);
+  const [image, setImage] = useState([]);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   useEffect(() => {
     loadUser();
   }, []);
 
   const loadUser = async () => {
+    setIsLoading(true);
     try {
       const result = await RequestHelper.get("profile");
-      setUser((prev) => ({ ...prev, name: result.name, email: result.email }));
+      setUser({
+        age: result.age,
+        description: result.description,
+        email: result.email,
+        name: result.name,
+      });
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const guardarCambios = () => {
+  const guardarCambios = async () => {
+    setIsLoading(true);
     try {
+      const updatedUser = {
+        name: user.name,
+        lastname: user.name,
+        username: user.name,
+        email: user.email,
+        tipo_usuario: user.tipo_usuario,
+        profileImage: image[0] ?? null,
+        age: user.age,
+        description: user.description,
+      };
+
+      await RequestHelper.put("usuarios", updatedUser);
       ToastHelper.success("Guardado exitosamente");
     } catch (error) {
+      console.log(error);
       ToastHelper.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <main className="bg-white h-full text-black pt-10 pl-16">
+      {showImageModal && (
+        <UploadImageModal
+          showModal={showImageModal}
+          setShowModal={setShowImageModal}
+          images={image}
+          setImages={setImage}
+          maxImages={1}
+        />
+      )}
       <div className="flex flex-col gap-4">
         <h2 className="text-lg " style={{ fontSize: "45px" }}>
           Configuración de la Cuenta
@@ -124,7 +161,15 @@ function AccountSettings() {
             </button>
           </div>
         </div>
-        <div className="ml-20 flex flex-col align-middle content-center">
+        <div className="ml-20 flex flex-col align-middle content-center relative">
+          <div className="absolute top-0 right-0">
+            <button
+              onClick={() => setShowImageModal(true)}
+              className="bg-transparent border-none"
+            >
+              <SquarePen size={25} />
+            </button>
+          </div>
           <img
             alt="imagen usuario"
             src="/images/default-image.jpg"

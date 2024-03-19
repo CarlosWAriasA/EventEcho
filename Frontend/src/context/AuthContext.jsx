@@ -7,7 +7,7 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [userToken, setUserToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const { setIsLoading: loading } = useContext(LoadingContext);
 
@@ -21,9 +21,8 @@ export function AuthProvider({ children }) {
   };
 
   const isLoggedIn = async () => {
-    const startTime = Date.now();
+    const userToken = localStorage.getItem(USER_TOKEN);
     try {
-      const userToken = localStorage.getItem(USER_TOKEN);
       if (userToken && userToken !== "null") {
         setIsLoading(true);
         const result = await RequestHelper.get("profile");
@@ -38,14 +37,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.error(`Function is Logged In error: ${error}`);
     } finally {
-      const remainingTime = 1000 - (Date.now() - startTime);
-      if (remainingTime > 0) {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, remainingTime);
-      } else {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   };
 

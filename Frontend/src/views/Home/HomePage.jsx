@@ -16,9 +16,7 @@ export function HomePage() {
       const result = await RequestHelper.get("events");
       const events = result?.map(async (e) => {
         let image;
-        const imageUrls = e.image
-          ? JSON.parse(e.image).map((image) => `${image}`)
-          : [];
+        const imageUrls = e.image ? e.image : [];
 
         if (imageUrls.length > 0) {
           try {
@@ -48,7 +46,6 @@ export function HomePage() {
         .catch((error) => {
           console.error("Error al obtener eventos:", error);
         });
-      setEvents(events);
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {

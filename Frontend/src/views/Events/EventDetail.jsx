@@ -30,9 +30,7 @@ function EventDetail() {
       setIsLoading(true);
       const result = await RequestHelper.get(`events/${id}`);
       const isRegister = await RequestHelper.get(`events/events-user/${id}`);
-      const imageUrls = result.image
-        ? JSON.parse(result.image).map((image) => `${image}`)
-        : [];
+      const imageUrls = result.image ? result.image : [];
       const images = [];
 
       if (isRegister.isRegister) {

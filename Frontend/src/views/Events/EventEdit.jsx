@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 import { Trash2 } from "lucide-react";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import UploadImageModal from "../../components/Modal/UploadImageModal";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -57,9 +58,7 @@ function EventEdit() {
       setIsLoading(true);
       const result = await RequestHelper.get(`events/${id}`);
 
-      const imageUrls = result.image
-        ? JSON.parse(result.image).map((image) => `${image}`)
-        : [];
+      const imageUrls = result.image ? result.image : [];
       const images = [];
 
       setEvent((prev) => ({
@@ -87,7 +86,6 @@ function EventEdit() {
         lng: parseFloat(result.longitud ?? 0),
       });
     } catch (error) {
-      console.log(error);
       ToastHelper.error("Ha ocurrido un error");
     } finally {
       const remainingTime = 200 - (Date.now() - startTime);
@@ -200,81 +198,16 @@ function EventEdit() {
     return null;
   }
 
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const files = Array.from(event.dataTransfer.files);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
-
-    const remainingSlots = 4 - images.length;
-    const toProcess = imageFiles.slice(0, remainingSlots);
-
-    setImages((prevImages) => [...prevImages, ...toProcess]);
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-  };
-
-  const handleFileSelect = (event) => {
-    const files = Array.from(event.target.files);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
-
-    const remainingSlots = 4 - images.length;
-    const toProcess = imageFiles.slice(0, remainingSlots);
-
-    // Guardar las imágenes como objetos File en el estado
-    setImages((prevImages) => [...prevImages, ...toProcess]);
-  };
-
-  const closeModal = () => {
-    setModalImageUpload(false);
-  };
-
-  const handleDeleteImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-  };
-
   return (
     <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
       <div className="flex gap-52">
         {modalImageUpload && (
-          <Modal show={modalImageUpload} size="md" onClose={closeModal} popup>
-            <Modal.Header>Cargar Imágenes</Modal.Header>
-            <Modal.Body>
-              <label
-                htmlFor="fileInput"
-                className="custom-file-upload"
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-              >
-                Seleccionar o Soltar Imágenes
-                <input
-                  className="p-8 border-4 border-dashed border-gray-500"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  multiple
-                  id="fileInput"
-                />
-              </label>
-              <div className="ml-7">
-                {images.map((imageUrl, index) => (
-                  <div key={index} className="image-container">
-                    <img
-                      src={URL.createObjectURL(imageUrl)}
-                      alt={`Imagen ${index + 1}`}
-                    />
-                    <button
-                      onClick={() => handleDeleteImage(index)}
-                      className="delete-button"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </Modal.Body>
-          </Modal>
+          <UploadImageModal
+            showModal={modalImageUpload}
+            setShowModal={setModalImageUpload}
+            images={images}
+            setImages={setImages}
+          />
         )}
         {modalDelete && (
           <Modal

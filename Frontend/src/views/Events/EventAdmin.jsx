@@ -28,7 +28,6 @@ function EventAdmin() {
   }, []);
 
   const loadEvents = async () => {
-    const startTime = Date.now();
     try {
       setIsLoading(true);
       const result = await RequestHelper.get("events/user");
@@ -44,14 +43,7 @@ function EventAdmin() {
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {
-      const remainingTime = 500 - (Date.now() - startTime);
-      if (remainingTime > 0) {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, remainingTime);
-      } else {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   };
 
