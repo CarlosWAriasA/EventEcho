@@ -8,7 +8,7 @@ const path = require("path");
 const Event = require("../models/eventModel");
 const Usuario = require("../models/usuarioModel");
 const UserEvent = require("../models/UserEvent");
-const { enviarCorreo } = require('./correoControlador');
+const { enviarCorreo } = require("./correoControlador");
 const { where } = require("sequelize");
 
 // Obtener un evento por su ID
@@ -165,18 +165,18 @@ const createEvent = async (req, res) => {
     // Enviar confirmación por correo electrónico
     const user = await Usuario.findByPk(userId);
     const destinatario = user.email;
-    const asunto = 'Evento creado exitosamente';
-    const plantillaNombre = 'confirmacion_evento.html';
+    const asunto = "Evento creado exitosamente";
+    const plantillaNombre = "confirmacion_evento.html";
     const datos = {
       nombre_evento: title,
-      fecha_evento: moment(date).format('DD/MM/YYYY HH:mm'),
-      ubicacion_evento: location
+      fecha_evento: moment(date).format("DD/MM/YYYY HH:mm"),
+      ubicacion_evento: location,
     };
 
     // Enviar el correo electrónico
     await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
 
-    res.status(201).json({ message: 'Evento creado exitosamente', event });
+    res.status(201).json({ message: "Evento creado exitosamente", event });
   } catch (error) {
     console.error("Error al crear un nuevo evento:", error);
     res.status(500).json({ message: "Error del servidor" });
@@ -221,7 +221,6 @@ const updateEvent = async (req, res) => {
     // Actualizar las imágenes si se proporcionan nuevas imágenes
     if (req.files && req.files.length > 0) {
       // Eliminar las imágenes antiguas si existen
-      JSON.parse(event.image);
       if (event.image && Array.isArray(event.image)) {
         event.image.forEach((imagePath) => {
           fs.unlinkSync(imagePath);
@@ -267,7 +266,9 @@ const deleteEvent = async (req, res) => {
     if (event.image) {
       if (Array.isArray(event.image)) {
         event.image.forEach((imagePath) => {
-          fs.unlinkSync(imagePath);
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+          }
         });
       } else {
         fs.unlinkSync(event.image);
@@ -277,20 +278,20 @@ const deleteEvent = async (req, res) => {
     // Envíar un correo electrónico de cancelación a todos los usuarios inscritos y al organizador
     const users = await UserEvent.findAll({ where: { eventId: eventId } });
     const eventTitle = event.title;
-    const eventDate = moment(event.date).format('DD/MM/YYYY HH:mm');
+    const eventDate = moment(event.date).format("DD/MM/YYYY HH:mm");
     const eventLocation = event.location;
 
     // Enviar un correo electrónico a todos los usuarios inscritos
     for (const user of users) {
       const userInstance = await Usuario.findByPk(user.userId);
       const destinatario = userInstance.email;
-      const asunto = 'Evento cancelado';
-      const plantillaNombre = 'cancelacion_evento.html';
+      const asunto = "Evento cancelado";
+      const plantillaNombre = "cancelacion_evento.html";
       const datos = {
         nombre_evento: eventTitle,
         fecha_evento: eventDate,
         ubicacion_evento: eventLocation,
-        motivo_cancelacion: 'El evento ha sido cancelado por el organizador'
+        motivo_cancelacion: "El evento ha sido cancelado por el organizador",
       };
 
       // Enviar el correo electrónico
@@ -300,17 +301,22 @@ const deleteEvent = async (req, res) => {
     // Enviar un correo electrónico al organizador
     const organizer = await Usuario.findByPk(event.userId);
     const destinatarioOrganizador = organizer.email;
-    const asuntoOrganizador = 'Evento cancelado';
-    const plantillaNombreOrganizador = 'cancelacion_evento.html';
+    const asuntoOrganizador = "Evento cancelado";
+    const plantillaNombreOrganizador = "cancelacion_evento.html";
     const datosOrganizador = {
       nombre_evento: eventTitle,
       fecha_evento: eventDate,
       ubicacion_evento: eventLocation,
-      motivo_cancelacion: 'El evento ha sido cancelado por el organizador'
+      motivo_cancelacion: "El evento ha sido cancelado por el organizador",
     };
 
     // Enviar el correo electrónico al organizador
-    await enviarCorreo(destinatarioOrganizador, asuntoOrganizador, plantillaNombreOrganizador, datosOrganizador);
+    await enviarCorreo(
+      destinatarioOrganizador,
+      asuntoOrganizador,
+      plantillaNombreOrganizador,
+      datosOrganizador
+    );
 
     // Eliminar el evento de la base de datos
     await UserEvent.destroy({ where: { eventId: eventId } });

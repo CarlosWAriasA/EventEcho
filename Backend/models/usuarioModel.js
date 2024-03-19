@@ -19,7 +19,6 @@ const Usuario = sequelize.define(
     },
     username: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
     },
     email: {
@@ -41,6 +40,12 @@ const Usuario = sequelize.define(
     },
     profileImage: {
       type: DataTypes.STRING,
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
+    age: {
+      type: DataTypes.INTEGER,
     },
   },
   {

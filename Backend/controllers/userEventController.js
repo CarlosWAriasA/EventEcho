@@ -35,8 +35,8 @@ const getUserEvents = async (req, res) => {
       where: { userId },
       include: [{ model: Event }, { model: User }],
     });
-
-    return res.status(200).json(userEvents);
+    const events = userEvents.map((e) => e.Evento);
+    return res.status(200).json(events);
   } catch (error) {
     console.error("Error getting user events:", error);
     return res.status(500).json({ error: "Internal server error" });
