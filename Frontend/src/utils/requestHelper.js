@@ -1,4 +1,4 @@
-import { URL_BASE, USER_TOKEN } from "./constans";
+import { URL_BASE, USER_TOKEN } from "./constants";
 
 const RequestHelper = {
   get: async function (url, responseType = "json") {

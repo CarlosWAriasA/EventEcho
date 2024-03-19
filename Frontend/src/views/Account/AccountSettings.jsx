@@ -52,11 +52,9 @@ function AccountSettings() {
         age: user.age,
         description: user.description,
       };
-      console.log(updatedUser);
       await RequestHelper.put("profile", updatedUser);
       ToastHelper.success("Guardado exitosamente");
     } catch (error) {
-      console.log(error);
       ToastHelper.error(error);
     } finally {
       setIsLoading(false);

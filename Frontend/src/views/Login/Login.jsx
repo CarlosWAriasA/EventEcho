@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { USER_TOKEN } from "../../utils/constans";
+import { USER_TOKEN } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
 import ButtonForm from "../../components/Button/ButtonForm";
 import TextInput from "../../components/Input/InputForm";
@@ -9,6 +9,8 @@ import Box from "@mui/material/Box";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
+import useKeypress from "react-use-keypress";
+import { KEY_ENTER } from "../../utils/constants";
 
 function Login() {
   const { setUserToken, setUser } = useContext(AuthContext);
@@ -57,6 +59,7 @@ function Login() {
     }
   };
 
+  useKeypress([KEY_ENTER], login);
   return (
     <div>
       <div>

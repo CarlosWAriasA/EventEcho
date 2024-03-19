@@ -12,6 +12,8 @@ import ToastHelper from "../../utils/toastHelper";
 import RequestHelper from "../../utils/requestHelper";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import useKeypress from "react-use-keypress";
+import { KEY_ENTER } from "../../utils/constants";
 
 function Register() {
   const navigate = useNavigate();
@@ -63,6 +65,14 @@ function Register() {
       return false;
     }
 
+    if (newUser.password.length < 6) {
+      ToastHelper.error(
+        "La Contraseña tiene que tener minimo 6 caracteres",
+        "top-center"
+      );
+      return false;
+    }
+
     if (!newUser.confirmPassword) {
       ToastHelper.error("Confirmar Contraseña es requerido.", "top-center");
       return false;
@@ -104,6 +114,7 @@ function Register() {
     }
   };
 
+  useKeypress([KEY_ENTER], registerUser);
   return (
     <Box
       sx={{
