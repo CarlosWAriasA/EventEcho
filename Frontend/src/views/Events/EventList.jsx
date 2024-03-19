@@ -4,8 +4,72 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Card from "../../components/Card/CardEventList";
 import CardEventList from "../../components/Card/CardEventList";
+import { forwardRef, useContext, useEffect, useState } from "react";
+import { LoadingContext } from "../../context/LoadingContext";
+import { NavLink, useNavigate } from "react-router-dom";
+import ToastHelper from "../../utils/toastHelper";
+import RequestHelper from "../../utils/requestHelper";
 
 const EventList = () => {
+  const { setIsLoading } = useContext(LoadingContext);
+  const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
+  const [images, setImages] = useState([]);
+
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  const loadEvents = async () => {
+    const startTime = Date.now();
+    try {
+      setIsLoading(true);
+      const result = await RequestHelper.get("events/events-user");
+      const formatData = result.map(async event => {
+        const imageUrls = event.image ? event.image : [];
+
+        if (imageUrls.length > 0) {
+          for (const imageUrl of imageUrls) {
+            try {
+              const blob = await RequestHelper.get(imageUrl, "image");
+              console.log(blob)
+              event.photo =   new File([blob], `image_${images.length}.jpg`, {
+                type: "image/jpeg",
+              });
+              images.push(
+                new File([blob], `image_${images.length}.jpg`, {
+                  type: "image/jpeg",
+                })
+              );
+            } catch (error) {
+              console.log(error)
+            }
+
+          }
+          console.log(images)
+          setImages(images);
+        }
+
+        return event;
+      });
+      console.log(result)
+      setEvents(result);
+    } catch (error) {
+      console.log(error)
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      const remainingTime = 500 - (Date.now() - startTime);
+      if (remainingTime > 0) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, remainingTime);
+      } else {
+        setIsLoading(false);
+      }
+    }
+  };
+
   const EventsData = [
     {
       id: 1,
@@ -74,15 +138,22 @@ const EventList = () => {
           className="flex flex-col columns-6 max-w-screen-xl w-3/4 bg-blue-500 p-8 ml-10 mt-10"
           style={{ backgroundColor: "#FCFCFC" }}
         >
-          {EventsData.map((card) => (
-            <Card
-              key={card.id}
-              title={card.title}
-              content={card.content}
-              place={card.place}
-              time={card.time}
-            ></Card>
-          ))}
+
+        {events && events.length > 0 ? (
+          events.map((card) => (
+          <Card
+            key={card.id}
+            title={card.title}
+            imageUrl={card.photo && URL.createObjectURL(card.photo) }
+            content={card.description}
+            place={card.location}
+            time={card.date}
+          ></Card>
+        ))
+        ) : (
+          <h1 className="">No tiene ningun evento inscrito.</h1>
+        )
+        }
         </div>
       </div>
     </main>
