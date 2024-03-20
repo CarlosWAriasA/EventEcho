@@ -17,6 +17,8 @@ import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
 import Mapa from "../../components/Mapa/Mapa";
+import useKeypress from "react-use-keypress";
+import { KEY_ENTER, KEY_ESCAPE } from "../../utils/constants";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -152,7 +154,7 @@ function EventEdit() {
     }
   };
 
-  const createEvent = async () => {
+  const saveEvent = async () => {
     try {
       setIsLoading(true);
       if (validateEvent()) {
@@ -185,6 +187,10 @@ function EventEdit() {
     }
   };
 
+  useKeypress([KEY_ENTER], saveEvent);
+  useKeypress([KEY_ESCAPE], () => {
+    navigate("/event-admin");
+  });
   return (
     <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
       <div className="flex gap-52">
@@ -248,12 +254,15 @@ function EventEdit() {
                   className="rounded-lg w-72"
                   label={"Cantidad de Personas"}
                   value={event.amountPeople}
-                  onChange={(e) =>
-                    setEvent((prev) => ({
-                      ...prev,
-                      amountPeople: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const inputValue = parseInt(e.target.value);
+                    if (!isNaN(inputValue) && inputValue >= 0) {
+                      setEvent((prev) => ({
+                        ...prev,
+                        amountPeople: inputValue,
+                      }));
+                    }
+                  }}
                   icon={<BoyIcon />}
                 />
               </div>
@@ -299,7 +308,7 @@ function EventEdit() {
             <div className="flex justify-between gap-5 mt-5">
               <div className="flex gap-5">
                 <button
-                  onClick={createEvent}
+                  onClick={saveEvent}
                   className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900 w-36"
                 >
                   Guardar

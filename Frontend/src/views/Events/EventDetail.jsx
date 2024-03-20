@@ -7,6 +7,10 @@ import ToastHelper from "../../utils/toastHelper";
 import Button from "../../components/Button/Button";
 import { AuthContext } from "../../context/AuthContext";
 import { Carousel } from "flowbite-react";
+import "./Event.css";
+import useKeypress from "react-use-keypress";
+import { KEY_ESCAPE } from "../../utils/constants";
+import { useNavigate } from "react-router";
 
 function EventDetail() {
   const { Id } = useParams();
@@ -23,6 +27,7 @@ function EventDetail() {
   const { setIsLoading } = useContext(LoadingContext);
   const [isRegister, setIsRegister] = useState(false);
   const [images, setImages] = useState([]);
+  const navigate = useNavigate();
 
   const loadEvent = async (id) => {
     const startTime = Date.now();
@@ -101,6 +106,10 @@ function EventDetail() {
 
   const defaultImageUrl = "/images/default-image.jpg";
 
+  useKeypress(KEY_ESCAPE, () => {
+    navigate("/");
+  });
+
   return (
     <main className="bg-white h-full pl-16 pt-16 text-black overflow-y-auto">
       <div className="flex gap-6">
@@ -114,8 +123,8 @@ function EventDetail() {
                 <img
                   key={image.name + i}
                   src={URL.createObjectURL(image)}
-                  className="object-cover mb-4"
-                  alt="..."
+                  className="object-cover w-full h-auto mb-4"
+                  alt={image.name}
                 />
               ))}
             </Carousel>
@@ -136,7 +145,9 @@ function EventDetail() {
               paddingTop: "-5px",
             }}
           >
-            {event.name}
+            {event.name.length > 20
+              ? `${event.name.substring(0, 20)}...`
+              : event.name}
           </h2>
           <div className="flex gap-2">
             <MapPin

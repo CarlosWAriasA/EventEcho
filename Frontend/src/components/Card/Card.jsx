@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { Card as CardFlowbite } from "flowbite-react/lib/esm";
 
 const Card = ({ id, title, content, image }) => {
   // Default image URL
@@ -6,15 +7,20 @@ const Card = ({ id, title, content, image }) => {
 
   return (
     <NavLink to={`event-detail/${id}`}>
-      <div className="m-2 p-4 bg-white rounded-lg shadow-md hover:cursor-pointer">
-        <img
-          src={image ?? defaultImageUrl}
-          alt="Card"
-          className="w-full h-44 object-cover mb-4 rounded-md"
-        />
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p>{content}</p>
-      </div>
+      <CardFlowbite
+        renderImage={() => (
+          <img
+            className="w-full object-cover mb-4 rounded-md"
+            src={image ?? defaultImageUrl}
+            alt="card"
+          />
+        )}
+      >
+        <h5>{title.length > 40 ? `${title.substring(0, 40)}...` : title}</h5>
+        <p className="font-normal text-gray-700 dark:text-gray-400">
+          {content.length > 78 ? `${content.substring(0, 78)}...` : content}
+        </p>
+      </CardFlowbite>
     </NavLink>
   );
 };

@@ -4,6 +4,8 @@ import { LoadingContext } from "../../context/LoadingContext";
 import RequestHelper from "../../utils/requestHelper";
 import { SquarePen } from "lucide-react";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
+import useKeypress from "react-use-keypress";
+import { KEY_ENTER } from "../../utils/constants";
 
 function AccountSettings() {
   const [user, setUser] = useState({
@@ -61,6 +63,7 @@ function AccountSettings() {
     }
   };
 
+  useKeypress(KEY_ENTER, guardarCambios);
   return (
     <main className="bg-white h-full text-black pt-10 pl-16">
       {showImageModal && (

@@ -17,6 +17,8 @@ import { forwardRef, useContext, useEffect, useState } from "react";
 import { LoadingContext } from "../../context/LoadingContext";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
+import useKeypress from "react-use-keypress";
+import { KEY_ENTER } from "../../utils/constants";
 
 function EventAdmin() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -117,7 +119,7 @@ function EventAdmin() {
             key={column.dataKey}
             align={column.numeric || false ? "right" : "left"}
             onClick={() => handleClick(row.id)}
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer overflow-hidden whitespace-nowrap text-overflow-ellipsis"
           >
             {row[column.dataKey]}
           </TableCell>
@@ -126,6 +128,9 @@ function EventAdmin() {
     );
   }
 
+  useKeypress(KEY_ENTER, () => {
+    navigate("/event-edit");
+  });
   return (
     <main className="bg-white h-full text-black pl-36 pt-8 overflow-y-auto flex">
       <div className="h-full w-10/12">

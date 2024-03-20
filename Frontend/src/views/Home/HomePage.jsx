@@ -79,7 +79,7 @@ export function HomePage() {
           style={{ height: "500px", maxHeight: "500px" }}
         >
           <img
-            className="rounded-md mt-5 border-4"
+            className="rounded-md mt-5 border-4 border-black"
             src={
               events.length > 0 && events[0]?.image
                 ? URL.createObjectURL(events[0].image)
@@ -88,7 +88,7 @@ export function HomePage() {
             style={{ width: "80%", height: "400px" }}
             alt="Description of your image"
           />
-          <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6">
+          <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap ">
             {events.length > 0 ? events[0]?.name : "Crea el primer evento"}
           </div>
         </div>
