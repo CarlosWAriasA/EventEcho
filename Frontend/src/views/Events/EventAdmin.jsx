@@ -19,9 +19,11 @@ import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
+import { AuthContext } from "../../context/AuthContext";
 
 function EventAdmin() {
   const { setIsLoading } = useContext(LoadingContext);
+  const { user } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const [info, setInfo] = useState({
@@ -31,6 +33,9 @@ function EventAdmin() {
   });
 
   useEffect(() => {
+    if (user.tipo_usuario !== "organizador") {
+      navigate("/");
+    }
     loadEvents();
   }, []);
 
@@ -38,7 +43,6 @@ function EventAdmin() {
     try {
       setIsLoading(true);
       const result = await RequestHelper.get("/user/events-info");
-      console.log(result);
       setInfo({
         totalPeople: result.totalAttendees,
         totalEvents: result.totalEvents,
