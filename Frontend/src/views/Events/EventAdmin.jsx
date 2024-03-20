@@ -24,6 +24,11 @@ function EventAdmin() {
   const { setIsLoading } = useContext(LoadingContext);
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
+  const [info, setInfo] = useState({
+    totalPeople: 0,
+    totalEvents: 0,
+    upcomingEvents: 0,
+  });
 
   useEffect(() => {
     loadEvents();
@@ -32,14 +37,21 @@ function EventAdmin() {
   const loadEvents = async () => {
     try {
       setIsLoading(true);
-      const result = await RequestHelper.get("events/user");
-      const events = result?.map((e) => ({
+      const result = await RequestHelper.get("/user/events-info");
+      console.log(result);
+      setInfo({
+        totalPeople: result.totalAttendees,
+        totalEvents: result.totalEvents,
+        upcomingEvents: result.upcomingEvents.length,
+      });
+      const events = result?.allEvents.map((e) => ({
         id: e.id,
         name: e.title,
         location: e.location,
-        amount: `${0}/${e.attendees}`,
+        amount: `${e.UserEvents.length}/${e.attendees}`,
         people: e.attendees,
         date: new Date(e.date).toLocaleDateString(),
+        subscribed: e.UserEvents.length,
       }));
       setEvents(events);
     } catch (error) {
@@ -161,7 +173,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Total de Eventos</p>
-              <p>{events.length}</p>
+              <p>{info.totalEvents}</p>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <PersonStanding
@@ -174,7 +186,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Total de Personas</p>
-              <p>{events.reduce((a, e) => a + e.people, 0)}</p>
+              <p>{info.totalPeople}</p>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <ChevronsRight
@@ -187,7 +199,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Eventos Proximos</p>
-              <p>{events.length}</p>
+              <p>{info.upcomingEvents}</p>
             </div>
           </div>
         </div>
