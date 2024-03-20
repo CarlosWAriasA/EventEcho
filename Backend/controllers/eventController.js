@@ -74,6 +74,7 @@ const getAllEventsByOrganizerId = async (req, res) => {
     // Obtener todos los eventos del usuario organizador
     const allEvents = await Event.findAll({
       where: { userId: userId },
+      include: [{ model: UserEvent }],
     });
 
     // Obtener la suma de personas en todos los eventos
