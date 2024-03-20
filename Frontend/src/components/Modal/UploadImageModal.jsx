@@ -75,7 +75,7 @@ function UploadImageModal({
             type="file"
             accept="image/*"
             onChange={handleFileSelect}
-            multiple={maxImages > 0 ? true : false}
+            multiple={maxImages > 1 ? true : false}
             id="fileInput"
           />
         </label>
