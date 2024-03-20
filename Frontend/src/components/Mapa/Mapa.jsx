@@ -5,8 +5,19 @@ import {
   Marker,
   Popup,
 } from "react-leaflet";
+import { useEffect, useState, useRef } from "react";
 
 function Mapa({ value, setValue, onClick = () => {} }) {
+  const [zoomed, setZoomed] = useState(false);
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (value && !zoomed && mapRef) {
+      mapRef.current.flyTo(value, 14);
+      setZoomed(true);
+    }
+  }, [value, zoomed]);
+
   function handleClick(event) {
     onClick(event.latlng.lat, event.latlng.lng);
     setValue(event.latlng);
@@ -21,6 +32,7 @@ function Mapa({ value, setValue, onClick = () => {} }) {
 
   return (
     <MapContainer
+      ref={mapRef}
       center={[18.8137633, -69.5430503]}
       zoom={7.5}
       style={{ height: "400px", zIndex: 1 }}
