@@ -64,6 +64,15 @@ const addUserEvent = async (req, res) => {
       });
     }
 
+    const userEvents = await UserEvent.findAll({ where: { eventId } });
+
+    if (userEvents.length >= eventExist.attendees) {
+      return res.status(200).json({
+        ok: false,
+        msg: "No se pueden inscribir mas personas a este evento",
+      });
+    }
+
     const newUserEvent = await UserEvent.create({ eventId, userId });
     return res.status(201).json(newUserEvent);
   } catch (error) {
