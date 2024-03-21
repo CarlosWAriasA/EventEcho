@@ -93,7 +93,6 @@ const storage = multer.diskStorage({
     cb(null, "uploads/profiles/"); // Guardar archivos en la carpeta "uploads/profiles"
   },
   filename: function (req, file, cb) {
-    console.log(file);
     cb(
       null,
       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
