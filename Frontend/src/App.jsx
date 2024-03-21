@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-tooltip/dist/react-tooltip.css";
 import Loading from "./components/Loading/Loading.jsx";
 import "leaflet/dist/leaflet.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function App() {
   const { userToken, isLoading } = useContext(AuthContext);

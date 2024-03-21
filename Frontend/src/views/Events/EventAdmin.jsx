@@ -14,15 +14,15 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { TableVirtuoso } from "react-virtuoso";
 import { forwardRef, useContext, useEffect, useState } from "react";
-import { LoadingContext } from "../../context/LoadingContext";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
+import Skeleton from "react-loading-skeleton";
 
 function EventAdmin() {
-  const { setIsLoading } = useContext(LoadingContext);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
@@ -61,7 +61,9 @@ function EventAdmin() {
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -137,7 +139,7 @@ function EventAdmin() {
             onClick={() => handleClick(row.id)}
             className="hover:cursor-pointer overflow-hidden whitespace-nowrap text-overflow-ellipsis"
           >
-            {row[column.dataKey]}
+            {isLoading ? <Skeleton /> : row[column.dataKey]}
           </TableCell>
         ))}
       </>
@@ -177,7 +179,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Total de Eventos</p>
-              <p>{info.totalEvents}</p>
+              <p>{isLoading ? <Skeleton width={50} /> : info.totalEvents}</p>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <PersonStanding
@@ -190,7 +192,7 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Total de Personas</p>
-              <p>{info.totalPeople}</p>
+              <p>{isLoading ? <Skeleton width={50} /> : info.totalPeople}</p>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <ChevronsRight
@@ -203,13 +205,13 @@ function EventAdmin() {
                 }}
               />
               <p className="flex justify-center">Eventos Proximos</p>
-              <p>{info.upcomingEvents}</p>
+              <p>{isLoading ? <Skeleton width={50} /> : info.upcomingEvents}</p>
             </div>
           </div>
         </div>
         <Paper className="w-10/12 h-3/5 mt-10">
           <TableVirtuoso
-            data={events}
+            data={isLoading ? Array.from({ length: 8 }) : events}
             components={VirtuosoTableComponents}
             fixedHeaderContent={fixedHeaderContent}
             itemContent={rowContent}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { NavLink } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
+import Skeleton from "react-loading-skeleton";
 
 export function HomePage() {
   const [events, setEvents] = useState([]);
@@ -81,11 +81,9 @@ export function HomePage() {
           style={{ height: "500px", maxHeight: "500px" }}
         >
           {isLoading ? (
-            <>
-              <div className="flex items-center justify-center w-full h-full">
-                <ClipLoader size={50} color="yellow" />
-              </div>
-            </>
+            <div style={{ width: "80%", height: "400px" }}>
+              <Skeleton height={400} />
+            </div>
           ) : (
             <>
               {" "}
