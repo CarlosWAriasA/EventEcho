@@ -15,6 +15,8 @@ const EventList = () => {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
+  const [isRegister, setIsRegister] = useState(false);
+
 
   useEffect(() => {
     loadEvents();
@@ -68,36 +70,37 @@ const EventList = () => {
     }
   };
 
-  const EventsData = [
-    {
-      id: 1,
-      title: "Fiesta en la Plaza",
-      content: "Acompañanos en nuestra fiesta",
-      time: "6:30",
-      place: "Plaza de la Bandera",
-    },
-    {
-      id: 2,
-      title: "Aventura deportiva colectiva",
-      content: "Aconpañanos en esta aventura deportiva",
-      time: "8:30",
-      place: "Centro Olimpico",
-    },
-    {
-      id: 3,
-      title: "Conocedores de Historia",
-      content: "En la misma conoceremos la historia del faro",
-      time: "6:30",
-      place: "El faro a Colon",
-    },
-    {
-      id: 4,
-      title: "Aventureros por la ciudad",
-      content: "Aventura por la Nuñez de Caceres",
-      time: "6:30",
-      place: "La nuñez de Caceres",
-    },
-  ];
+
+  // const EventsData = [
+  //   {
+  //     id: 1,
+  //     title: "Fiesta en la Plaza",
+  //     content: "Acompañanos en nuestra fiesta",
+  //     time: "6:30",
+  //     place: "Plaza de la Bandera",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Aventura deportiva colectiva",
+  //     content: "Aconpañanos en esta aventura deportiva",
+  //     time: "8:30",
+  //     place: "Centro Olimpico",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Conocedores de Historia",
+  //     content: "En la misma conoceremos la historia del faro",
+  //     time: "6:30",
+  //     place: "El faro a Colon",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "Aventureros por la ciudad",
+  //     content: "Aventura por la Nuñez de Caceres",
+  //     time: "6:30",
+  //     place: "La nuñez de Caceres",
+  //   },
+  // ];
 
   return (
     <main
@@ -112,7 +115,7 @@ const EventList = () => {
           >
             <div className="flex mb-2">
               <h1 style={{ fontSize: "22px" }}>
-                Hora de Salir a comer con Chanchito
+               Eventos Pendientes
               </h1>
             </div>
             <div className="flex mb-2">
@@ -133,18 +136,20 @@ const EventList = () => {
         </div>
 
         <div
-          className="flex flex-col columns-6 max-w-screen-xl w-3/4 bg-blue-500 p-8 ml-10 mt-10"
+          className="flex flex-col  columns-6 max-w-screen-xl w-3/4 bg-blue-500 p-8 ml-10 mt-10"
           style={{ backgroundColor: "#FCFCFC" }}
         >
           {events && events.length > 0 ? (
             events.map((card) => (
               <Card
+                id={card.id}
                 key={card.id}
                 title={card.title}
                 imageUrl={card.photo && URL.createObjectURL(card.photo)}
                 content={card.description}
                 place={card.location}
                 time={card.date}
+                onLoadEvents={loadEvents}
               ></Card>
             ))
           ) : (
