@@ -93,6 +93,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads/profiles/"); // Guardar archivos en la carpeta "uploads/profiles"
   },
   filename: function (req, file, cb) {
+    console.log(file);
     cb(
       null,
       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
@@ -107,8 +108,7 @@ const editarUsuario = async (req, res) => {
   // Extraer el ID del usuario desde el token JWT
   const id = req.user.userId;
 
-  const { name, lastName, username, email, tipo_usuario, description, age } =
-    req.body;
+  const { name, lastName, username, email, description, age } = req.body;
 
   try {
     // Verificar si el usuario existe en la base de datos
@@ -130,13 +130,10 @@ const editarUsuario = async (req, res) => {
       lastName,
       username,
       email,
-      tipo_usuario,
       description,
       age,
-      profileImage: req.file ? req.file.path : null, // Guardar la ruta de la nueva imagen de perfil si se proporciona una nueva imagen
+      profileImage: req.file ? req.file.path : null,
     });
-
-    console.log("Usuario actualizado");
 
     // Eliminar la imagen anterior del servidor si existe y se proporciona una nueva imagen
     if (req.file && imagenAnterior) {

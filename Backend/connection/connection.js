@@ -20,6 +20,7 @@ const sequelize = new Sequelize(
     host: MYSQL_HOST,
     dialect: "mysql",
     port: MYSQL_PORT,
+    logging: false,
   }
 );
 
