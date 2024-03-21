@@ -23,8 +23,8 @@ function AccountSettings() {
       formData.append("username", user.username);
       formData.append("email", user.email);
       formData.append("profileImage", image[0]);
-      formData.append("age", user.age);
-      formData.append("description", user.description);
+      formData.append("age", user.age ?? 0);
+      formData.append("description", user.description ?? "");
 
       await RequestHelper.put("profile", formData, true);
       loadUser();
@@ -41,6 +41,8 @@ function AccountSettings() {
     <main className="bg-white h-full text-black pt-10 pl-16">
       {showImageModal && (
         <UploadImageModal
+          title="Cargan Imagen"
+          subtitle="Seleccionar o Soltar Imagen"
           showModal={showImageModal}
           setShowModal={setShowImageModal}
           images={image}
@@ -105,7 +107,7 @@ function AccountSettings() {
                 className="border p-2 rounded-md border-gray-500"
                 placeholder="Edad"
                 type="number"
-                value={user.age}
+                value={user.age ?? 0}
                 onChange={(e) =>
                   setUser((prev) => ({ ...prev, age: e.target.value }))
                 }
@@ -120,7 +122,7 @@ function AccountSettings() {
                 className="border p-2 rounded-md border-gray-500"
                 placeholder="Descripcion"
                 rows={5}
-                value={user.description}
+                value={user.description ?? ""}
                 onChange={(e) =>
                   setUser((prev) => ({ ...prev, description: e.target.value }))
                 }
@@ -153,7 +155,13 @@ function AccountSettings() {
                 : "/images/default-image.jpg"
             }
             width={240}
-            style={{ height: "220px", maxHeight: "400px", borderRadius: "50%" }}
+            style={{
+              height: "220px",
+              maxHeight: "400px",
+              borderRadius: "50%",
+              boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+              objectFit: "cover",
+            }}
           />
           <div className="mt-8">
             <button

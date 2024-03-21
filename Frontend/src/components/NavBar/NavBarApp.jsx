@@ -54,7 +54,9 @@ const NavbarApp = () => {
       <ul className="flex justify-between">
         <li>
           <NavLink to="/">
-            <div className="text-black ml-10 text-lg mt-2">EventEcho</div>
+            <div className="text-black ml-10 text-lg mt-2 font-bold">
+              EventEcho
+            </div>
           </NavLink>
         </li>
         <li className="flex gap-6 content-center pt-3">
@@ -134,8 +136,9 @@ const NavbarApp = () => {
                       width: "30px",
                       height: "30px",
                       borderRadius: "50%",
+                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
+                      objectFit: "cover",
                       cursor: "pointer",
-                      border: "2px solid rgba(0, 0, 0)",
                     }}
                     onClick={handleIconClick}
                   />
@@ -144,7 +147,7 @@ const NavbarApp = () => {
                     className="hover:cursor-pointer select-none"
                     color="black"
                     onClick={handleIconClick}
-                    size={25}
+                    size={30}
                   />
                 )}
               </div>

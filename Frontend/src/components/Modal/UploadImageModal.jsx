@@ -7,6 +7,8 @@ function UploadImageModal({
   images,
   setImages,
   maxImages = 4,
+  title = "Cargar Imágenes",
+  subtitle = "Seleccionar o Soltar Imágenes",
 }) {
   const modalRef = useRef(null);
 
@@ -61,7 +63,7 @@ function UploadImageModal({
       popup
       ref={modalRef}
     >
-      <Modal.Header>Cargar Imágenes</Modal.Header>
+      <Modal.Header>{title}</Modal.Header>
       <Modal.Body>
         <label
           htmlFor="fileInput"
@@ -69,7 +71,7 @@ function UploadImageModal({
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          Seleccionar o Soltar Imágenes
+          {subtitle}
           <input
             className="p-8 border-4 border-dashed border-gray-500"
             type="file"

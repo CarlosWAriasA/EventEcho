@@ -1,14 +1,14 @@
 import { LayoutGrid } from "lucide-react";
 import Card from "../../components/Card/Card";
-import { LoadingContext } from "../../context/LoadingContext";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { NavLink } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 export function HomePage() {
-  const { setIsLoading } = useContext(LoadingContext);
   const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadEvents = async () => {
     try {
@@ -49,7 +49,9 @@ export function HomePage() {
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
 
@@ -78,19 +80,30 @@ export function HomePage() {
           className="flex flex-col items-center"
           style={{ height: "500px", maxHeight: "500px" }}
         >
-          <img
-            className="rounded-md mt-5 border-4 border-black"
-            src={
-              events.length > 0 && events[0]?.image
-                ? URL.createObjectURL(events[0].image)
-                : "/images/default-image.jpg"
-            }
-            style={{ width: "80%", height: "400px" }}
-            alt="Description of your image"
-          />
-          <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap ">
-            {events.length > 0 ? events[0]?.name : "Crea el primer evento"}
-          </div>
+          {isLoading ? (
+            <>
+              <div className="flex items-center justify-center w-full h-full">
+                <ClipLoader size={50} color="yellow" />
+              </div>
+            </>
+          ) : (
+            <>
+              {" "}
+              <img
+                className="rounded-md mt-5 border-4 border-black"
+                src={
+                  events.length > 0 && events[0]?.image
+                    ? URL.createObjectURL(events[0].image)
+                    : "/images/default-image.jpg"
+                }
+                style={{ width: "80%", height: "400px" }}
+                alt="Description of your image"
+              />
+              <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap">
+                {events.length > 0 ? events[0]?.name : "Crea el primer evento"}
+              </div>
+            </>
+          )}
         </div>
       </NavLink>
       <div className="ml-36 mr-36">
@@ -114,15 +127,23 @@ export function HomePage() {
           </div>
         </div>
         <div className="mt-10 mb-36 grid grid-cols-3 gap-4 mr-10 ml-10">
-          {events.slice(1).map((card) => (
-            <Card
-              key={card.id}
-              id={card.id}
-              title={card.name}
-              content={card.location}
-              image={card.image && URL.createObjectURL(card.image)}
-            />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} loading />
+            ))
+          ) : (
+            <>
+              {events.slice(1).map((card) => (
+                <Card
+                  key={card.id}
+                  id={card.id}
+                  title={card.name}
+                  content={card.location}
+                  image={card.image && URL.createObjectURL(card.image)}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>
