@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
 import RequestHelper from "../../utils/requestHelper";
@@ -6,55 +6,28 @@ import { SquarePen } from "lucide-react";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
+import { AuthContext } from "../../context/AuthContext";
 
 function AccountSettings() {
-  const [user, setUser] = useState({
-    name: "",
-    password: "",
-    email: "",
-    age: "",
-    description: "",
-  });
+  const { user, setUser, loadUser } = useContext(AuthContext);
   const { setIsLoading } = useContext(LoadingContext);
   const [image, setImage] = useState([]);
   const [showImageModal, setShowImageModal] = useState(false);
 
-  useEffect(() => {
-    loadUser();
-  }, []);
-
-  const loadUser = async () => {
-    setIsLoading(true);
-    try {
-      const result = await RequestHelper.get("profile");
-
-      setUser({
-        age: result.age,
-        description: result.description,
-        email: result.email,
-        name: result.name,
-      });
-    } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const guardarCambios = async () => {
     setIsLoading(true);
     try {
-      const updatedUser = {
-        name: user.name,
-        lastname: user.name,
-        username: user.name,
-        email: user.email,
-        tipo_usuario: user.tipo_usuario,
-        profileImage: image[0] ?? null,
-        age: user.age,
-        description: user.description,
-      };
-      await RequestHelper.put("profile", updatedUser);
+      const formData = new FormData();
+      formData.append("name", user.name);
+      formData.append("lastname", user.lastname);
+      formData.append("username", user.username);
+      formData.append("email", user.email);
+      formData.append("profileImage", image[0]);
+      formData.append("age", user.age);
+      formData.append("description", user.description);
+
+      await RequestHelper.put("profile", formData, true);
+      loadUser();
       ToastHelper.success("Guardado exitosamente");
     } catch (error) {
       ToastHelper.error(error);
@@ -174,13 +147,20 @@ function AccountSettings() {
           </div>
           <img
             alt="imagen usuario"
-            src="/images/default-image.jpg"
+            src={
+              user.image
+                ? URL.createObjectURL(user.image)
+                : "/images/default-image.jpg"
+            }
             width={240}
             style={{ height: "220px", maxHeight: "400px", borderRadius: "50%" }}
           />
           <div className="mt-8">
             <button
               style={{ borderWidth: "3px" }}
+              onClick={() => {
+                setUser((prev) => ({ ...prev, image: "", profileImage: "" }));
+              }}
               className="border border-blue-950 p-2 pl-16 ml-2 pr-16 rounded-lg hover:bg-blue-950 hover:text-white"
             >
               Eliminar Foto

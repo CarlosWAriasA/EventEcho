@@ -68,7 +68,7 @@ const NavbarApp = () => {
                 <ListChecks
                   className="hover:cursor-pointer select-none"
                   color="black"
-                  size={25}
+                  size={30}
                 />
               </div>
             </NavLink>
@@ -82,7 +82,7 @@ const NavbarApp = () => {
               <CalendarCheck
                 className="hover:cursor-pointer select-none"
                 color="black"
-                size={25}
+                size={30}
               />
             </div>
           </NavLink>
@@ -94,7 +94,7 @@ const NavbarApp = () => {
               <Bell
                 className="hover:cursor-pointer select-none"
                 color="black"
-                size={25}
+                size={30}
                 fill="black"
               />
             </div>
@@ -108,7 +108,7 @@ const NavbarApp = () => {
               >
                 <LogOut
                   color="black"
-                  size={25}
+                  size={30}
                   fill="yellow"
                   style={{
                     borderRadius: "30%",
@@ -126,12 +126,27 @@ const NavbarApp = () => {
                 data-tooltip-id={"tooltip"}
                 data-tooltip-content="Mi Cuenta"
               >
-                <CircleUserRound
-                  className="hover:cursor-pointer select-none"
-                  color="black"
-                  onClick={handleIconClick}
-                  size={25}
-                />
+                {user.image ? (
+                  <img
+                    src={URL.createObjectURL(user.image)}
+                    alt="Profile"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      cursor: "pointer",
+                      border: "2px solid rgba(0, 0, 0)",
+                    }}
+                    onClick={handleIconClick}
+                  />
+                ) : (
+                  <CircleUserRound
+                    className="hover:cursor-pointer select-none"
+                    color="black"
+                    onClick={handleIconClick}
+                    size={25}
+                  />
+                )}
               </div>
               {showOptions && (
                 <div className="absolute right-12 w-44 top-11 bg-gray-800 rounded-md ">

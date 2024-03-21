@@ -47,6 +47,16 @@ function Login() {
         });
         localStorage.setItem(USER_TOKEN, result.token);
         const user = await RequestHelper.get("profile");
+        if (user.profileImage) {
+          try {
+            const blob = await RequestHelper.get(user.profileImage, "image");
+            user.image = new File([blob], `image_user.jpg`, {
+              type: "image/jpeg",
+            });
+          } catch (error) {
+            //
+          }
+        }
         setUser(user);
         setUserToken(result.token);
         ToastHelper.success("Usuario logueado exitosamente");

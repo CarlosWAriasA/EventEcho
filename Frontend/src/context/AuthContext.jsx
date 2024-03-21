@@ -2,6 +2,7 @@ import { useState, createContext, useEffect, useContext } from "react";
 import { USER_TOKEN } from "../utils/constants";
 import { LoadingContext } from "./LoadingContext";
 import RequestHelper from "../utils/requestHelper";
+import ToastHelper from "../utils/toastHelper";
 
 export const AuthContext = createContext();
 
@@ -20,6 +21,27 @@ export function AuthProvider({ children }) {
     }, 1000);
   };
 
+  const loadUser = async () => {
+    try {
+      const result = await RequestHelper.get("profile");
+      if (result) {
+        if (result.profileImage) {
+          try {
+            const blob = await RequestHelper.get(result.profileImage, "image");
+            result.image = new File([blob], `image_user.jpg`, {
+              type: "image/jpeg",
+            });
+          } catch (error) {
+            //
+          }
+        }
+      }
+      setUser(result);
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    }
+  };
+
   const isLoggedIn = async () => {
     const userToken = localStorage.getItem(USER_TOKEN);
     try {
@@ -27,6 +49,19 @@ export function AuthProvider({ children }) {
         setIsLoading(true);
         const result = await RequestHelper.get("profile");
         if (result) {
+          if (result.profileImage) {
+            try {
+              const blob = await RequestHelper.get(
+                result.profileImage,
+                "image"
+              );
+              result.image = new File([blob], `image_user.jpg`, {
+                type: "image/jpeg",
+              });
+            } catch (error) {
+              //
+            }
+          }
           setUser(result);
           setUserToken(userToken);
         } else {
@@ -54,6 +89,7 @@ export function AuthProvider({ children }) {
         isLoading,
         user,
         setUser,
+        loadUser,
       }}
     >
       {children}
