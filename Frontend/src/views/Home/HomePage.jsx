@@ -1,50 +1,147 @@
 import { LayoutGrid } from "lucide-react";
 import Card from "../../components/Card/Card";
+import { useState, useEffect } from "react";
+import RequestHelper from "../../utils/requestHelper";
+import ToastHelper from "../../utils/toastHelper";
+import { NavLink } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
 
-function HomePage() {
-  const cardData = [
-    { id: 1, title: "Card 1", content: "Content for card 1" },
-    { id: 2, title: "Card 2", content: "Content for card 2" },
-    { id: 3, title: "Card 3", content: "Content for card 3" },
-    { id: 4, title: "Card 4", content: "Content for card 4" },
-    { id: 5, title: "Card 5", content: "Content for card 5" },
-    { id: 6, title: "Card 6", content: "Content for card 6" },
-  ];
+export function HomePage() {
+  const [events, setEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadEvents = async () => {
+    try {
+      setIsLoading(true);
+      const result = await RequestHelper.get("events");
+      const events = result?.map(async (e) => {
+        let image;
+        const imageUrls = e.image ? e.image : [];
+
+        if (imageUrls.length > 0) {
+          try {
+            const blob = await RequestHelper.get(imageUrls[0], "image");
+            image = new File([blob], `image_.jpg`, {
+              type: "image/jpeg",
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        return {
+          id: e.id,
+          name: e.title,
+          location: e.location,
+          amount: `${0}/${e.attendees}`,
+          people: e.attendees,
+          date: new Date(e.date),
+          image: image,
+        };
+      });
+      Promise.all(events)
+        .then((events) => {
+          setEvents(events);
+        })
+        .catch((error) => {
+          console.error("Error al obtener eventos:", error);
+        });
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
+  const sortByDate = () => {
+    const sortedEvents = [...events];
+    sortedEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+    setEvents([events[0], ...sortedEvents.slice(1)]);
+  };
+
+  const sortByName = () => {
+    const sortedEvents = [...events];
+    sortedEvents.sort((a, b) => a.name.localeCompare(b.name));
+    setEvents([events[0], ...sortedEvents.slice(1)]);
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
 
   return (
     <div className="bg-white h-full overflow-y-auto text-black">
-      <div
-        className="flex flex-col items-center"
-        style={{ height: "500px", maxHeight: "500px" }}
+      <NavLink
+        to={`${events.length > 0 ? `event-detail/${events[0].id}` : ""}`}
       >
-        <img
-          className="rounded-md mt-5"
-          src="/images/default-image.jpg"
-          style={{ width: "80%", height: "400px" }}
-          alt="Description of your image"
-        />
-        <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6">
-          Evento random
+        <div
+          className="flex flex-col items-center"
+          style={{ height: "500px", maxHeight: "500px" }}
+        >
+          {isLoading ? (
+            <div style={{ width: "80%", height: "400px" }}>
+              <Skeleton height={400} />
+            </div>
+          ) : (
+            <>
+              {" "}
+              <img
+                className="rounded-md mt-5 border-4 border-black"
+                src={
+                  events.length > 0 && events[0]?.image
+                    ? URL.createObjectURL(events[0].image)
+                    : "/images/default-image.jpg"
+                }
+                style={{ width: "80%", height: "400px" }}
+                alt="Description of your image"
+              />
+              <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap">
+                {events.length > 0 ? events[0]?.name : "Crea el primer evento"}
+              </div>
+            </>
+          )}
         </div>
-      </div>
+      </NavLink>
       <div className="ml-36 mr-36">
         <div className="flex justify-between">
           <h2 className="text-black text-lg">Eventos</h2>
           <div className="flex gap-3">
-            <div className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white">
-              ordernar1
+            <div
+              onClick={sortByDate}
+              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white"
+            >
+              Fecha
               <LayoutGrid size={18} />
             </div>
-            <div className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white">
-              ordernar2
+            <div
+              onClick={sortByName}
+              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white"
+            >
+              Nombre
               <LayoutGrid size={18} />
             </div>
           </div>
         </div>
         <div className="mt-10 mb-36 grid grid-cols-3 gap-4 mr-10 ml-10">
-          {cardData.map((card) => (
-            <Card key={card.id} title={card.title} content={card.content} />
-          ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} loading />
+            ))
+          ) : (
+            <>
+              {events.slice(1).map((card) => (
+                <Card
+                  key={card.id}
+                  id={card.id}
+                  title={card.name}
+                  content={card.location}
+                  image={card.image && URL.createObjectURL(card.image)}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>
