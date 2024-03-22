@@ -1,9 +1,6 @@
-
 // Modules and Dist ignore
 node_modules/*
 dist/*
 
 // Environment
 .env
-
-uploads/**/*

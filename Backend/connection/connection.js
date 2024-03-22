@@ -1,17 +1,37 @@
-const mysql = require('mysql2');
-const dotenv = require('dotenv');
+const { Sequelize } = require("sequelize");
 
-dotenv.config();
+// Variables de entorno
+require("dotenv").config();
 
-const { MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE, MYSQLHOST, MYSQLPORT } = process.env;
+const {
+  MYSQLUSER,
+  MYSQL_ROOT_PASSWORD,
+  MYSQL_HOST,
+  MYSQL_DATABASE,
+  MYSQL_PORT,
+} = process.env;
 
-const connection = mysql.createConnection({
-    host: 'monorail.proxy.rlwy.net',
-    user: 'root',
-    password: '-bhF-2a3-AFd-g2AGeCEdF31EbgCb66e',
-    database: 'railway',
-    port: 22411,
-    client: 'mysql2'
-});
+// Configura la conexión a la base de datos
+const sequelize = new Sequelize(
+  MYSQL_DATABASE,
+  MYSQLUSER,
+  MYSQL_ROOT_PASSWORD,
+  {
+    host: MYSQL_HOST,
+    dialect: "mysql",
+    port: MYSQL_PORT,
+    logging: false,
+  }
+);
 
-module.exports = connection;
+// Prueba la conexión a la base de datos
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Conexión establecida correctamente.");
+  })
+  .catch((err) => {
+    console.error("No se pudo conectar a la base de datos:", err);
+  });
+
+module.exports = sequelize;

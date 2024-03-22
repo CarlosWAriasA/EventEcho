@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-const generarToken = (userId) => {
-    return jwt.sign({ userId }, 'tu_secreto_secreto', { expiresIn: '1d' });
+const generarToken = (userId, tipo_usuario) => {
+    return jwt.sign({ userId, tipo_usuario }, 'tu_secreto_secreto', { expiresIn: '1d' });
 };
 
 const verificarToken = (token) => {
