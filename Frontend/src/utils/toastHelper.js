@@ -1,10 +1,10 @@
 import { toast } from "react-toastify";
 
 const ToastHelper = {
-  error: (message) => {
+  error: (message, position = "bottom-right") => {
     toast.dismiss();
     toast(message, {
-      position: "top-right",
+      position: position,
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -16,16 +16,15 @@ const ToastHelper = {
     });
   },
 
-  success: (message) => {
+  success: (message, position = "bottom-right") => {
     toast.dismiss();
     toast(message, {
-      position: "top-right",
+      position: position,
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
       theme: "dark",
       type: "success",
     });
