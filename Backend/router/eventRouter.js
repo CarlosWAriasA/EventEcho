@@ -45,7 +45,7 @@ router.put(
 router.delete("/:eventId", authenticateToken, eventController.deleteEvent);
 
 // Define la ruta GET para obtener todos los eventos
-router.get("/", authenticateToken, eventController.getAllEvents);
+router.get("/", eventController.getAllEvents);
 router.get("/user", authenticateToken, eventController.getAllEventsByUserId);
 router.get("/:eventId", authenticateToken, eventController.getEventById);
 
