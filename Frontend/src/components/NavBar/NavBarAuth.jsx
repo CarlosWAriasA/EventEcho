@@ -13,12 +13,14 @@ const NavbarAuth = () => {
       <ul className="flex justify-between">
         <li>
           <NavLink to="/">
-            <div className="text-white ml-10 text-lg mt-4">EventEcho</div>
+            <div className="text-white ml-10 text-lg mt-4 font-bold">
+              EventEcho
+            </div>
           </NavLink>
         </li>
         <li>
           {isRegisterPage ? (
-            <NavLink to="/">
+            <NavLink to="/login">
               <div className="text-white mr-10 text-lg mt-4">Login</div>
             </NavLink>
           ) : (

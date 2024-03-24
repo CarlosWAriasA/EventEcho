@@ -6,7 +6,7 @@ import {
   CalendarCheck,
   ListChecks,
 } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
@@ -17,6 +17,7 @@ const NavbarApp = () => {
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
   const isEventDetail = location.pathname.includes("/event-detail");
+  const navigate = useNavigate();
 
   const handleIconClick = (event) => {
     event.preventDefault();
@@ -29,6 +30,7 @@ const NavbarApp = () => {
 
   const handleLogoutClick = () => {
     logout();
+    navigate("/");
     setShowOptions(false);
   };
 
@@ -59,18 +61,19 @@ const NavbarApp = () => {
             </div>
           </NavLink>
         </li>
-        <li className="flex gap-6 content-center pt-3">
+        <li className="flex gap-6 content-center pt-1">
           {user?.tipo_usuario === "organizador" && (
             <NavLink to={"/event-admin"}>
               <div
                 id="events"
                 data-tooltip-id="tooltip"
                 data-tooltip-content="Administrar Eventos"
+                style={{ paddingTop: "4px" }}
               >
                 <ListChecks
                   className="hover:cursor-pointer select-none"
                   color="black"
-                  size={30}
+                  size={25}
                 />
               </div>
             </NavLink>
@@ -80,11 +83,12 @@ const NavbarApp = () => {
               id="events"
               data-tooltip-id="tooltip"
               data-tooltip-content="Mis eventos"
+              style={{ paddingTop: "4px" }}
             >
               <CalendarCheck
                 className="hover:cursor-pointer select-none"
                 color="black"
-                size={30}
+                size={25}
               />
             </div>
           </NavLink>
@@ -92,11 +96,12 @@ const NavbarApp = () => {
             <div
               data-tooltip-id="tooltip"
               data-tooltip-content="Notificaciones"
+              style={{ paddingTop: "4px" }}
             >
               <Bell
                 className="hover:cursor-pointer select-none"
                 color="black"
-                size={30}
+                size={25}
                 fill="black"
               />
             </div>
@@ -107,10 +112,11 @@ const NavbarApp = () => {
                 className="mr-10"
                 data-tooltip-id="tooltip"
                 data-tooltip-content="Volver Atras"
+                style={{ paddingTop: "4px" }}
               >
                 <LogOut
                   color="black"
-                  size={30}
+                  size={25}
                   fill="yellow"
                   style={{
                     borderRadius: "30%",
@@ -123,36 +129,40 @@ const NavbarApp = () => {
           ) : (
             <div>
               <div
-                className="mr-10"
+                className="mr-10 cursor-pointer"
                 ref={optionsRef}
-                data-tooltip-id={"tooltip"}
-                data-tooltip-content="Mi Cuenta"
+                onClick={handleIconClick}
               >
-                {user.image ? (
-                  <img
-                    src={URL.createObjectURL(user.image)}
-                    alt="Profile"
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
-                      objectFit: "cover",
-                      cursor: "pointer",
-                    }}
-                    onClick={handleIconClick}
-                  />
-                ) : (
-                  <CircleUserRound
-                    className="hover:cursor-pointer select-none"
-                    color="black"
-                    onClick={handleIconClick}
-                    size={30}
-                  />
-                )}
+                <div className="text-white flex gap-2 bg-blue-950 rounded-md px-2 py-1 select-none">
+                  <p className="font-bold text-md">{user.name}</p>
+                  {user.image ? (
+                    <img
+                      src={URL.createObjectURL(user.image)}
+                      alt="Profile"
+                      style={{
+                        width: "25px",
+                        height: "25px",
+                        borderRadius: "50%",
+                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                    />
+                  ) : (
+                    <CircleUserRound
+                      className="hover:cursor-pointer bg-gray-300 p-1"
+                      color="black"
+                      style={{ borderRadius: "50%" }}
+                      size={25}
+                    />
+                  )}
+                </div>
               </div>
               {showOptions && (
-                <div className="absolute right-12 w-44 top-11 bg-gray-800 rounded-md ">
+                <div
+                  className="absolute right-9 w-44 top-9 bg-gray-800 rounded-md"
+                  style={{ zIndex: 100 }}
+                >
                   <ul>
                     <NavLink to={"account-settings"}>
                       <li
