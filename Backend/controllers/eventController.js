@@ -9,7 +9,6 @@ const Event = require("../models/eventModel");
 const Usuario = require("../models/usuarioModel");
 const UserEvent = require("../models/UserEvent");
 const { enviarCorreo } = require("./correoControlador");
-const { where } = require("sequelize");
 
 // Obtener un evento por su ID
 const getEventById = async (req, res) => {
@@ -32,7 +31,20 @@ const getEventById = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     // Obtener todos los eventos con la información de los usuarios asociados
-    const events = await Event.findAll({});
+    const { isPageable, page, pageSize } = req.query;
+    console.log(isPageable);
+    const offset = page
+      ? (parseInt(page) - 1) * (parseInt(pageSize) || 10)
+      : null;
+
+    const events = await Event.findAll(
+      isPageable
+        ? {
+            offset,
+            limit: pageSize && parseInt(pageSize),
+          }
+        : {}
+    );
 
     res.status(200).json(events);
   } catch (error) {
