@@ -55,7 +55,7 @@ function EventDetail() {
       }));
       if (imageUrls.length > 0) {
         for (const imageUrl of imageUrls) {
-          const blob = await RequestHelper.get(imageUrl, "image");
+          const blob = await RequestHelper.get(imageUrl, {}, "image");
           images.push(
             new File([blob], `image_${images.length}.jpg`, {
               type: "image/jpeg",

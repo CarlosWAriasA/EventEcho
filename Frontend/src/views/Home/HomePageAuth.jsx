@@ -9,6 +9,7 @@ import Skeleton from "react-loading-skeleton";
 export function HomePageAuth() {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showMoreButton, setShowMoreButton] = useState(true);
 
   const handleClick = () => {
     ToastHelper.warning(
@@ -19,14 +20,18 @@ export function HomePageAuth() {
   const loadEvents = async () => {
     try {
       setIsLoading(true);
-      const result = await RequestHelper.get("events");
+      const result = await RequestHelper.get("events", {
+        isPageable: true,
+        page: 1,
+        pageSize: 6,
+      });
       const events = result?.map(async (e) => {
         let image;
         const imageUrls = e.image ? e.image : [];
 
         if (imageUrls.length > 0) {
           try {
-            const blob = await RequestHelper.get(imageUrls[0], "image");
+            const blob = await RequestHelper.get(imageUrls[0], {}, "image");
             image = new File([blob], `image_.jpg`, {
               type: "image/jpeg",
             });
@@ -47,6 +52,9 @@ export function HomePageAuth() {
       });
       Promise.all(events)
         .then((events) => {
+          if (events.length < 6) {
+            setShowMoreButton(false);
+          }
           setEvents(events);
         })
         .catch((error) => {
@@ -93,7 +101,7 @@ export function HomePageAuth() {
         </ul>
       </div>
       <div
-        className="bg-white h-full overflow-y-auto text-black w-full"
+        className="bg-white h-full overflow-y-auto text-black w-full pb-36"
         style={{ marginTop: "45px", height: "93.9vh" }}
         onClick={handleClick}
       >
@@ -138,14 +146,14 @@ export function HomePageAuth() {
               </div>
             </div>
           </div>
-          <div className="mt-10 mb-36 grid grid-cols-3 gap-4 mr-10 ml-10">
+          <div className="mt-10 grid grid-cols-3 gap-4 mr-10 ml-10">
             {isLoading ? (
               Array.from({ length: 6 }).map((_, index) => (
                 <Card key={index} loading />
               ))
             ) : (
               <>
-                {events.slice(1).map((card) => (
+                {events.map((card) => (
                   <Card
                     key={card.id}
                     id={card.id}
@@ -157,6 +165,16 @@ export function HomePageAuth() {
               </>
             )}
           </div>
+          {showMoreButton && (
+            <div className="flex justify-center mt-10">
+              <button
+                type="button"
+                className="bg-yellow-400 text-white py-2 px-4 rounded-md"
+              >
+                Mostrar Mas
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,14 +1,20 @@
 import { URL_BASE, USER_TOKEN } from "./constants";
 
 const RequestHelper = {
-  get: async function (url, responseType = "json") {
+  get: async function (url, queryParams = {}, responseType = "json") {
     try {
       const token = localStorage.getItem(USER_TOKEN);
-      const response = await fetch(URL_BASE + url, {
+
+      // Serialize query parameters
+      const queryString = new URLSearchParams(queryParams).toString();
+      const queryUrl = queryString ? `${url}?${queryString}` : url;
+
+      const response = await fetch(URL_BASE + queryUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }

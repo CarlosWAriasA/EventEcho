@@ -1,22 +1,15 @@
-import { blue } from "@mui/material/colors";
-import { color } from "@mui/system";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Card from "../../components/Card/CardEventList";
-import CardEventList from "../../components/Card/CardEventList";
-import { forwardRef, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LoadingContext } from "../../context/LoadingContext";
-import { NavLink, useNavigate } from "react-router-dom";
 import ToastHelper from "../../utils/toastHelper";
 import RequestHelper from "../../utils/requestHelper";
 
 const EventList = () => {
   const { setIsLoading } = useContext(LoadingContext);
   const [events, setEvents] = useState([]);
-  const navigate = useNavigate();
   const [images, setImages] = useState([]);
-  const [isRegister, setIsRegister] = useState(false);
-
 
   useEffect(() => {
     loadEvents();
@@ -27,13 +20,13 @@ const EventList = () => {
     try {
       setIsLoading(true);
       const result = await RequestHelper.get("events/events-user");
-      const formatData = result.map(async (event) => {
+      result.map(async (event) => {
         const imageUrls = event.image ? event.image : [];
 
         if (imageUrls.length > 0) {
           for (const imageUrl of imageUrls) {
             try {
-              const blob = await RequestHelper.get(imageUrl, "image");
+              const blob = await RequestHelper.get(imageUrl, {}, "image");
               console.log(blob);
               event.photo = new File([blob], `image_${images.length}.jpg`, {
                 type: "image/jpeg",
@@ -47,13 +40,11 @@ const EventList = () => {
               console.log(error);
             }
           }
-          console.log(images);
           setImages(images);
         }
 
         return event;
       });
-      console.log(result);
       setEvents(result);
     } catch (error) {
       console.log(error);
@@ -82,9 +73,7 @@ const EventList = () => {
             style={{ backgroundColor: "#394867" }}
           >
             <div className="flex mb-2">
-              <h1 style={{ fontSize: "22px" }}>
-               Eventos Pendientes
-              </h1>
+              <h1 style={{ fontSize: "22px" }}>Eventos Pendientes</h1>
             </div>
             <div className="flex mb-2">
               <h3 className="pr-2">

@@ -92,7 +92,7 @@ const NavbarApp = () => {
               />
             </div>
           </NavLink>
-          <NavLink to={"/home"}>
+          <NavLink to={"/"}>
             <div
               data-tooltip-id="tooltip"
               data-tooltip-content="Notificaciones"

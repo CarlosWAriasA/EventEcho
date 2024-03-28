@@ -27,7 +27,11 @@ export function AuthProvider({ children }) {
       if (result) {
         if (result.profileImage) {
           try {
-            const blob = await RequestHelper.get(result.profileImage, "image");
+            const blob = await RequestHelper.get(
+              result.profileImage,
+              {},
+              "image"
+            );
             result.image = new File([blob], `image_user.jpg`, {
               type: "image/jpeg",
             });
@@ -53,6 +57,7 @@ export function AuthProvider({ children }) {
             try {
               const blob = await RequestHelper.get(
                 result.profileImage,
+                {},
                 "image"
               );
               result.image = new File([blob], `image_user.jpg`, {

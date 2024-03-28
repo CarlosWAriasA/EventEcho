@@ -64,7 +64,7 @@ function EventEdit() {
 
       if (imageUrls.length > 0) {
         imageUrls.forEach(async (i) => {
-          const blob = await RequestHelper.get(i, "image");
+          const blob = await RequestHelper.get(i, {}, "image");
           images.push(
             new File([blob], `image_${images.length}.jpg`, {
               type: "image/jpeg",

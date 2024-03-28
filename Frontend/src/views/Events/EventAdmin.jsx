@@ -20,6 +20,7 @@ import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
+import "./Event.css";
 
 function EventAdmin() {
   const [isLoading, setIsLoading] = useState(false);

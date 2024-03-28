@@ -49,7 +49,11 @@ function Login() {
         const user = await RequestHelper.get("profile");
         if (user.profileImage) {
           try {
-            const blob = await RequestHelper.get(user.profileImage, "image");
+            const blob = await RequestHelper.get(
+              user.profileImage,
+              {},
+              "image"
+            );
             user.image = new File([blob], `image_user.jpg`, {
               type: "image/jpeg",
             });
