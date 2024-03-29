@@ -1,23 +1,28 @@
-import { NavLink } from "react-router-dom";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Trash2 } from "lucide-react";
 import ToastHelper from "../../utils/toastHelper";
 import { Card as CardFlowbite } from "flowbite-react/lib/esm";
 import RequestHelper from "../../utils/requestHelper";
 
-
-const CardEventList = ({id, title, content, imageUrl, time, place, onLoadEvents }) => {
-
+const CardEventList = ({
+  id,
+  title,
+  content,
+  imageUrl,
+  time,
+  place,
+  onLoadEvents,
+}) => {
   const DesinscribirEvento = async () => {
     try {
-        await RequestHelper.delete(`events/delete-user`, {
-          eventId: id,
-        });
-        ToastHelper.success("Desinscrito exitosamente");
-        onLoadEvents();
+      await RequestHelper.delete(`events/delete-user`, {
+        eventId: id,
+      });
+      ToastHelper.success("Desinscrito exitosamente");
+      onLoadEvents();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       ToastHelper.error("Ha ocurrido un error");
     }
   };
@@ -26,35 +31,54 @@ const CardEventList = ({id, title, content, imageUrl, time, place, onLoadEvents 
   const defaultImageUrl = "/images/default-image.jpg";
 
   return (
-      //<NavLink to={`event-detail/${id}`}>
-        <CardFlowbite>
-        <div className="flex h-40">
-          <img
-            src={imageUrl || defaultImageUrl}
-            alt="Card"
-            className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
-          />
-          <div className="flex-columns ml-10">
-            <h5 className="mb-5">{title.length > 40 ? `${title.substring(0, 40)}...` : title}</h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              {content.length > 78 ? `${content.substring(0, 78)}...` : content}
-            </p>
+    <CardFlowbite>
+      <div className="flex h-40">
+        <img
+          src={imageUrl || defaultImageUrl}
+          alt="Card"
+          className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
+        />
+        <div>
+          <div className="flex">
+            <div className="flex-columns ml-10">
+              <h3 className="mb-3 text-large">
+                {title.length > 40 ? `${title.substring(0, 40)}...` : title}
+              </h3>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                {content.length > 78
+                  ? `${content.substring(0, 180)}...`
+                  : content}
+              </p>
+            </div>
+            <button
+              style={{ color: "yellow", borderRadius: "50%" }}
+              className="ml-auto bg-black h-10 p-2"
+              onClick={DesinscribirEvento}
+            >
+              <Trash2 />
+            </button>
           </div>
-          <button style={{color: 'yellow'}} className="ml-auto bg-black h-10 rounded-3xl" onClick={DesinscribirEvento}>
-            <DeleteIcon/>
-          </button>
-        </div>  
-          <div className="flex ml-5 w-full justify-center">
-            <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
-            <h3 className="mr-35 ml-2 w-60">{time}</h3>
-            <LocationOnOutlinedIcon sx={{ color: "yellow", fontSize: "20px" }}/>
-                <h3 className="mr-35 ml-2 w-60">
-                  <h3>{place}</h3>
-                </h3>
+          <div
+            className={`flex ml-8 justify-center gap-2 ${
+              content ? "mt-8" : "mt-16"
+            }`}
+          >
+            <div className="flex w-1/2 items-center">
+              <AccessTimeIcon sx={{ color: "yellow", fontSize: 30 }} />
+              <p className="ml-2">{new Date(time).toLocaleString()}</p>
+            </div>
+            <div className="flex items-center">
+              <LocationOnOutlinedIcon
+                className=""
+                sx={{ color: "yellow", fontSize: 30 }}
+              />
+              <p>{place}</p>
+            </div>
           </div>
-        </CardFlowbite>
-      //</NavLink>
-    );
+        </div>
+      </div>
+    </CardFlowbite>
+  );
 };
 
 export default CardEventList;

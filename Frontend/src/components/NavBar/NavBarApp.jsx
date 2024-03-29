@@ -6,7 +6,7 @@ import {
   CalendarCheck,
   ListChecks,
 } from "lucide-react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
@@ -17,7 +17,6 @@ const NavbarApp = () => {
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
   const isEventDetail = location.pathname.includes("/event-detail");
-  const navigate = useNavigate();
 
   const handleIconClick = (event) => {
     event.preventDefault();
@@ -30,7 +29,6 @@ const NavbarApp = () => {
 
   const handleLogoutClick = () => {
     logout();
-    navigate("/");
     setShowOptions(false);
   };
 
