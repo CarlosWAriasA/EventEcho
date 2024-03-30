@@ -1,6 +1,7 @@
 const UsuarioModel = require("../models/usuarioModel");
 const EventModel = require("../models/eventModel");
 const UserEventsModel = require("../models/UserEvent");
+const ComentariosModel = require("../models/Comentario");
 
 const defineAssociations = () => {
   UsuarioModel.hasMany(EventModel, {
@@ -17,6 +18,12 @@ const defineAssociations = () => {
 
   UserEventsModel.belongsTo(UsuarioModel, { foreignKey: "userId" });
   UsuarioModel.hasMany(UserEventsModel, { foreignKey: "userId" });
+
+  ComentariosModel.belongsTo(EventModel, { foreignKey: "eventId" });
+  EventModel.hasMany(ComentariosModel, { foreignKey: "eventId" });
+
+  ComentariosModel.belongsTo(UsuarioModel, { foreignKey: "userId" });
+  UsuarioModel.hasMany(ComentariosModel, { foreignKey: "userId" });
 };
 
 module.exports = defineAssociations;

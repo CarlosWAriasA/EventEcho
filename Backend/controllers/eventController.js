@@ -17,7 +17,7 @@ const getEventById = async (req, res) => {
     const event = await Event.findByPk(eventId);
 
     if (!event) {
-      return res.status(404).json({ message: "Evento no encontrado" });
+      return res.status(400).json({ message: "Evento no encontrado" });
     }
 
     res.status(200).json(event);
@@ -32,7 +32,7 @@ const getAllEvents = async (req, res) => {
   try {
     // Obtener todos los eventos con la información de los usuarios asociados
     const { isPageable, page, pageSize } = req.query;
-    console.log(isPageable);
+
     const offset = page
       ? (parseInt(page) - 1) * (parseInt(pageSize) || 10)
       : null;
@@ -148,7 +148,7 @@ const createEvent = async (req, res) => {
   // Verificar si el usuario es un organizador
   if (tipoUsuario !== "organizador") {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "No tienes permiso para crear eventos" });
   }
 
@@ -262,7 +262,7 @@ const deleteEvent = async (req, res) => {
   // Verificar si el usuario es un organizador
   if (tipoUsuario !== "organizador") {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "No tienes permiso para eliminar eventos" });
   }
 

@@ -7,6 +7,7 @@ const registerRoutes = require("./router/register");
 const homeRouter = require("./router/homeRouter");
 const eventRouter = require("./router/eventRouter");
 const profileRouter = require("./router/profileRouter");
+const comentarioRouter = require("./router/comentarioRouter");
 const userEventsRouter = require("./router/userEventsRouter");
 const sequelize = require("./connection/connection");
 const defineAssociations = require("./connection/associations");
@@ -26,7 +27,7 @@ app.use("/api/", registerRoutes);
 app.use("/", homeRouter);
 app.use("/api/events/", eventRouter);
 app.use("/api/profile/", profileRouter);
-
+app.use("/api/comentarios/", comentarioRouter);
 app.use("/api/", userEventsRouter);
 
 //Ruta de los usuarios
@@ -44,7 +45,7 @@ const PORT = process.env.PORT || 5000;
 
 defineAssociations();
 
-sequelize.sync().then(() => {
+sequelize.sync({ alter: true }).then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

@@ -13,7 +13,7 @@ const iniciarSesion = async (req, res) => {
     if (!usuario) {
       return res.status(400).json({
         ok: false,
-        msg: "Revisa los datos ingresados",
+        msg: "El Correo Electronico o la Contraseña son incorrectos",
       });
     }
 
@@ -23,7 +23,7 @@ const iniciarSesion = async (req, res) => {
     if (!passwordValido) {
       return res.status(400).json({
         ok: false,
-        msg: "Revisa los datos ingresados",
+        msg: "El Correo Electronico o la Contraseña son incorrectos",
       });
     }
 
