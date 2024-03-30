@@ -22,7 +22,6 @@ const CardEventList = ({
       ToastHelper.success("Desinscrito exitosamente");
       onLoadEvents();
     } catch (error) {
-      console.log(error);
       ToastHelper.error("Ha ocurrido un error");
     }
   };

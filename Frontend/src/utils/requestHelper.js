@@ -16,7 +16,12 @@ const RequestHelper = {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(responseData.msg || "Error de solicitud");
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
 
       const contentType = response.headers.get("content-type");
@@ -59,9 +64,13 @@ const RequestHelper = {
       });
 
       if (!response.ok) {
-        throw response;
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(responseData.msg || "Error de solicitud");
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
-
       return await response.json();
     } catch (error) {
       console.error("Error making POST request:", error);
@@ -87,7 +96,12 @@ const RequestHelper = {
       });
 
       if (!response.ok) {
-        throw response;
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(responseData.msg || "Error de solicitud");
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
 
       return await response.json();
@@ -109,7 +123,12 @@ const RequestHelper = {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(responseData.msg || "Error de solicitud");
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
       return await response.json();
     } catch (error) {

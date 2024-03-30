@@ -67,7 +67,7 @@ function Login() {
         cleanUser();
       }
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.warning(error.message);
     } finally {
       setIsLoading(false);
     }

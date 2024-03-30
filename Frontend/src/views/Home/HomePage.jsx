@@ -14,6 +14,7 @@ export function HomePage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showMoreButton, setShowMoreButton] = useState(true);
   const navigate = useNavigate();
+  const [ascendingOrder, setAscendingOrder] = useState(true);
 
   const loadEvents = async () => {
     try {
@@ -73,16 +74,25 @@ export function HomePage() {
       }
     }
   };
-
   const sortByDate = () => {
     const sortedEvents = events.slice(1);
-    sortedEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+    sortedEvents.sort((a, b) => {
+      const dateComparison = new Date(a.date) - new Date(b.date);
+      return ascendingOrder ? dateComparison : -dateComparison;
+    });
+
+    setAscendingOrder(!ascendingOrder); // Invertir el indicador de orden
     setEvents([events[0], ...sortedEvents]);
   };
 
   const sortByName = () => {
     const sortedEvents = events.slice(1);
-    sortedEvents.sort((a, b) => a.name.localeCompare(b.name));
+    sortedEvents.sort((a, b) => {
+      const nameComparison = a.name.localeCompare(b.name);
+      return ascendingOrder ? nameComparison : -nameComparison;
+    });
+
+    setAscendingOrder(!ascendingOrder); // Invertir el indicador de orden
     setEvents([events[0], ...sortedEvents]);
   };
 
@@ -133,14 +143,14 @@ export function HomePage() {
           <div className="flex gap-3">
             <div
               onClick={sortByDate}
-              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white"
+              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white select-none"
             >
               Fecha
               <LayoutGrid size={18} />
             </div>
             <div
               onClick={sortByName}
-              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white"
+              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white select-none"
             >
               Nombre
               <LayoutGrid size={18} />

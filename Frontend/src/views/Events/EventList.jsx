@@ -31,7 +31,7 @@ const EventList = () => {
                 type: "image/jpeg",
               });
             } catch (error) {
-              console.log(error);
+              //
             }
           }
         }
