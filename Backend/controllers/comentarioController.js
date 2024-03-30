@@ -1,12 +1,12 @@
 const Comentario = require("../models/Comentario");
 const Event = require("../models/eventModel");
 const User = require("../models/usuarioModel");
+const notificacionUtil = require("../util/notificacionUtil");
 
 const getComentarios = async (req, res) => {
   const { eventId } = req.query;
 
   try {
-    console.log(eventId);
     const eventExist = await Event.findOne({ where: { id: eventId } });
 
     if (!eventExist) {
@@ -48,6 +48,16 @@ const addComentario = async (req, res) => {
       userId,
       date: Date.now(),
     });
+
+    if (eventExist.userId !== userId) {
+      notificacionUtil.addNotificacion(
+        `Ha agregado un nuevo comentario en el evento: ${eventExist.title}`,
+        eventExist.userId,
+        "C",
+        newComentario.id,
+        userId
+      );
+    }
     return res.status(201).json(newComentario);
   } catch (error) {
     console.error("Error adding user event:", error);

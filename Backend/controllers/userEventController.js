@@ -84,7 +84,7 @@ const addUserEvent = async (req, res) => {
 const deleteUserEvent = async (req, res) => {
   const userId = req.user.userId;
   const { eventId } = req.body;
-  console.log(eventId);
+
   try {
     const eventExist = await Event.findOne({ where: { id: eventId } });
 

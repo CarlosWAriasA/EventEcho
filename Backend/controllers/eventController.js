@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
@@ -8,6 +7,7 @@ const path = require("path");
 const Event = require("../models/eventModel");
 const Usuario = require("../models/usuarioModel");
 const UserEvent = require("../models/UserEvent");
+const Comentario = require("../models/Comentario");
 const { enviarCorreo } = require("./correoControlador");
 
 // Obtener un evento por su ID
@@ -214,8 +214,6 @@ const updateEvent = async (req, res) => {
     const { title, description, date, attendees, location, longitud, latitud } =
       req.body;
 
-    console.log(req.files);
-
     // Buscar el evento en la base de datos
     const event = await Event.findByPk(eventId);
     if (!event) {
@@ -311,6 +309,11 @@ const deleteEvent = async (req, res) => {
       await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
     }
 
+    // Eliminar el evento de la base de datos
+    await UserEvent.destroy({ where: { eventId: eventId } });
+    await Comentario.destroy({ where: { eventId: eventId } });
+    await event.destroy();
+
     // Enviar un correo electrónico al organizador
     const organizer = await Usuario.findByPk(event.userId);
     const destinatarioOrganizador = organizer.email;
@@ -330,10 +333,6 @@ const deleteEvent = async (req, res) => {
       plantillaNombreOrganizador,
       datosOrganizador
     );
-
-    // Eliminar el evento de la base de datos
-    await UserEvent.destroy({ where: { eventId: eventId } });
-    await event.destroy();
 
     res.status(200).json({ message: "Evento eliminado exitosamente" });
   } catch (error) {

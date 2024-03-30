@@ -36,8 +36,6 @@ const registrarUsuario = async (req, res) => {
     // Insertar el nuevo usuario en la base de datos
     await Usuario.create({
       name,
-      lastName,
-      username,
       email,
       password: hashedPassword,
       tipo_usuario, // Añadir el nuevo campo userType
