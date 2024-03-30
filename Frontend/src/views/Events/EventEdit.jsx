@@ -18,7 +18,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
 import Mapa from "../../components/Mapa/Mapa";
 import useKeypress from "react-use-keypress";
-import { KEY_ENTER, KEY_ESCAPE } from "../../utils/constants";
+import { KEY_ESCAPE } from "../../utils/constants";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -187,7 +187,6 @@ function EventEdit() {
     }
   };
 
-  useKeypress([KEY_ENTER], saveEvent);
   useKeypress([KEY_ESCAPE], () => {
     navigate("/event-admin");
   });

@@ -32,13 +32,27 @@ function EventAdmin() {
     totalEvents: 0,
     upcomingEvents: 0,
   });
+  const [notificaciones, setNotificaciones] = useState([]);
 
   useEffect(() => {
     if (user.tipo_usuario !== "organizador") {
       navigate("/");
     }
     loadEvents();
+    getNotificaciones();
   }, []);
+
+  const getNotificaciones = async () => {
+    try {
+      const result = await RequestHelper.get("notificaciones", {
+        source: "C",
+        userRecieverId: user.id,
+      });
+      setNotificaciones(result);
+    } catch (error) {
+      ToastHelper.error(error.message ?? "Ha ocurrido un error");
+    }
+  };
 
   const loadEvents = async () => {
     try {
@@ -219,17 +233,43 @@ function EventAdmin() {
           />
         </Paper>
       </div>
-      <div className="border-t-4 border-l-4 pt-2 pl-3 w-1/4 pr-2">
+      <div className="border-t-4 border-l-4 pt-2 pl-3 w-1/4 pr-2 overflow-auto">
         <h2 className="text-xl font-bold">Notificaciones</h2>
-        <div className="bg-blue-500 rounded-xl p-5 flex flex-col mt-5">
-          <div className="flex items-center gap-1">
-            <CircleUserRound size={20} />
-            <p>Carlos Arias</p>
-          </div>
-          <p className="mt-2">
-            Me ha encatando el evento espero con ansias el proximo
-          </p>
-        </div>
+        {notificaciones.map((n) => {
+          const comentario = n.Comentario;
+          return (
+            <NavLink
+              to={`/event-detail/${comentario.eventId}`}
+              key={comentario.id}
+            >
+              <div className="bg-blue-500 rounded-xl p-5 flex flex-col mt-5 text-white">
+                <div className="flex items-center gap-1">
+                  {comentario.Usuario.image64 ? (
+                    <img
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                      src={`data:image/png;base64, ${comentario.Usuario.image64}`}
+                    />
+                  ) : (
+                    <CircleUserRound size={20} />
+                  )}
+                  <p>{comentario.Usuario.name}</p>
+                </div>
+                <p className="mt-2">
+                  {comentario.description.length > 200
+                    ? `${comentario.description.substring(0, 200)}...`
+                    : comentario.description}
+                </p>
+              </div>
+            </NavLink>
+          );
+        })}
       </div>
     </main>
   );

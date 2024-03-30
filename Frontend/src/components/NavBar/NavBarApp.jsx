@@ -2,14 +2,14 @@ import {
   CircleUserRound,
   LogOut,
   UserRound,
-  Bell,
   CalendarCheck,
   ListChecks,
 } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
+import NotificacionButton from "../Button/NotificacionButton";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
@@ -17,6 +17,7 @@ const NavbarApp = () => {
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
   const isEventDetail = location.pathname.includes("/event-detail");
+  const navigate = useNavigate();
 
   const handleIconClick = (event) => {
     event.preventDefault();
@@ -90,40 +91,24 @@ const NavbarApp = () => {
               />
             </div>
           </NavLink>
-          <NavLink to={"/"}>
+          <NotificacionButton />
+          {isEventDetail ? (
             <div
-              data-tooltip-id="tooltip"
-              data-tooltip-content="Notificaciones"
+              className="mr-10 hover:cursor-pointer"
               style={{ paddingTop: "4px" }}
+              onClick={() => navigate(-1)}
             >
-              <Bell
-                className="hover:cursor-pointer select-none"
+              <LogOut
                 color="black"
                 size={25}
-                fill="black"
+                fill="yellow"
+                style={{
+                  borderRadius: "30%",
+                  padding: "2px",
+                  backgroundColor: "yellow",
+                }}
               />
             </div>
-          </NavLink>
-          {isEventDetail ? (
-            <NavLink to={"/"}>
-              <div
-                className="mr-10"
-                data-tooltip-id="tooltip"
-                data-tooltip-content="Volver Atras"
-                style={{ paddingTop: "4px" }}
-              >
-                <LogOut
-                  color="black"
-                  size={25}
-                  fill="yellow"
-                  style={{
-                    borderRadius: "30%",
-                    padding: "2px",
-                    backgroundColor: "yellow",
-                  }}
-                />
-              </div>
-            </NavLink>
           ) : (
             <div>
               <div

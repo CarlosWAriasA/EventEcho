@@ -108,7 +108,7 @@ function Register() {
         });
         ToastHelper.success(result.msg);
         cleanUser();
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
       ToastHelper.warning(error.message);

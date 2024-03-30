@@ -61,7 +61,7 @@ export function HomePageAuth() {
           console.error("Error al obtener eventos:", error);
         });
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.warning(error.message ?? "Ha ocurrido un error");
     } finally {
       setIsLoading(false);
     }

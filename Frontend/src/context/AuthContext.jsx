@@ -42,7 +42,7 @@ export function AuthProvider({ children }) {
       }
       setUser(result);
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.error(error.message ?? "Ha ocurrido un error");
     }
   };
 
