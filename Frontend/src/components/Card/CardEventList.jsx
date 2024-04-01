@@ -30,12 +30,12 @@ const CardEventList = ({
   const defaultImageUrl = "/images/default-image.jpg";
 
   return (
-    <CardFlowbite>
-      <div className="flex h-40">
+    <CardFlowbite className="border-4 border-gray-600 rounded-3xl">
+      <div className="flex h-40 ">
         <img
           src={imageUrl || defaultImageUrl}
           alt="Card"
-          className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
+          className="text-black-500 w-30 h-44 object-cover mb-4 rounded-3xl "
         />
         <div>
           <div className="flex">

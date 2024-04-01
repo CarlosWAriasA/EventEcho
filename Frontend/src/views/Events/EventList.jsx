@@ -63,11 +63,11 @@ const EventList = () => {
       <div className="flex justify-inline flex-col">
         <div className="flex">
           <div
-            className="flex flex-col columns-6  w-3/4 bg-blue-500 p-8 rounded-3xl ml-10 mt-10 text-white"
+            className="flex flex-col columns-6 w-3/4  bg-blue-500 p-8 rounded-3xl ml-10 mt-10 text-white"
             style={{ backgroundColor: "#394867" }}
           >
             <div className="flex mb-2">
-              <h1 style={{ fontSize: "22px" }}>{firstEvent.title ?? ""}</h1>
+              <h1 style={{ fontSize: "22px" }}>{firstEvent?.title ?? ""}</h1>
             </div>
             <div className="flex mb-2">
               <h3 className="pr-2">
@@ -75,18 +75,18 @@ const EventList = () => {
                   sx={{ color: "yellow", fontSize: "20px" }}
                 />
               </h3>
-              <h3>{firstEvent.location ?? ""}</h3>
+              <h3>{firstEvent?.location ?? ""}</h3>
             </div>
             <div className="flex mb-2">
               <h3 className="pr-2">
                 <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
               </h3>
-              <h3>{firstEvent.date ?? ""}</h3>
+              <h3>{firstEvent?.date ?? ""}</h3>
             </div>
           </div>
         </div>
         <div
-          className="flex flex-col w-3/4 bg-blue-500 p-8 ml-10 mt-10 gap-5 overflow-auto"
+          className="flex flex-col w-3/4 bg-blue-500 p-8 ml-10 mt-10 gap-5 "
           style={{
             backgroundColor: "#FCFCFC",
             maxHeight: "60vh",
