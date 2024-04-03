@@ -9,6 +9,8 @@ import { LoadingContext } from "../../context/LoadingContext";
 import { NavLink, useNavigate } from "react-router-dom";
 import ToastHelper from "../../utils/toastHelper";
 import RequestHelper from "../../utils/requestHelper";
+import { Skeleton, Icon, Container, Typography } from "@mui/material";
+import { LocationIcon, TimeIcon } from "../../components/icons/iconComponents";
 
 const EventList = () => {
   const { setIsLoading } = useContext(LoadingContext);
@@ -114,30 +116,43 @@ const EventList = () => {
             style={{ backgroundColor: "#394867" }}
           >
             <div className="flex mb-2">
-              <h1 style={{ fontSize: "22px" }}>
-               Eventos Pendientes
+              <h1 
+              className="font-quicksand font-semibold mb-3"
+              style={{ fontSize: "22px" }}>
+                No hay eventos próximos
               </h1>
             </div>
-            <div className="flex mb-2">
+            <div className="flex mb-2 items-center pb-3">
               <h3 className="pr-2">
-                <LocationOnOutlinedIcon
-                  sx={{ color: "yellow", fontSize: "20px" }}
+                <LocationIcon 
+                sx={{ 
+                  fontSize: 24
+
+                }}
                 />
               </h3>
-              <h3>Santo Domingo, Naco</h3>{" "}
+              <Skeleton variant="rounded" width={130} height={15}/>
             </div>
-            <div className="flex mb-2">
+            <div className="flex mb-2 items-center">
               <h3 className="pr-2">
-                <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
+                <TimeIcon
+                  sx={{
+                    fontSize: 24 
+                  }}
+
+                />
               </h3>
-              <h3>07:30 PM</h3>
+              <Skeleton variant="rounded" width={100} height={15}/>
             </div>
           </div>
         </div>
 
         <div
-          className="flex flex-col  columns-6 max-w-screen-xl w-3/4 bg-blue-500 p-8 ml-10 mt-10"
-          style={{ backgroundColor: "#FCFCFC" }}
+          className="flex flex-col  columns-6 max-w-screen-xl w-3/4 h-96 bg-blue-500 p-8 ml-10 mt-10"
+          style={{ 
+            backgroundColor: "#FCFCFC",
+            boxShadow: '1px 0 8px rgba(57, 72, 103, 0.4)'
+          }}
         >
           {events && events.length > 0 ? (
             events.map((card) => (
@@ -153,7 +168,15 @@ const EventList = () => {
               ></Card>
             ))
           ) : (
-            <h1 className="">No tiene ningun evento inscrito.</h1>
+            // <h1 className="">No tiene ningun evento inscrito.</h1>
+            <Container sx={{ display: "grid", justifyItems: 'center', alignItems:'content'}} className="w-full h-full">
+              <Icon
+              sx={{display:'flex', justifyContent:"center", alignSelf: 'end', marginBottom: 3, width: "80%", height: '80%'}}
+             >
+              <img style={{width: '40%', maxWidth: '50%'}} src="../../../public/icons/aloneIllustration.svg"/>
+              </Icon>
+              <Typography variant='h6' sx={{ fontFamily: 'quicksand', fontWeight: '600'}}>¡Vaya! No hay ningún evento</Typography>
+            </Container>
           )}
         </div>
       </div>

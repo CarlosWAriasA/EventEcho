@@ -22,7 +22,7 @@ export default function TextInput({
       variant="filled"
       onChange={onChange}
       value={value}
-      label={label}
+      label={<p className="font-quicksand font-medium">{label}</p>}
       multiline={multiline}
       className={className}
       InputLabelProps={{

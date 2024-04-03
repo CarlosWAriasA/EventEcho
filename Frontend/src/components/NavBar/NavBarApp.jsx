@@ -1,15 +1,13 @@
 import {
-  CircleUserRound,
   LogOut,
   UserRound,
-  Bell,
-  CalendarCheck,
   ListChecks,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
+import { EventIcon, NotificationIcon } from "../icons/iconComponents";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
@@ -49,17 +47,17 @@ const NavbarApp = () => {
   return (
     <nav
       className="absolute top-0"
-      style={{ width: "100%", backgroundColor: "white", height: "45px" }}
+      style={{ width: "100%", backgroundColor: "white", height: "3.5rem" }}
     >
-      <ul className="flex justify-between">
-        <li>
+      <ul className="flex justify-between h-full ">
+        <li className="flex items-center">
           <NavLink to="/">
-            <div className="text-black ml-10 text-lg mt-2 font-bold">
+            <div className="font-quicksand font-semibold text-black pl-3  text-lg mt-2 ">
               EventEcho
             </div>
           </NavLink>
         </li>
-        <li className="flex gap-6 content-center pt-3">
+        <li className="flex gap-6 items-center">
           {user?.tipo_usuario === "organizador" && (
             <NavLink to={"/event-admin"}>
               <div
@@ -81,10 +79,10 @@ const NavbarApp = () => {
               data-tooltip-id="tooltip"
               data-tooltip-content="Mis eventos"
             >
-              <CalendarCheck
-                className="hover:cursor-pointer select-none"
-                color="black"
-                size={30}
+              <EventIcon 
+                sx={{
+                  fontSize: 26
+                }}
               />
             </div>
           </NavLink>
@@ -93,11 +91,10 @@ const NavbarApp = () => {
               data-tooltip-id="tooltip"
               data-tooltip-content="Notificaciones"
             >
-              <Bell
-                className="hover:cursor-pointer select-none"
-                color="black"
-                size={30}
-                fill="black"
+              <NotificationIcon 
+                sx={{
+                  fontSize: 26
+                }}
               />
             </div>
           </NavLink>

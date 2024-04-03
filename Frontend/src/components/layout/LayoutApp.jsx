@@ -5,7 +5,7 @@ const LayoutApp = () => {
   return (
     <>
       <NavbarApp />
-      <main className="w-full" style={{ marginTop: "45px", height: "93.9vh" }}>
+      <main className="w-full" style={{ marginTop: "3.5rem", height: "92.8vh" }}>
         <Outlet />
       </main>
     </>

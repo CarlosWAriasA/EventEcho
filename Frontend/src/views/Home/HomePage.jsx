@@ -5,6 +5,7 @@ import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { NavLink } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
+import { Container } from "@mui/material";
 
 export function HomePage() {
   const [events, setEvents] = useState([]);
@@ -77,7 +78,7 @@ export function HomePage() {
         to={`${events.length > 0 ? `event-detail/${events[0].id}` : ""}`}
       >
         <div
-          className="flex flex-col items-center"
+          className="flex flex-col items-center cursor-default"
           style={{ height: "500px", maxHeight: "500px" }}
         >
           {isLoading ? (
@@ -88,7 +89,7 @@ export function HomePage() {
             <>
               {" "}
               <img
-                className="rounded-md mt-5 border-4 border-black"
+                className="rounded-lg mt-5 border-4 "
                 src={
                   events.length > 0 && events[0]?.image
                     ? URL.createObjectURL(events[0].image)
@@ -97,16 +98,22 @@ export function HomePage() {
                 style={{ width: "80%", height: "400px" }}
                 alt="Description of your image"
               />
-              <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap">
-                {events.length > 0 ? events[0]?.name : "Crea el primer evento"}
-              </div>
+              <Container
+                className="relative text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap"
+                sx={{
+                  width: 300,
+                  backgroundColor: '#212A3E',
+                }}
+              >
+                {events.length > 0 ? events[0]?.name : <p className="font-quicksand font-medium tracking-wide">Sé el primer evento</p>}
+              </Container>
             </>
           )}
         </div>
       </NavLink>
       <div className="ml-36 mr-36">
         <div className="flex justify-between">
-          <h2 className="text-black text-lg">Eventos</h2>
+          <h2 className="font-quicksand font-medium text-2xl" style={{color: '#212A3E'}}>Eventos</h2>
           <div className="flex gap-3">
             <div
               onClick={sortByDate}
