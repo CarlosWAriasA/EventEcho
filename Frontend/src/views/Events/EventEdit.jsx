@@ -18,7 +18,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
 import Mapa from "../../components/Mapa/Mapa";
 import useKeypress from "react-use-keypress";
-import { KEY_ENTER, KEY_ESCAPE } from "../../utils/constants";
+import { KEY_ESCAPE } from "../../utils/constants";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -64,7 +64,7 @@ function EventEdit() {
 
       if (imageUrls.length > 0) {
         imageUrls.forEach(async (i) => {
-          const blob = await RequestHelper.get(i, "image");
+          const blob = await RequestHelper.get(i, {}, "image");
           images.push(
             new File([blob], `image_${images.length}.jpg`, {
               type: "image/jpeg",
@@ -95,7 +95,7 @@ function EventEdit() {
   async function fetchCity(lat, lng) {
     setIsLoading(true);
     try {
-      if (!clickedPosition) return;
+      if (!lat || !lng) return;
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
       );
@@ -187,12 +187,11 @@ function EventEdit() {
     }
   };
 
-  useKeypress([KEY_ENTER], saveEvent);
   useKeypress([KEY_ESCAPE], () => {
     navigate("/event-admin");
   });
   return (
-    <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
+    <main className="bg-white h-full text-black pl-16 pt-8 overflow-y-auto">
       <div className="flex gap-52">
         {modalImageUpload && (
           <UploadImageModal
@@ -336,6 +335,7 @@ function EventEdit() {
               Localización
             </p>
             <Mapa
+              initialValue={{ lat: event.latitude, lng: event.longitude }}
               value={clickedPosition}
               setValue={setClickedPosition}
               onClick={fetchCity}

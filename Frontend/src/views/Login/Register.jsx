@@ -60,6 +60,11 @@ function Register() {
       return false;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
+      ToastHelper.error("El Correo Electronico es invalido.", "top-center");
+      return false;
+    }
+
     if (!newUser.password) {
       ToastHelper.error("La Contraseña es requerida.", "top-center");
       return false;
@@ -97,18 +102,16 @@ function Register() {
       if (validateUser()) {
         const result = await RequestHelper.post("register", {
           name: newUser.userName,
-          lastName: newUser.userName,
-          username: newUser.userName,
           email: newUser.email,
           password: newUser.password,
           tipo_usuario: newUser.role.toLowerCase(),
         });
         ToastHelper.success(result.msg);
         cleanUser();
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.warning(error.message);
     } finally {
       setIsLoading(false);
     }

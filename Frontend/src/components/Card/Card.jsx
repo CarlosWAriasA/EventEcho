@@ -27,12 +27,12 @@ const Card = ({ id, title, content, image, loading = false }) => {
             className="w-full object-cover mb-4 rounded-md border-2 border-black"
             src={image ?? defaultImageUrl}
             alt="card"
-            style={{ maxHeight: 220 }}
+            style={{ height: 220, maxHeight: 220 }}
           />
         )}
       >
         <h5>{title.length > 40 ? `${title.substring(0, 40)}...` : title}</h5>
-        <p className="font-normal text-gray-700 dark:text-gray-400">
+        <p className="font-normal text-gray-700 dark:text-gray-400 h-10">
           {content.length > 78 ? `${content.substring(0, 78)}...` : content}
         </p>
       </CardFlowbite>

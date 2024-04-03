@@ -30,7 +30,7 @@ function AccountSettings() {
       loadUser();
       ToastHelper.success("Guardado exitosamente");
     } catch (error) {
-      ToastHelper.error(error);
+      ToastHelper.warning(error.message ?? "Ha ocurrido un error");
     } finally {
       setIsLoading(false);
     }
