@@ -1,6 +1,7 @@
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Card from "../../components/Card/CardEventList";
+import { Trash2 } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { LoadingContext } from "../../context/LoadingContext";
 import ToastHelper from "../../utils/toastHelper";
@@ -55,6 +56,18 @@ const EventList = () => {
     }
   };
 
+  const DesinscribirEvento = async () => {
+    try {
+      await RequestHelper.delete(`events/delete-user`, {
+        eventId: event.id,
+      });
+      ToastHelper.success("Desinscrito exitosamente");
+      onLoadEvents();
+    } catch (error) {
+      ToastHelper.error("Ha ocurrido un error");
+    }
+  };
+
   return (
     <main
       className="bg-white text-black h-full overflow-y-auto"
@@ -67,20 +80,27 @@ const EventList = () => {
             style={{ backgroundColor: "#394867" }}
           >
             <div className="flex mb-2">
-              <h1 style={{ fontSize: "22px" }}>{firstEvent?.title ?? ""}</h1>
+              <h1 style={{ fontSize: "22px" }}>{firstEvent?.title ?? "No tiene eventos principales"}</h1>
             </div>
+          {/* <button style={{ color: "yellow", borderRadius: "50%" }} className="ml-auto bg-black h-10 p-2" onClick={DesinscribirEvento}>
+            <Trash2 />
+          </button> */}
             <div className="flex mb-2">
-              <h3 className="pr-2">
-                <LocationOnOutlinedIcon
-                  sx={{ color: "yellow", fontSize: "20px" }}
-                />
-              </h3>
+              {firstEvent?.location && (
+                <h3 className="pr-2">
+                  <LocationOnOutlinedIcon
+                    sx={{ color: "yellow", fontSize: "20px" }}
+                  />
+                </h3>
+              )}
               <h3>{firstEvent?.location ?? ""}</h3>
             </div>
             <div className="flex mb-2">
-              <h3 className="pr-2">
-                <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
-              </h3>
+              {firstEvent?.date && (
+                <h3 className="pr-2">
+                  <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
+                </h3>
+              )}
               <h3>{firstEvent?.date ?? ""}</h3>
             </div>
           </div>

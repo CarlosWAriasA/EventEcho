@@ -31,53 +31,33 @@ const CardEventList = ({
 
   return (
     <CardFlowbite className="border-4 border-gray-600 rounded-3xl">
-      <div className="flex h-40 ">
-        <img
-          src={imageUrl || defaultImageUrl}
-          alt="Card"
-          className="text-black-500 w-30 h-44 object-cover mb-4 rounded-3xl "
-        />
-        <div>
-          <div className="flex">
-            <div className="flex-columns ml-10">
-              <h3 className="mb-3 text-large">
-                {title.length > 40 ? `${title.substring(0, 40)}...` : title}
-              </h3>
-              <p className="font-normal text-gray-700 dark:text-gray-400">
-                {content.length > 78
-                  ? `${content.substring(0, 180)}...`
-                  : content}
-              </p>
-            </div>
-            <button
-              style={{ color: "yellow", borderRadius: "50%" }}
-              className="ml-auto bg-black h-10 p-2"
-              onClick={DesinscribirEvento}
-            >
-              <Trash2 />
-            </button>
+      <div className="flex h-40">
+          <img
+            src={imageUrl || defaultImageUrl}
+            alt="Card"
+            className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
+          />
+          <div className="flex-columns ml-10">
+            <h4 className="mb-5">{title.length > 40 ? `${title.substring(0, 40)}...` : title}</h4>
+            <h5 className="font-normal text-gray-700 dark:text-gray-400">
+              {content.length > 78 ? `${content.substring(0, 78)}...` : content}
+            </h5>
           </div>
-          <div
-            className={`flex ml-8 justify-center gap-2 ${
-              content ? "mt-8" : "mt-16"
-            }`}
-          >
-            <div className="flex w-1/2 items-center">
-              <AccessTimeIcon sx={{ color: "yellow", fontSize: 30 }} />
-              <p className="ml-2">{new Date(time).toLocaleString()}</p>
-            </div>
-            <div className="flex items-center">
-              <LocationOnOutlinedIcon
-                className=""
-                sx={{ color: "yellow", fontSize: 30 }}
-              />
-              <p>{place}</p>
-            </div>
+          <button style={{ color: "yellow", borderRadius: "50%" }} className="ml-auto bg-black h-10 p-2" onClick={DesinscribirEvento}>
+            <Trash2 />
+          </button>
+        </div>  
+          <div className="flex ml-5 w-full justify-center">
+            <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
+            <h3 className="mr-35 ml-2 w-60">{time}</h3>
+            <LocationOnOutlinedIcon sx={{ color: "yellow", fontSize: "20px" }}/>
+                <h3 className="mr-35 ml-2 w-60">
+                  <h3>{place}</h3>
+                </h3>
           </div>
-        </div>
-      </div>
-    </CardFlowbite>
-  );
+          </CardFlowbite>
+      //</NavLink>
+    );
 };
 
 export default CardEventList;
