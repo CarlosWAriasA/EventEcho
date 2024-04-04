@@ -5,7 +5,8 @@ import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { Container } from "@mui/material";
+import { Container, Button, Icon } from "@mui/material";
+import { DownFilterIcon } from "../../components/icons/iconComponents";
 
 export function HomePage() {
   const [events, setEvents] = useState([]);
@@ -117,29 +118,55 @@ export function HomePage() {
           </div>
         ) : (
           <>
+          <Container
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '90%',
+            width: '90%',
+            padding: '3rem'
+          }}
+          >
+            <Icon
+            sx={{
+              display:'inherit',
+              justifyContent: 'inherit',
+              alignItems: 'inherit',
+              width: '100%',
+              height: '100%'
+            }}
+            >
             <img
               onClick={() =>
                 navigate(
                   `${events.length > 0 ? `event-detail/${events[0].id}` : ""}`
                 )
               }
-              className="rounded-lg mt-5 border-4  hover:cursor-pointer"
+              className="rounded-lg mt-5 hover:cursor-pointer"
               src={
                 events.length > 0 && events[0]?.image
                   ? URL.createObjectURL(events[0].image)
-                  : "/images/default-image.jpg"
+                  : '../../public/icons/emptyIllustration.svg'
               }
-              style={{ width: "80%", height: "400px" }}
+              style={{ width: "90%", height: "90%", margin: '0' }}
               alt="Description of your image"
             />
+            </Icon>
+          </Container>
             <Container
-                className="relative text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap"
+                className="relative text-white bottom-9 text-center p-6 overflow-hidden whitespace-nowrap"
                 sx={{
-                  width: 300,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 350,
                   backgroundColor: '#212A3E',
+                  boxShadow: '2px 1px 5px rgba(33, 42, 62, .5)',
+                  borderRadius: '1.5em'
                 }}
               >
-              {events.length > 0 ? events[0]?.name : <p className="font-quicksand font-medium tracking-wide">Sé el primer evento</p>}
+              {events.length > 0 ? events[0]?.name : <p className="font-quicksand font-medium text-xl tracking-wide">Sé el primer evento</p>}
             </Container>
           </>
         )}
@@ -148,20 +175,41 @@ export function HomePage() {
         <div className="flex justify-between">
           <h2 className="font-quicksand font-medium text-2xl" style={{color: '#212A3E'}}>Eventos</h2>
           <div className="flex gap-3">
-            <div
+            <Button
               onClick={sortByDate}
-              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white select-none"
+              variant='contained'
+              style={{
+                borderRadius: '.7em',
+                width: '5.7rem',
+                height: '2.6rem',
+                fontFamily: 'quicksand',
+                fontWeight: 600,
+                backgroundColor: 'rgba(252, 252, 252, 0.8)',
+                color: '#394867',
+                textTransform: 'none',
+              }}
+              endIcon={<DownFilterIcon sx={{ fontSize: 24 }}/>}
             >
+
               Fecha
-              <LayoutGrid size={18} />
-            </div>
-            <div
+            </Button>
+            <Button
               onClick={sortByName}
-              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white select-none"
+              variant='contained'
+              style={{
+                borderRadius: '.7em',
+                width: '6.2rem',
+                height: '2.6rem',
+                fontFamily: 'quicksand',
+                fontWeight: 600,
+                backgroundColor: 'rgba(252, 252, 252, 0.8)',
+                color: '#394867',
+                textTransform: 'none',
+              }}
+              endIcon={<DownFilterIcon sx={{ fontSize: 24 }}/>}
             >
               Nombre
-              <LayoutGrid size={18} />
-            </div>
+            </Button>
           </div>
         </div>
         <div className="mt-10 grid grid-cols-3 gap-4 mr-10 ml-10">
@@ -189,14 +237,14 @@ export function HomePage() {
         </div>
         {showMoreButton && (
           <div className="flex justify-center mt-10">
-            <button
+            {/* <button
               type="button"
               className="bg-yellow-400 text-white py-2 px-4 rounded-md"
               onClick={handleShowMore}
               disabled={isLoadingMore}
             >
               Mostrar Mas
-            </button>
+            </button> */}
           </div>
         )}
       </div>

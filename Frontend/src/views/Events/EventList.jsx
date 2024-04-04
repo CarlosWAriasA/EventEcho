@@ -59,8 +59,8 @@ const EventList = () => {
 
   return (
     <main
-      className="bg-white text-black h-full overflow-y-auto"
-      style={{ backgroundColor: "#D8E1EE" }}
+      className="text-black h-full overflow-y-auto"
+      style={{ backgroundColor: "rgba(252, 252, 252, 0.9)" }}
     >
       <div className="flex justify-inline flex-col">
         <div className="flex">
@@ -122,7 +122,6 @@ const EventList = () => {
                 ></Card>
               ))
           ) : (
-            // <h1 className="">No tiene ningun evento inscrito.</h1>
             <Container sx={{ display: "grid", justifyItems: 'center', alignItems:'content'}} className="w-full h-full">
               <Icon
               sx={{display:'flex', justifyContent:"center", alignSelf: 'end', marginBottom: 3, width: "80%", height: '80%'}}

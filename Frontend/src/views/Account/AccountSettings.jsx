@@ -7,6 +7,8 @@ import UploadImageModal from "../../components/Modal/UploadImageModal";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
+import TextInput from "../../components/Input/InputForm";
+import { Button, TextareaAutosize } from "@mui/material";
 
 function AccountSettings() {
   const { user, setUser, loadUser } = useContext(AuthContext);
@@ -21,7 +23,7 @@ function AccountSettings() {
       formData.append("name", user.name);
       formData.append("lastname", user.lastname);
       formData.append("username", user.username);
-      formData.append("email", user.email);
+      formData.append("email", user.email );
       formData.append("profileImage", image[0]);
       formData.append("age", user.age ?? 0);
       formData.append("description", user.description ?? "");
@@ -51,7 +53,7 @@ function AccountSettings() {
         />
       )}
       <div className="flex flex-col gap-4">
-        <h2 className="text-lg " style={{ fontSize: "45px" }}>
+        <h2 className="font-quicksand font-semibold text-lg " style={{ fontSize: "45px" }}>
           Configuración de la Cuenta
         </h2>
         <div className="w-16 h-3 bg-yellow-400 rounded-sm"></div>
@@ -60,45 +62,71 @@ function AccountSettings() {
         <div className="mt-14" style={{ width: "50%" }}>
           <div className="flex gap-20">
             <div className="flex flex-col w-64">
-              <label htmlFor="name">Nombre</label>
-              <input
-                id="name"
-                className="border p-2 rounded-md border-gray-500"
-                placeholder="Nombre"
-                type="text"
-                value={user.name}
+            <TextInput
+              type={"text"}
+              label={'Nombre'}
+              className="rounded-lg w-72"
+              id={'name'}
                 onChange={(e) =>
                   setUser((prev) => ({ ...prev, name: e.target.value }))
                 }
-              />
+              // value={user.name}
+              sx={{
+                background: "rgb(248, 250, 229, 0.9)",
+                "& .MuiFilledInput-underline:after": {
+                  borderBottomColor: "#FEDB39",
+                  height: "7rem",
+                  // borderRadius: "0 0 10px 10px",
+                },
+              }}
+              // icon={<HttpsRoundedIcon />}
+            />
             </div>
             <div className="flex flex-col w-80">
-              <label>Correo Electronico</label>
-              <input
-                className="border p-2 rounded-md border-gray-500 bg-gray-500"
-                placeholder="Email"
-                disabled
-                style={{ opacity: 0.5, cursor: "not-allowed" }}
-                type="email"
-                value={user.email}
+            <TextInput
+              type={"text"}
+              label={'Email'}
+              className="rounded-lg w-72"
+              // id={'name'}
                 onChange={(e) =>
                   setUser((prev) => ({ ...prev, email: e.target.value }))
                 }
-              />
+              // value={user.email}
+              disabled={true}
+              sx={{
+                background: "rgb(248, 250, 229, 0.9)",
+                "& .MuiFilledInput-underline:after": {
+                  borderBottomColor: "#FEDB39",
+                  height: "7rem",
+                  // borderRadius: "0 0 10px 10px",
+                },
+              }}
+              // icon={<HttpsRoundedIcon />}
+            />
             </div>
           </div>
           <div className="flex gap-20 mt-5">
             <div className="flex flex-col w-64">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                id="password"
-                className="border p-2 rounded-md border-gray-500 bg-gray-500"
-                value={"123456"}
-                placeholder="Contraseña"
-                type="password"
-                style={{ opacity: 0.5, cursor: "not-allowed" }}
-                disabled
-              />
+            <TextInput
+              type={"password"}
+              label={'Contraseña'}
+              className="rounded-lg w-72"
+              // id={'password'}
+                // onChange={(e) =>
+                //   setUser((prev) => ({ ...prev, email: e.target.value }))
+                // }
+              value={'123456'}
+              disabled={true}
+              sx={{
+                background: "rgb(248, 250, 229, 0.9)",
+                "& .MuiFilledInput-underline:after": {
+                  borderBottomColor: "#FEDB39",
+                  height: "7rem",
+                  // borderRadius: "0 0 10px 10px",
+                },
+              }}
+              // icon={<HttpsRoundedIcon />}
+            />
             </div>
             <div className="flex flex-col w-32">
               <label htmlFor="age">Edad</label>
@@ -107,7 +135,7 @@ function AccountSettings() {
                 className="border p-2 rounded-md border-gray-500"
                 placeholder="Edad"
                 type="number"
-                value={user.age ?? 0}
+                // value={user.age ?? 0}
                 onChange={(e) =>
                   setUser((prev) => ({ ...prev, age: e.target.value }))
                 }
@@ -116,26 +144,35 @@ function AccountSettings() {
           </div>
           <div className="mt-5">
             <div className="flex flex-col w-80">
-              <label htmlFor="description">Descripción</label>
-              <textarea
-                id="description"
-                className="border p-2 rounded-md border-gray-500"
-                placeholder="Descripcion"
-                rows={5}
-                value={user.description ?? ""}
-                onChange={(e) =>
-                  setUser((prev) => ({ ...prev, description: e.target.value }))
-                }
+              <TextareaAutosize
+              id="description"
+              maxRows={5}
+              onChange={(e) => setUser((prev) => ({ ...prev, description: e.target.value }))}
+              placeholder="Describe tu evento"
+              style={{
+                border: '2px solid #000 !important',
+                height: '20%'
+              }}
               />
             </div>
           </div>
           <div className="mt-5">
-            <button
-              onClick={guardarCambios}
-              className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900"
+            <Button
+            variant="contained"
+            onClick={guardarCambios}
+            style={{
+              fontSize: '1em',
+              fontFamily: 'quicksand',
+              fontWeight: '600',
+              letterSpacing: '.2px',
+              wordSpacing: '.2px',
+              textTransform: 'none',
+              borderRadius: '.8rem',
+              backgroundColor: 'rgba(33, 42, 62, 1)'
+            }}
             >
               Guardar Cambios
-            </button>
+            </Button>
           </div>
         </div>
         <div className="ml-20 flex flex-col align-middle content-center relative">
@@ -149,11 +186,11 @@ function AccountSettings() {
           </div>
           <img
             alt="imagen usuario"
-            src={
-              user.image
-                ? URL.createObjectURL(user.image)
-                : "/images/default-image.jpg"
-            }
+            // src={
+            //   user.image
+            //     ? URL.createObjectURL(user.image)
+            //     : "/images/default-image.jpg"
+            // }
             width={240}
             style={{
               height: "220px",

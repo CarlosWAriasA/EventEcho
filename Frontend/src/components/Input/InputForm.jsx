@@ -12,6 +12,7 @@ export default function TextInput({
   multiline = false,
   rows,
   className,
+  disabled = false,
 }) {
   return (
     <TextField
@@ -25,6 +26,7 @@ export default function TextInput({
       label={<p className="font-quicksand font-medium">{label}</p>}
       multiline={multiline}
       className={className}
+      disabled={disabled}
       InputLabelProps={{
         style: { color: "#394867" },
       }}
