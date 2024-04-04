@@ -6,6 +6,10 @@ import { useContext, useEffect, useState } from "react";
 import { LoadingContext } from "../../context/LoadingContext";
 import ToastHelper from "../../utils/toastHelper";
 import RequestHelper from "../../utils/requestHelper";
+import { image } from "@nextui-org/react";
+
+const defaultImageUrl = "/images/default-image.jpg";
+
 
 const EventList = () => {
   const { setIsLoading } = useContext(LoadingContext);
@@ -40,6 +44,7 @@ const EventList = () => {
         event.date = new Date(event.date).toLocaleString();
         return event;
       });
+      console.log(result)
       setFirstEvent(result.at(0));
       setEvents(result);
     } catch (error) {
@@ -59,12 +64,13 @@ const EventList = () => {
   const DesinscribirEvento = async () => {
     try {
       await RequestHelper.delete(`events/delete-user`, {
-        eventId: event.id,
+        eventId: firstEvent.id,
       });
       ToastHelper.success("Desinscrito exitosamente");
-      onLoadEvents();
+      loadEvents();
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.error("Ha ocurrido un error");  
+      console.log(error)
     }
   };
 
@@ -79,12 +85,22 @@ const EventList = () => {
             className="flex flex-col columns-6 w-3/4  bg-blue-500 p-8 rounded-3xl ml-10 mt-10 text-white"
             style={{ backgroundColor: "#394867" }}
           >
+            {/* {firstEvent?.photo && (
+              <img
+                src={firstEvent?.photo ? URL.createObjectURL(firstEvent.photo) : defaultImageUrl}
+                alt="Card"
+                className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
+              />
+            )} */}
+
             <div className="flex mb-2">
               <h1 style={{ fontSize: "22px" }}>{firstEvent?.title ?? "No tiene eventos principales"}</h1>
+              {firstEvent?.title && (
+                <button style={{ color: "yellow", borderRadius: "50%" }} className="ml-auto bg-black h-10 p-2" onClick={DesinscribirEvento}>
+                  <Trash2 />
+                </button>
+              )}
             </div>
-          {/* <button style={{ color: "yellow", borderRadius: "50%" }} className="ml-auto bg-black h-10 p-2" onClick={DesinscribirEvento}>
-            <Trash2 />
-          </button> */}
             <div className="flex mb-2">
               {firstEvent?.location && (
                 <h3 className="pr-2">
@@ -105,6 +121,7 @@ const EventList = () => {
             </div>
           </div>
         </div>
+
         <div
           className="flex flex-col w-3/4 bg-blue-500 p-8 ml-10 mt-10 gap-5 "
           style={{
