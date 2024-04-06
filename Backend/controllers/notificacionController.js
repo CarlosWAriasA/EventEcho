@@ -28,7 +28,7 @@ const getNotificaciones = async (req, res) => {
         n.dataValues.Comentario = comentario;
         if (comentario && comentario.Usuario) {
           const usuario = comentario.Usuario.dataValues;
-          if (usuario.profileImage) {
+          if (usuario.profileImage && fs.existsSync(usuario.profileImage)) {
             const imageData = fs.readFileSync(usuario.profileImage);
             n.dataValues.Comentario.Usuario.dataValues.image64 =
               imageData.toString("base64");
@@ -37,7 +37,7 @@ const getNotificaciones = async (req, res) => {
       }
       if (n.Usuario) {
         const usuario = n.Usuario.dataValues;
-        if (usuario.profileImage) {
+        if (usuario.profileImage && fs.existsSync(usuario.profileImage)) {
           const imageData = fs.readFileSync(usuario.profileImage);
           n.dataValues.Usuario.dataValues.image64 =
             imageData.toString("base64");
