@@ -229,10 +229,10 @@ function EventEdit() {
         )}
         <div>
           <div>
-            <h1 className="font-bold" style={{ fontSize: "3em" }}>
+            <h4 className="font-quicksand font-semibold my-0" style={{ fontSize: "3em" }}>
               {Id ? "Actualizar Evento" : "Crea tu Propio Evento"}
-            </h1>
-            <div className="w-24 h-3 bg-yellow-400 rounded-sm"></div>
+            </h4>
+            <div className="w-20 h-2 rounded-full" style={{ backgroundColor: "#FEDB39"}}></div>
           </div>
           <div className="mt-14">
             <div className="flex gap-16">

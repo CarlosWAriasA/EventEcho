@@ -86,21 +86,21 @@ function Login() {
             borderRadius: "2px",
           }}
         ></div>
-        <h1 className="text-4xl text-white font-bold mb-6 text-start">Login</h1>
+        <h1 className="font-quicksand font-bold text-3xl text-white mb-6 text-start">Iniciar Sesión</h1>
         <div className="relative my-4">
           <Box sx={{ display: "flex", alignItems: "flex-end" }}>
             <TextInput
               id={"email"}
               type={"email"}
               className="rounded-lg w-72"
-              label={"Correo Electronico"}
+              label={'Correo Electrónico'}
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               icon={<MailRoundedIcon fontSize="medium" />}
               sx={{
-                background: "rgb(248, 250, 229, 0.8)",
+                background: "rgb(248, 250, 229, 0.9)",
                 "& .MuiFilledInput-underline:after": {
-                  borderBottomColor: "#FAEF5D",
+                  borderBottomColor: "#FEDB39",
                   height: "5rem",
                   borderRadius: "0 0 10px 10px",
                 },
@@ -111,15 +111,15 @@ function Login() {
         <div className="relative mt-4">
           <TextInput
             type={"password"}
-            label={"Contraseña"}
+            label={'Contraseña'}
             className="rounded-lg w-72"
-            id={"password"}
+            id={'password'}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             sx={{
-              background: "rgb(248, 250, 229, 0.8)",
+              background: "rgb(248, 250, 229, 0.9)",
               "& .MuiFilledInput-underline:after": {
-                borderBottomColor: "#FAEF5D",
+                borderBottomColor: "#FEDB39",
                 height: "5rem",
                 borderRadius: "0 0 10px 10px",
               },
@@ -127,16 +127,17 @@ function Login() {
             icon={<HttpsRoundedIcon />}
           />
         </div>
-        <div className="mb-4 flex justify-end text-gray-400 hover:text-white hover:cursor-pointer">
-          <span style={{ marginTop: "1rem" }}>Olvidaste la Contraseña?</span>
+        <div className="font-quicksand mb-4 flex justify-end text-gray-400 duration-400 ease-in-out hover:text-white hover:cursor-pointer">
+          <span style={{ marginTop: "1rem" }}>¿Olvidaste la Contraseña?</span>
         </div>
         <ButtonForm
           onClick={login}
-          label="Iniciar Sesion"
+          label={<p className='font-quicksand font-semibold tracking-normal'>Iniciar Sesión</p>}
           className={
-            "text-black px-8 font-normal h-10 justify-center py-0 w-full rounded-lg"
+            "px-8 h-10 justify-center py-0 w-full rounded-lg"
           }
-          style={{ backgroundColor: "#FAEF5D", color: "#212A3E" }}
+          style={{ backgroundColor: "#FEDB39", color: "#212A3E"}}
+        
         />
       </div>
     </div>

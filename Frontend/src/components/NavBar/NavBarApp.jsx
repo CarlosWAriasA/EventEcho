@@ -1,15 +1,13 @@
 import {
-  CircleUserRound,
   LogOut,
   UserRound,
-  CalendarCheck,
   ListChecks,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
-import NotificacionButton from "../Button/NotificacionButton";
+import { EventIcon, NotificationIcon } from "../icons/iconComponents";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
@@ -50,17 +48,17 @@ const NavbarApp = () => {
   return (
     <nav
       className="absolute top-0"
-      style={{ width: "100%", backgroundColor: "white", height: "45px" }}
+      style={{ width: "100%", backgroundColor: "white", height: "3.5rem" }}
     >
-      <ul className="flex justify-between">
-        <li>
+      <ul className="flex justify-between h-full ">
+        <li className="flex items-center">
           <NavLink to="/">
-            <div className="text-black ml-10 text-lg mt-2 font-bold">
+            <div className="font-quicksand font-semibold text-black pl-3  text-lg mt-2 ">
               EventEcho
             </div>
           </NavLink>
         </li>
-        <li className="flex gap-6 content-center pt-1">
+        <li className="flex gap-6 items-center">
           {user?.tipo_usuario === "organizador" && (
             <NavLink to={"/event-admin"}>
               <div
@@ -72,8 +70,7 @@ const NavbarApp = () => {
                 <ListChecks
                   className="hover:cursor-pointer select-none"
                   color="black"
-                  size={25}
-                />
+                  size={25} />
               </div>
             </NavLink>
           )}
@@ -84,95 +81,106 @@ const NavbarApp = () => {
               data-tooltip-content="Mis eventos"
               style={{ paddingTop: "4px" }}
             >
-              <CalendarCheck
-                className="hover:cursor-pointer select-none"
-                color="black"
-                size={25}
-              />
+              <EventIcon
+                sx={{
+                  fontSize: 28
+                }} />
             </div>
           </NavLink>
-          <NotificacionButton />
           {isEventDetail ? (
             <div
               className="mr-10 hover:cursor-pointer"
               style={{ paddingTop: "4px" }}
               onClick={() => navigate(-1)}
             >
+              <NotificationIcon
+                sx={{
+                  fontSize: 28
+                }} />
+            </div>)
+            : (<p></p>)
+          }
+        </li>
+        {isEventDetail ? (
+          <NavLink to={"/"}>
+            <div
+              className="mr-10"
+              data-tooltip-id="tooltip"
+              data-tooltip-content="Volver Atras"
+            >
               <LogOut
                 color="black"
-                size={25}
+                size={30}
                 fill="yellow"
                 style={{
                   borderRadius: "30%",
                   padding: "2px",
                   backgroundColor: "yellow",
-                }}
-              />
+                }} />
             </div>
-          ) : (
-            <div>
-              <div
-                className="mr-10 cursor-pointer"
-                ref={optionsRef}
-                onClick={handleIconClick}
-              >
-                <div className="text-white flex gap-2 bg-blue-950 rounded-md px-2 py-1 select-none">
-                  <p className="font-bold text-md">{user.name}</p>
-                  {user.image ? (
-                    <img
-                      src={URL.createObjectURL(user.image)}
-                      alt="Profile"
-                      style={{
-                        width: "25px",
-                        height: "25px",
-                        borderRadius: "50%",
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
-                        objectFit: "cover",
-                        cursor: "pointer",
-                      }}
-                    />
-                  ) : (
-                    <CircleUserRound
-                      className="hover:cursor-pointer bg-gray-300 p-1"
-                      color="black"
-                      style={{ borderRadius: "50%" }}
-                      size={25}
-                    />
-                  )}
-                </div>
+          </NavLink>
+        ) : (
+          <div>
+            <div
+              className="mr-10 cursor-pointer"
+              ref={optionsRef}
+              onClick={handleIconClick}
+            >
+              <div className="text-white flex gap-2 bg-blue-950 rounded-md px-2 py-1 select-none">
+                <p className="font-bold text-md">{user?.name}</p>
+                {user?.image ? (
+                  <img
+                    src={URL.createObjectURL(user.image)}
+                    alt="Profile"
+                    style={{
+                      width: "25px",
+                      height: "25px",
+                      borderRadius: "50%",
+                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                    }} />
+                ) : (
+                  <span></span>
+                  // <CircleUserRound
+                  //   className="hover:cursor-pointer bg-gray-300 p-1"
+                  //   color="black"
+                  //   style={{ borderRadius: "50%" }}
+                  //   size={25} />
+                )}
               </div>
-              {showOptions && (
-                <div
-                  className="absolute right-9 w-44 top-9 bg-gray-800 rounded-md"
-                  style={{ zIndex: 100 }}
-                >
-                  <ul>
-                    <NavLink to={"account-settings"}>
-                      <li
-                        onClick={handleProfileClick}
-                        className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
-                      >
-                        <UserRound size={18} />
-                        Cuenta
-                      </li>
-                    </NavLink>
-                    <li
-                      onClick={handleLogoutClick}
-                      className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
-                    >
-                      <LogOut size={18} color="red" />
-                      Cerrar Sesión
-                    </li>
-                  </ul>
-                </div>
-              )}
             </div>
-          )}
-        </li>
-      </ul>
-      <Tooltip id="tooltip" />
+             {showOptions && (
+              <div
+                className="absolute right-9 w-44 top-9 bg-gray-800 rounded-md"
+                style={{ zIndex: 100 }}
+              >
+                <ul>
+                  <NavLink to={"account-settings"}>
+                    <li
+                      onClick={handleProfileClick}
+                      className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
+                    >
+                      <UserRound size={18} />
+                      Cuenta
+                    </li>
+                  </NavLink>
+                  <li
+                    onClick={handleLogoutClick}
+                    className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
+                  >
+                    <LogOut size={18} color="red" />
+                    Cerrar Sesión
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        )} 
+    </ul><Tooltip id="tooltip" />
     </nav>
-  );
-};
+  ) 
+}
+  
 
 export default NavbarApp;

@@ -22,7 +22,7 @@ function App() {
       <RouterProvider
         router={
           userToken !== null && userToken !== "null" ? appRouter : authRouter
-        }
+                  }
       />
       <ToastContainer />
     </div>
