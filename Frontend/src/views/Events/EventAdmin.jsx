@@ -239,12 +239,12 @@ function EventAdmin() {
           const comentario = n.Comentario;
           return (
             <NavLink
-              to={`/event-detail/${comentario.eventId}`}
-              key={comentario.id}
+              to={`/event-detail/${comentario?.eventId}`}
+              key={comentario?.id}
             >
               <div className="bg-blue-500 rounded-xl p-5 flex flex-col mt-5 text-white">
                 <div className="flex items-center gap-1">
-                  {comentario.Usuario.image64 ? (
+                  {comentario?.Usuario.image64 ? (
                     <img
                       style={{
                         width: "20px",
@@ -254,17 +254,17 @@ function EventAdmin() {
                         objectFit: "cover",
                         cursor: "pointer",
                       }}
-                      src={`data:image/png;base64, ${comentario.Usuario.image64}`}
+                      src={`data:image/png;base64, ${comentario?.Usuario.image64}`}
                     />
                   ) : (
                     <CircleUserRound size={20} />
                   )}
-                  <p>{comentario.Usuario.name}</p>
+                  <p>{comentario?.Usuario.name}</p>
                 </div>
                 <p className="mt-2">
-                  {comentario.description.length > 200
-                    ? `${comentario.description.substring(0, 200)}...`
-                    : comentario.description}
+                  {comentario?.description.length > 200
+                    ? `${comentario?.description.substring(0, 200)}...`
+                    : comentario?.description}
                 </p>
               </div>
             </NavLink>
