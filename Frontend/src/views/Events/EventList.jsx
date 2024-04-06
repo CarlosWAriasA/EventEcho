@@ -10,7 +10,6 @@ import { image } from "@nextui-org/react";
 
 const defaultImageUrl = "/images/default-image.jpg";
 
-
 const EventList = () => {
   const { setIsLoading } = useContext(LoadingContext);
   const [firstEvent, setFirstEvent] = useState({});
@@ -44,7 +43,6 @@ const EventList = () => {
         event.date = new Date(event.date).toLocaleString();
         return event;
       });
-      console.log(result)
       setFirstEvent(result.at(0));
       setEvents(result);
     } catch (error) {
@@ -69,8 +67,7 @@ const EventList = () => {
       ToastHelper.success("Desinscrito exitosamente");
       loadEvents();
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");  
-      console.log(error)
+      ToastHelper.error("Ha ocurrido un error");
     }
   };
 
@@ -94,9 +91,15 @@ const EventList = () => {
             )} */}
 
             <div className="flex mb-2">
-              <h1 style={{ fontSize: "22px" }}>{firstEvent?.title ?? "No tiene eventos principales"}</h1>
+              <h1 style={{ fontSize: "22px" }}>
+                {firstEvent?.title ?? "No tiene eventos principales"}
+              </h1>
               {firstEvent?.title && (
-                <button style={{ color: "yellow", borderRadius: "50%" }} className="ml-auto bg-black h-10 p-2" onClick={DesinscribirEvento}>
+                <button
+                  style={{ color: "yellow", borderRadius: "50%" }}
+                  className="ml-auto bg-black h-10 p-2"
+                  onClick={DesinscribirEvento}
+                >
                   <Trash2 />
                 </button>
               )}
