@@ -8,6 +8,7 @@ const Event = require("../models/eventModel");
 const Usuario = require("../models/usuarioModel");
 const UserEvent = require("../models/UserEvent");
 const Comentario = require("../models/Comentario");
+const Notificacion = require("../models/Notificacion");
 const { enviarCorreo } = require("./correoControlador");
 
 // Obtener un evento por su ID
@@ -312,6 +313,7 @@ const deleteEvent = async (req, res) => {
     // Eliminar el evento de la base de datos
     await UserEvent.destroy({ where: { eventId: eventId } });
     await Comentario.destroy({ where: { eventId: eventId } });
+    await Notificacion.destroy({ where: { eventId: eventId } });
     await event.destroy();
 
     // Enviar un correo electrónico al organizador
