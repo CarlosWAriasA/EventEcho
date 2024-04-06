@@ -14,8 +14,9 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     loading(true);
-    localStorage.setItem(USER_TOKEN, null);
     setTimeout(() => {
+      localStorage.setItem(USER_TOKEN, null);
+      setUser(null);
       setUserToken(null);
       loading(false);
     }, 1000);

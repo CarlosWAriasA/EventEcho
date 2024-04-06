@@ -96,10 +96,11 @@ function NotificacionButton() {
             const comentario = n.Comentario;
             return (
               <NavLink
-                to={`/event-detail/${comentario.eventId}`}
-                key={comentario.id}
+                to={`/event-detail/${comentario?.eventId}`}
+                key={comentario?.id}
               >
                 <div
+                  key={comentario?.id}
                   className={`${
                     n.read ? "bg-gray-500" : "bg-blue-500"
                   }  rounded-xl p-5 flex flex-col mt-2 text-white w-80`}
@@ -118,7 +119,7 @@ function NotificacionButton() {
                           objectFit: "cover",
                           cursor: "pointer",
                         }}
-                        src={`data:image/png;base64, ${comentario.Usuario.image64}`}
+                        src={`data:image/png;base64, ${comentario?.Usuario?.image64}`}
                       />
                     ) : (
                       <CircleUserRound size={20} />
