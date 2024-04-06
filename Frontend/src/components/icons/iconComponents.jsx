@@ -76,3 +76,33 @@ export function DownFilterIcon({
         </SvgIcon>
     )
 }
+export function UserIcon({
+    className,
+    sx,
+    fontSize
+}) {
+    return (
+        <SvgIcon
+        className={className}
+        sx={sx}
+        fontSize={fontSize}
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(57,72,103,1)"><path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H18C18 18.6863 15.3137 16 12 16C8.68629 16 6 18.6863 6 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11Z"></path></svg>
+        </SvgIcon>
+    )
+}
+export function EditIcon({
+    className,
+    sx,
+    fontSize
+}) {
+    return (
+        <SvgIcon
+        className={className}
+        sx={sx}
+        fontSize={fontSize}
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="rgba(252,252,252,1)"><path d="M9.24264 18.9967H21V20.9967H3V16.754L12.8995 6.85453L17.1421 11.0972L9.24264 18.9967ZM14.3137 5.44032L16.435 3.319C16.8256 2.92848 17.4587 2.92848 17.8492 3.319L20.6777 6.14743C21.0682 6.53795 21.0682 7.17112 20.6777 7.56164L18.5563 9.68296L14.3137 5.44032Z"></path></svg>
+        </SvgIcon>
+    )
+}

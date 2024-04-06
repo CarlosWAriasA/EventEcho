@@ -5,6 +5,7 @@ import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { NavLink } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
+import { Typography } from "@mui/material";
 
 export function HomePageAuth() {
   const [events, setEvents] = useState([]);
@@ -13,7 +14,11 @@ export function HomePageAuth() {
 
   const handleClick = () => {
     ToastHelper.warning(
-      "Tienes que estar logueado para acceder a estas funcionalidades"
+      <Typography
+        className="font-quicksand font-medium"
+      >
+        Por favor, iniciar sesión
+      </Typography>
     );
   };
 

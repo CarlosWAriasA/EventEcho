@@ -2,13 +2,14 @@ import { useState, useContext } from "react";
 import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
 import RequestHelper from "../../utils/requestHelper";
-import { SquarePen } from "lucide-react";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
 import TextInput from "../../components/Input/InputForm";
-import { Button, TextareaAutosize } from "@mui/material";
+import { Button, Container } from "@mui/material";
+import { Textarea } from '@mui/joy';
+import { UserIcon, EditIcon } from "../../components/icons/iconComponents";
 
 function AccountSettings() {
   const { user, setUser, loadUser } = useContext(AuthContext);
@@ -128,30 +129,46 @@ function AccountSettings() {
               // icon={<HttpsRoundedIcon />}
             />
             </div>
-            <div className="flex flex-col w-32">
-              <label htmlFor="age">Edad</label>
-              <input
-                id="age"
-                className="border p-2 rounded-md border-gray-500"
-                placeholder="Edad"
-                type="number"
-                // value={user.age ?? 0}
-                onChange={(e) =>
-                  setUser((prev) => ({ ...prev, age: e.target.value }))
-                }
-              />
-            </div>
+            <TextInput
+              className={'w-36 '}
+              id={'age'}
+              label={'Edad'}
+              type={'number'}
+              // onChange={(e) => setUser((prev) => ({...prev, age: e.target.value}))}
+              sx={{
+                background: "rgb(248, 250, 229, 0.9)",
+                "& .MuiFilledInput-underline:after": {
+                  borderBottomColor: "#FEDB39",
+                  height: "7rem",
+                  // borderRadius: "0 0 10px 10px",
+                },
+              }}
+            />
           </div>
           <div className="mt-5">
             <div className="flex flex-col w-80">
-              <TextareaAutosize
+              <Textarea
               id="description"
               maxRows={5}
+              variant="solid"
               onChange={(e) => setUser((prev) => ({ ...prev, description: e.target.value }))}
               placeholder="Describe tu evento"
+              sx={{
+                '&::before':{
+                  display:'none'
+                },
+                '&:focus-within': {
+                  outline: '1px solid rgba(33, 42, 62, .6)'
+                }
+
+              }}
               style={{
-                border: '2px solid #000 !important',
-                height: '20%'
+                background:'rgba(0, 0, 0, 0.1)',
+                color: '#394867',
+                width: '100%',
+                height: '9rem',
+                fontFamily: 'quicksand',
+                fontWeight: '600'
               }}
               />
             </div>
@@ -175,41 +192,76 @@ function AccountSettings() {
             </Button>
           </div>
         </div>
-        <div className="ml-20 flex flex-col align-middle content-center relative">
+        <div 
+         className="ml-20 flex flex-col align-middle content-center relative"
+         style={{
+          width: '18%',
+          maxWidth: '20%'
+         }}
+        >
           <div className="absolute top-0 right-0">
             <button
               onClick={() => setShowImageModal(true)}
-              className="bg-transparent border-none"
+              style={{
+                display: 'flex',
+                justifyContent:'center',
+                alignItems: 'center', 
+                width: '2.9em',
+                height: '2.7em',
+                borderRadius: '100%',
+                backgroundColor: '#394867',
+              }}
             >
-              <SquarePen size={25} />
+              <EditIcon sx={{ fontSize: 29 }}/>
             </button>
           </div>
-          <img
-            alt="imagen usuario"
-            // src={
-            //   user.image
-            //     ? URL.createObjectURL(user.image)
-            //     : "/images/default-image.jpg"
-            // }
-            width={240}
-            style={{
-              height: "220px",
-              maxHeight: "400px",
-              borderRadius: "50%",
-              boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-              objectFit: "cover",
+          <Container
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '85%',
+              height: '55%',
+              background: 'rgba(155, 164, 181, 0.4)',
+              borderRadius:"10rem"
             }}
-          />
-          <div className="mt-8">
-            <button
-              style={{ borderWidth: "3px" }}
+          >
+            {user?.image ? 
+             <img 
+               src={URL.createObjectURL(user?.image)}
+               width={240}
+               style={{
+                height: "220px",
+                maxHeight: "400px",
+                borderRadius: "50%",
+                boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+                objectFit: "cover",
+              }}
+              /> 
+              : <UserIcon sx={{ fontSize: 112}}/>
+          }
+          </Container>
+
+          <div className="flex justify-center items-center mt-8" >
+            <Button
+              className="border border-blue-950 p-2 pl-16 ml-2 pr-16 rounded-lg hover:bg-blue-950 "
+              style={{
+                width: '50%',
+                height: '100%',
+                backgroundColor: 'rgba(33, 42, 62, 0.2)',
+                borderRadius: '.6em',
+                textTransform: 'none',
+                fontFamily: 'quicksand',
+                color: 'rgba(33, 42, 62, 1)',
+                fontSize: '1rem', 
+                fontWeight: 600
+              }}
               onClick={() => {
                 setUser((prev) => ({ ...prev, image: "", profileImage: "" }));
               }}
-              className="border border-blue-950 p-2 pl-16 ml-2 pr-16 rounded-lg hover:bg-blue-950 hover:text-white"
             >
               Eliminar Foto
-            </button>
+            </Button>
           </div>
         </div>
       </div>
