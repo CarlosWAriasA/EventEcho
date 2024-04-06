@@ -1,4 +1,3 @@
-import { LayoutGrid } from "lucide-react";
 import Card from "../../components/Card/Card";
 import { useState, useEffect } from "react";
 import RequestHelper from "../../utils/requestHelper";
@@ -83,7 +82,7 @@ export function HomePage() {
       return ascendingOrder ? dateComparison : -dateComparison;
     });
 
-    setAscendingOrder(!ascendingOrder); // Invertir el indicador de orden
+    setAscendingOrder(!ascendingOrder);
     setEvents([events[0], ...sortedEvents]);
   };
 
@@ -118,95 +117,107 @@ export function HomePage() {
           </div>
         ) : (
           <>
-          <Container
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '90%',
-            width: '90%',
-            padding: '3rem'
-          }}
-          >
-            <Icon
-            sx={{
-              display:'inherit',
-              justifyContent: 'inherit',
-              alignItems: 'inherit',
-              width: '100%',
-              height: '100%'
-            }}
-            >
-            <img
-              onClick={() =>
-                navigate(
-                  `${events.length > 0 ? `event-detail/${events[0].id}` : ""}`
-                )
-              }
-              className="rounded-lg mt-5 hover:cursor-pointer"
-              src={
-                events.length > 0 && events[0]?.image
-                  ? URL.createObjectURL(events[0].image)
-                  : '../../public/icons/emptyIllustration.svg'
-              }
-              style={{ width: "90%", height: "90%", margin: '0' }}
-              alt="Description of your image"
-            />
-            </Icon>
-          </Container>
             <Container
-                className="relative text-white bottom-9 text-center p-6 overflow-hidden whitespace-nowrap"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "90%",
+                width: "90%",
+                padding: "3rem",
+              }}
+            >
+              <Icon
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 350,
-                  backgroundColor: '#212A3E',
-                  boxShadow: '2px 1px 5px rgba(33, 42, 62, .5)',
-                  borderRadius: '1.5em'
+                  display: "inherit",
+                  justifyContent: "inherit",
+                  alignItems: "inherit",
+                  width: "100%",
+                  height: "100%",
                 }}
               >
-              {events.length > 0 ? events[0]?.name : <p className="font-quicksand font-medium text-xl tracking-wide">Sé el primer evento</p>}
+                <img
+                  onClick={() =>
+                    navigate(
+                      `${
+                        events.length > 0 ? `event-detail/${events[0].id}` : ""
+                      }`
+                    )
+                  }
+                  className="rounded-lg mt-5 hover:cursor-pointer"
+                  src={
+                    events.length > 0 && events[0]?.image
+                      ? URL.createObjectURL(events[0].image)
+                      : "/icons/emptyIllustration.svg"
+                  }
+                  style={{ width: "90%", height: "90%", margin: "0" }}
+                  alt="Description of your image"
+                />
+              </Icon>
+            </Container>
+            <Container
+              className="relative text-white bottom-9 text-center p-6 overflow-hidden whitespace-nowrap"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 350,
+                backgroundColor: "#212A3E",
+                boxShadow: "2px 1px 5px rgba(33, 42, 62, .5)",
+                borderRadius: "1.5em",
+              }}
+            >
+              {events.length > 0 ? (
+                events[0]?.name
+              ) : (
+                <p className="font-quicksand font-medium text-xl tracking-wide">
+                  Sé el primer evento
+                </p>
+              )}
             </Container>
           </>
         )}
       </div>
       <div className="ml-36 mr-36">
         <div className="flex justify-between">
-          <h2 className="font-quicksand font-medium text-2xl" style={{color: '#212A3E'}}>Eventos</h2>
+          <h2
+            className="font-quicksand font-medium text-2xl"
+            style={{ color: "#212A3E" }}
+          >
+            Eventos
+          </h2>
           <div className="flex gap-3">
             <Button
               onClick={sortByDate}
-              variant='contained'
+              variant="contained"
               style={{
-                borderRadius: '.7em',
-                width: '5.7rem',
-                height: '2.6rem',
-                fontFamily: 'quicksand',
+                borderRadius: ".7em",
+                width: "5.7rem",
+                height: "2.6rem",
+                fontFamily: "quicksand",
                 fontWeight: 600,
-                backgroundColor: 'rgba(252, 252, 252, 0.8)',
-                color: '#394867',
-                textTransform: 'none',
+                backgroundColor: "rgba(252, 252, 252, 0.8)",
+                color: "#394867",
+                textTransform: "none",
               }}
-              endIcon={<DownFilterIcon sx={{ fontSize: 24 }}/>}
+              endIcon={<DownFilterIcon sx={{ fontSize: 24 }} />}
             >
-
               Fecha
             </Button>
             <Button
               onClick={sortByName}
-              variant='contained'
+              variant="contained"
               style={{
-                borderRadius: '.7em',
-                width: '6.2rem',
-                height: '2.6rem',
-                fontFamily: 'quicksand',
+                borderRadius: ".7em",
+                width: "6.2rem",
+                height: "2.6rem",
+                fontFamily: "quicksand",
                 fontWeight: 600,
-                backgroundColor: 'rgba(252, 252, 252, 0.8)',
-                color: '#394867',
-                textTransform: 'none',
+                backgroundColor: "rgba(252, 252, 252, 0.8)",
+                color: "#394867",
+                textTransform: "none",
               }}
-              endIcon={<DownFilterIcon sx={{ fontSize: 24 }}/>}
+              endIcon={<DownFilterIcon sx={{ fontSize: 24 }} />}
             >
               Nombre
             </Button>
@@ -237,14 +248,14 @@ export function HomePage() {
         </div>
         {showMoreButton && (
           <div className="flex justify-center mt-10">
-            {/* <button
+            <button
               type="button"
               className="bg-yellow-400 text-white py-2 px-4 rounded-md"
               onClick={handleShowMore}
               disabled={isLoadingMore}
             >
               Mostrar Mas
-            </button> */}
+            </button>
           </div>
         )}
       </div>

@@ -1,10 +1,11 @@
-import { Bell, CircleUserRound } from "lucide-react";
+import { CircleUserRound } from "lucide-react";
 import { useState, useContext, useEffect } from "react";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { AuthContext } from "../../context/AuthContext";
 import { NavLink, useLocation } from "react-router-dom";
 import "./NotificacionButton.css";
+import { NotificationIcon } from "../icons/iconComponents";
 
 function NotificacionButton() {
   const { user } = useContext(AuthContext);
@@ -56,11 +57,11 @@ function NotificacionButton() {
   return (
     <div className="dropdown select-none">
       <div onClick={handleDropdownToggle}>
-        <Bell
-          className="hover:cursor-pointer select-none mt-1"
-          color="black"
-          size={25}
-          fill="black"
+        <NotificationIcon
+          className={"hover:cursor-pointer"}
+          sx={{
+            fontSize: 28,
+          }}
         />
         {pendingCount > 0 && (
           <div

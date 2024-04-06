@@ -1,13 +1,10 @@
-import {
-  LogOut,
-  UserRound,
-  ListChecks,
-} from "lucide-react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { LogOut, UserRound, ListChecks } from "lucide-react";
+import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
-import { EventIcon, NotificationIcon } from "../icons/iconComponents";
+import { EventIcon } from "../icons/iconComponents";
+import NotificacionButton from "../Button/NotificacionButton";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
@@ -15,7 +12,6 @@ const NavbarApp = () => {
   const [showOptions, setShowOptions] = useState(false);
   const location = useLocation();
   const isEventDetail = location.pathname.includes("/event-detail");
-  const navigate = useNavigate();
 
   const handleIconClick = (event) => {
     event.preventDefault();
@@ -58,7 +54,7 @@ const NavbarApp = () => {
             </div>
           </NavLink>
         </li>
-        <li className="flex gap-6 items-center">
+        <div className="flex gap-5 items-center">
           {user?.tipo_usuario === "organizador" && (
             <NavLink to={"/event-admin"}>
               <div
@@ -70,7 +66,8 @@ const NavbarApp = () => {
                 <ListChecks
                   className="hover:cursor-pointer select-none"
                   color="black"
-                  size={25} />
+                  size={25}
+                />
               </div>
             </NavLink>
           )}
@@ -83,44 +80,32 @@ const NavbarApp = () => {
             >
               <EventIcon
                 sx={{
-                  fontSize: 28
-                }} />
+                  fontSize: 28,
+                }}
+              />
             </div>
           </NavLink>
+          <NotificacionButton />
           {isEventDetail ? (
-            <div
-              className="mr-10 hover:cursor-pointer"
-              style={{ paddingTop: "4px" }}
-              onClick={() => navigate(-1)}
-            >
-              <NotificationIcon
-                sx={{
-                  fontSize: 28
-                }} />
-            </div>)
-            : (<p></p>)
-          }
-        </li>
-        {isEventDetail ? (
-          <NavLink to={"/"}>
-            <div
-              className="mr-10"
-              data-tooltip-id="tooltip"
-              data-tooltip-content="Volver Atras"
-            >
-              <LogOut
-                color="black"
-                size={30}
-                fill="yellow"
-                style={{
-                  borderRadius: "30%",
-                  padding: "2px",
-                  backgroundColor: "yellow",
-                }} />
-            </div>
-          </NavLink>
-        ) : (
-          <div>
+            <NavLink to={"/"}>
+              <div
+                className="mr-10"
+                data-tooltip-id="tooltip"
+                data-tooltip-content="Volver Atras"
+              >
+                <LogOut
+                  color="black"
+                  size={30}
+                  fill="yellow"
+                  style={{
+                    borderRadius: "30%",
+                    padding: "2px",
+                    backgroundColor: "yellow",
+                  }}
+                />
+              </div>
+            </NavLink>
+          ) : (
             <div
               className="mr-10 cursor-pointer"
               ref={optionsRef}
@@ -139,7 +124,8 @@ const NavbarApp = () => {
                       boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
                       objectFit: "cover",
                       cursor: "pointer",
-                    }} />
+                    }}
+                  />
                 ) : (
                   <span></span>
                   // <CircleUserRound
@@ -149,38 +135,38 @@ const NavbarApp = () => {
                   //   size={25} />
                 )}
               </div>
-            </div>
-             {showOptions && (
-              <div
-                className="absolute right-9 w-44 top-9 bg-gray-800 rounded-md"
-                style={{ zIndex: 100 }}
-              >
-                <ul>
-                  <NavLink to={"account-settings"}>
+              {showOptions && (
+                <div
+                  className="absolute right-9 w-44 top-9 bg-gray-800 rounded-md"
+                  style={{ zIndex: 100 }}
+                >
+                  <ul>
+                    <NavLink to={"account-settings"}>
+                      <li
+                        onClick={handleProfileClick}
+                        className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
+                      >
+                        <UserRound size={18} />
+                        Cuenta
+                      </li>
+                    </NavLink>
                     <li
-                      onClick={handleProfileClick}
-                      className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-t-md"
+                      onClick={handleLogoutClick}
+                      className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
                     >
-                      <UserRound size={18} />
-                      Cuenta
+                      <LogOut size={18} color="red" />
+                      Cerrar Sesión
                     </li>
-                  </NavLink>
-                  <li
-                    onClick={handleLogoutClick}
-                    className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-400 hover:rounded-b-md"
-                  >
-                    <LogOut size={18} color="red" />
-                    Cerrar Sesión
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-        )} 
-    </ul><Tooltip id="tooltip" />
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </ul>
+      <Tooltip id="tooltip" />
     </nav>
-  ) 
-}
-  
+  );
+};
 
 export default NavbarApp;
