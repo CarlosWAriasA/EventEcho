@@ -19,8 +19,10 @@ import ToastHelper from "../../utils/toastHelper";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
+import { Doughnut, Line } from 'react-chartjs-2';
 import Skeleton from "react-loading-skeleton";
 import "./Event.css";
+import ButtonForm from "../../components/Button/ButtonForm";
 
 function EventAdmin() {
   const [isLoading, setIsLoading] = useState(false);
@@ -128,7 +130,7 @@ function EventAdmin() {
             key={column.dataKey}
             variant="head"
             align={column.numeric || false ? "right" : "left"}
-            style={{ width: column.width, fontWeight: "bold" }}
+            style={{ width: column.width, fontWeight: "700", fontFamily: 'quicksand', fontSize: 15 }}
             sx={{
               backgroundColor: "background.paper",
             }}
@@ -168,21 +170,41 @@ function EventAdmin() {
     <main className="bg-white h-full text-black pl-36 pt-8 overflow-y-auto flex">
       <div className="h-full w-10/12">
         <div className="flex gap-6">
-          <div className="bg-blue-950 rounded-3xl p-5 flex justify-between flex-col items-center w-56 h-40">
-            <span className="text-white flex flex-col justify-center">
-              <p>Crea un nuevo </p>
-              <p className="flex justify-center">evento</p>
+          <div 
+            className="rounded-3xl p-5 flex justify-around flex-col items-center w-56 h-40"
+            style={{
+              backgroundColor: 'rgba(33, 42, 62, 1)',
+            }}
+          >
+            <span className="font-quicksand font-semibold text-lg flex justify-center">
+              <p
+                style={{ width: '90%', textAlign: 'center', color: '#FCFCFC', }}
+              >
+                Crea un nuevo evento
+              </p>
             </span>
             <NavLink to={"/event-edit"}>
-              <button
-                type="button"
-                className="bg-yellow-400 p-1 w-32 pl-10 pr-10 rounded-lg "
-              >
-                Crear
-              </button>
+              <ButtonForm
+                variant={'filled'}
+                label={'Crear'}
+                style={{
+                  color:'#212A3E',
+                  width: '5rem',
+                  height: '2em',
+                  backgroundColor: 'rgba(254, 219, 57, 1)',
+                  fontSize: '1em',
+                  letterSpacing: '1px',
+                  textTransform: 'none'
+                }}
+              />
             </NavLink>
           </div>
-          <div className="border-4 border-gray-600 rounded-3xl p-5 flex w-3/5 text-black justify-center gap-16">
+          <div 
+            className="  rounded-3xl p-5 flex w-4/6 text-black justify-center gap-16"
+            style={{
+              boxShadow: '2px 2px 7px rgba(33, 42, 62, .3)' 
+            }}
+          >
             <div className=" flex flex-col justify-center items-center">
               <CalendarCheck
                 color="yellow"

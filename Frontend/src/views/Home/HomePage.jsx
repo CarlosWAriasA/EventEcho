@@ -127,7 +127,13 @@ export function HomePage() {
         onClick={isUnLogged && handleClick}
       >
         {isUnLogged && (
-          <div className="absolute bottom-0 w-full h-1/2 bg-black bg-opacity-50 flex items-center justify-center">
+          <div 
+            className="absolute bottom-0 w-full bg-opacity-50 flex items-center justify-center"
+            style={{
+              backgroundColor: "rgba(33, 42, 62, 0.2)",
+              height: '45%'
+            }}
+          >
             <Ban
               size={50}
               color="#f0ad4e"

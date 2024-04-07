@@ -44,12 +44,12 @@ const NavbarApp = () => {
   return (
     <nav
       className="absolute top-0"
-      style={{ width: "100%", backgroundColor: "white", height: "3.5rem" }}
+      style={{ width: "100%", backgroundColor: "rgba(252, 252, 252, 0.9)", height: "3.5rem" }}
     >
       <ul className="flex justify-between h-full ">
         <li className="flex items-center">
           <NavLink to="/">
-            <div className="font-quicksand font-semibold text-black pl-3  text-lg mt-2 ">
+            <div className="font-quicksand font-semibold text-black pl-3  text-xl">
               EventEcho
             </div>
           </NavLink>
