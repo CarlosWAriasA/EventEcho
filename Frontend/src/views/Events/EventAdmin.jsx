@@ -19,10 +19,11 @@ import ToastHelper from "../../utils/toastHelper";
 import useKeypress from "react-use-keypress";
 import { KEY_ENTER } from "../../utils/constants";
 import { AuthContext } from "../../context/AuthContext";
-import { Doughnut, Line } from 'react-chartjs-2';
 import Skeleton from "react-loading-skeleton";
 import "./Event.css";
 import ButtonForm from "../../components/Button/ButtonForm";
+import { PieChart } from '@mui/x-charts'
+import { Typography } from "@mui/material";
 
 function EventAdmin() {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,13 +37,13 @@ function EventAdmin() {
   });
   const [notificaciones, setNotificaciones] = useState([]);
 
-  useEffect(() => {
-    if (user.tipo_usuario !== "organizador") {
-      navigate("/");
-    }
-    loadEvents();
-    getNotificaciones();
-  }, []);
+  // useEffect(() => {
+  //   if (user.tipo_usuario !== "organizador") {
+  //     navigate("/");
+  //   }
+  //   loadEvents();
+  //   getNotificaciones();
+  // }, []);
 
   const getNotificaciones = async () => {
     try {
@@ -206,43 +207,52 @@ function EventAdmin() {
             }}
           >
             <div className=" flex flex-col justify-center items-center">
-              <CalendarCheck
-                color="yellow"
-                size={50}
-                style={{
-                  borderRadius: "50%",
-                  padding: "8px",
-                  backgroundColor: "gray",
+              <PieChart
+                series={[
+                  {
+                    data: [{label: 'Total De Eventos', value: 1, color: '#FEDB39'}] 
+                  },
+                ]}
+                slotProps={{
+                  legend: { hidden: true}
                 }}
+                width={170}
               />
-              <p className="flex justify-center">Total de Eventos</p>
-              <p>{isLoading ? <Skeleton width={50} /> : info.totalEvents}</p>
+              <Typography style={{ fontFamily: 'quicksand', fontWeight: 600}}>Total de Eventos</Typography>
             </div>
             <div className=" flex flex-col justify-center items-center">
-              <PersonStanding
-                color="yellow"
-                size={50}
-                style={{
-                  borderRadius: "50%",
-                  padding: "8px",
-                  backgroundColor: "gray",
+              <PieChart
+                series={[
+                  {
+                    data: [
+                      {label: 'Total De Personas', value: 1, color: '#FEDB39'},
+                      {label: 'Cupos Faltantes', value: 2, color: '#394867'}
+                    ] 
+                  },
+                ]}
+                slotProps={{
+                  legend: { hidden: true}
                 }}
+                width={170}
               />
-              <p className="flex justify-center">Total de Personas</p>
-              <p>{isLoading ? <Skeleton width={50} /> : info.totalPeople}</p>
+              <Typography style={{ fontFamily: 'quicksand', fontWeight: 600}}>Total de Personas</Typography>
             </div>
             <div className=" flex flex-col justify-center items-center">
-              <ChevronsRight
-                color="yellow"
-                size={50}
-                style={{
-                  borderRadius: "50%",
-                  padding: "8px",
-                  backgroundColor: "gray",
+              <PieChart
+                series={[
+                  {
+                    data: [
+                      {label: 'Eventos Abiertos', value: 1, color: '#FEDB39'},
+                      {label: 'Eventos Cerrados', value: 2, color: '#394867'}
+                    ] 
+                  },
+                ]}
+                slotProps={{
+                  legend: { hidden: true}
                 }}
+                width={170}
               />
-              <p className="flex justify-center">Eventos Proximos</p>
-              <p>{isLoading ? <Skeleton width={50} /> : info.upcomingEvents}</p>
+              <Typography style={{ fontFamily: 'quicksand', fontWeight: 600}}>Eventos Abiertos</Typography>
             </div>
           </div>
         </div>
@@ -255,8 +265,15 @@ function EventAdmin() {
           />
         </Paper>
       </div>
-      <div className="border-t-4 border-l-4 pt-2 pl-3 w-1/4 pr-2 overflow-auto">
-        <h2 className="text-xl font-bold">Notificaciones</h2>
+      <div 
+        className=" pt-2 pl-3 w-1/4 pr-2 overflow-auto"
+        style={{
+          borderRadius: '1.2rem 0 0 0',
+          border: '2px soolid',
+          boxShadow: '2px 2px 8px rgba(33, 42, 62, .8) '
+        }}
+      >
+        <h2 className="font-quicksand text-xl font-semibold p-3">Notificaciones</h2>
         {notificaciones.map((n) => {
           const comentario = n.Comentario;
           return (
@@ -272,7 +289,7 @@ function EventAdmin() {
                         width: "20px",
                         height: "20px",
                         borderRadius: "50%",
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
+                        boxShadow: "0 0px 5px rgba(0, 0, 0, 0.4)",
                         objectFit: "cover",
                         cursor: "pointer",
                       }}
