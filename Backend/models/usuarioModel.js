@@ -42,6 +42,15 @@ const Usuario = sequelize.define(
     age: {
       type: DataTypes.INTEGER,
     },
+    // Otros campos de usuario...
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
   },
   {
     tableName: "tbl_usuario",

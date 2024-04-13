@@ -13,6 +13,8 @@ const userEventsRouter = require("./router/userEventsRouter");
 const sequelize = require("./connection/connection");
 const defineAssociations = require("./connection/associations");
 const userRoutes = require("./router/userRouter");
+const forgotPasswordRouter = require("./router/forgotPasswordRouter");
+const resetPasswordRouter = require("./router/resetPasswordRouter");
 
 dotenv.config();
 
@@ -34,6 +36,8 @@ app.use("/api/", userEventsRouter);
 
 //Ruta de los usuarios
 app.use("/api/", userRoutes);
+app.use("/api/forgot-password/", forgotPasswordRouter);
+app.use("/api/reset-password/", resetPasswordRouter);
 
 // para servir imagenes estaticas
 app.use("/api/uploads/", express.static(path.join(__dirname, "uploads")));
