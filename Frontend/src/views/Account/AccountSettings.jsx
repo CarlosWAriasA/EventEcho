@@ -41,8 +41,7 @@ function AccountSettings() {
 
   useKeypress(KEY_ENTER, guardarCambios);
   return (
-    <main 
-      className="bg-white h-full text-black pt-10 pl-16">
+    <main className="bg-white h-full text-black pt-10 pl-16">
       {showImageModal && (
         <UploadImageModal
           title="Cargar Imagen"

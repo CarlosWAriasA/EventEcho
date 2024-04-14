@@ -6,6 +6,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
 import { LoadingContext } from "../../context/LoadingContext";
+import { KEY_ENTER } from "../../utils/constants";
+import useKeypress from "react-use-keypress";
 
 function ResetPassword() {
   const [passwords, setPasswords] = useState({
@@ -22,7 +24,7 @@ function ResetPassword() {
     setIsLoading(true);
     try {
       if (!passwords.password) {
-        ToastHelper.warning("La Contraseña es requerida.");
+        ToastHelper.warning("La Contraseña es requerida.", "top-center");
         return false;
       }
 
@@ -35,12 +37,12 @@ function ResetPassword() {
       }
 
       if (!passwords.confirmPassword) {
-        ToastHelper.warning("Confirmar Contraseña es requerido.");
+        ToastHelper.warning("Confirmar Contraseña es requerido.", "top-center");
         return false;
       }
 
       if (passwords.password !== passwords.confirmPassword) {
-        ToastHelper.warning("Las Contraseñas no son iguales.");
+        ToastHelper.warning("Las Contraseñas no son iguales.", "top-center");
         return false;
       }
 
@@ -58,6 +60,7 @@ function ResetPassword() {
     }
   };
 
+  useKeypress([KEY_ENTER], changePassword);
   return (
     <div>
       <div>

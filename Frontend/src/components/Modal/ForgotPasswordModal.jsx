@@ -31,12 +31,15 @@ export default function ForgotPasswordModal({ open, setOpen }) {
     setIsFetching(true);
     try {
       if (!email) {
-        ToastHelper.warning("El Correo Electronico es requerido.");
+        ToastHelper.warning(
+          "El Correo Electronico es requerido.",
+          "top-center"
+        );
         return false;
       }
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        ToastHelper.warning("El Correo Electronico es invalido.");
+        ToastHelper.warning("El Correo Electronico es invalido.", "top-center");
         return false;
       }
 
