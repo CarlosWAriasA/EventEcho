@@ -11,7 +11,7 @@ const ToastHelper = {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "dark",
+      theme: "light",
       type: "error",
     });
   },
@@ -25,8 +25,22 @@ const ToastHelper = {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      theme: "dark",
+      theme: "light",
       type: "success",
+    });
+  },
+
+  warning: (message, position = "bottom-right") => {
+    toast.dismiss();
+    toast(message, {
+      position: position,
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "dark",
+      type: "warning",
     });
   },
 };
