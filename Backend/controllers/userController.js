@@ -152,7 +152,7 @@ const editarUsuario = async (req, res) => {
     });
 
     // Eliminar la imagen anterior del servidor si existe y se proporciona una nueva imagen
-    if (req.file && imagenAnterior) {
+    if (req.file && imagenAnterior && fs.existsSync(imagenAnterior)) {
       fs.unlinkSync(imagenAnterior);
     }
 
