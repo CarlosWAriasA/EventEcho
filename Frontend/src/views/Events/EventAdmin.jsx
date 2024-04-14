@@ -1,9 +1,4 @@
-import {
-  CalendarCheck,
-  ChevronsRight,
-  CircleUserRound,
-  PersonStanding,
-} from "lucide-react";
+import { CircleUserRound } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -22,7 +17,7 @@ import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import "./Event.css";
 import ButtonForm from "../../components/Button/ButtonForm";
-import { PieChart } from '@mui/x-charts'
+import { PieChart } from "@mui/x-charts";
 import { Typography } from "@mui/material";
 
 function EventAdmin() {
@@ -34,16 +29,19 @@ function EventAdmin() {
     totalPeople: 0,
     totalEvents: 0,
     upcomingEvents: 0,
+    totalPeopleSubscribe: 0,
+    totalEventsOpen: 0,
+    totalEventsClose: 0,
   });
   const [notificaciones, setNotificaciones] = useState([]);
 
-  // useEffect(() => {
-  //   if (user.tipo_usuario !== "organizador") {
-  //     navigate("/");
-  //   }
-  //   loadEvents();
-  //   getNotificaciones();
-  // }, []);
+  useEffect(() => {
+    if (user.tipo_usuario !== "organizador") {
+      navigate("/");
+    }
+    loadEvents();
+    getNotificaciones();
+  }, []);
 
   const getNotificaciones = async () => {
     try {
@@ -63,18 +61,30 @@ function EventAdmin() {
       const result = await RequestHelper.get("/user/events-info");
       setInfo({
         totalPeople: result.totalAttendees,
+        totalPeopleSubscribe: result.allEvents?.reduce(
+          (acc, v) => acc + (v.UserEvents?.length ?? 0),
+          0
+        ),
         totalEvents: result.totalEvents,
         upcomingEvents: result.upcomingEvents.length,
+        totalEventsClose: result.allEvents?.filter(
+          (e) => new Date(e.date) <= Date.now()
+        ).length,
+        totalEventsOpen: result.allEvents?.filter(
+          (e) => new Date(e.date) > Date.now()
+        ).length,
       });
-      const events = result?.allEvents.map((e) => ({
-        id: e.id,
-        name: e.title,
-        location: e.location,
-        amount: `${e.UserEvents.length}/${e.attendees}`,
-        people: e.attendees,
-        date: new Date(e.date).toLocaleDateString(),
-        subscribed: e.UserEvents.length,
-      }));
+      const events = result?.allEvents
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map((e) => ({
+          id: e.id,
+          name: e.title,
+          location: e.location,
+          amount: `${e.UserEvents.length}/${e.attendees}`,
+          people: e.attendees,
+          date: new Date(e.date).toLocaleDateString(),
+          subscribed: e.UserEvents.length,
+        }));
       setEvents(events);
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
@@ -131,7 +141,12 @@ function EventAdmin() {
             key={column.dataKey}
             variant="head"
             align={column.numeric || false ? "right" : "left"}
-            style={{ width: column.width, fontWeight: "700", fontFamily: 'quicksand', fontSize: 15 }}
+            style={{
+              width: column.width,
+              fontWeight: "700",
+              fontFamily: "quicksand",
+              fontSize: 15,
+            }}
             sx={{
               backgroundColor: "background.paper",
             }}
@@ -171,88 +186,119 @@ function EventAdmin() {
     <main className="bg-white h-full text-black pl-36 pt-8 overflow-y-auto flex">
       <div className="h-full w-10/12">
         <div className="flex gap-6">
-          <div 
+          <div
             className="rounded-3xl p-5 flex justify-around flex-col items-center w-56 h-40"
             style={{
-              backgroundColor: 'rgba(33, 42, 62, 1)',
+              backgroundColor: "rgba(33, 42, 62, 1)",
             }}
           >
             <span className="font-quicksand font-semibold text-lg flex justify-center">
               <p
-                style={{ width: '90%', textAlign: 'center', color: '#FCFCFC', }}
+                style={{ width: "90%", textAlign: "center", color: "#FCFCFC" }}
               >
                 Crea un nuevo evento
               </p>
             </span>
             <NavLink to={"/event-edit"}>
               <ButtonForm
-                variant={'filled'}
-                label={'Crear'}
+                variant={"filled"}
+                label={"Crear"}
                 style={{
-                  color:'#212A3E',
-                  width: '5rem',
-                  height: '2em',
-                  backgroundColor: 'rgba(254, 219, 57, 1)',
-                  fontSize: '1em',
-                  letterSpacing: '1px',
-                  textTransform: 'none'
+                  color: "#212A3E",
+                  width: "5rem",
+                  height: "2em",
+                  backgroundColor: "rgba(254, 219, 57, 1)",
+                  fontSize: "1em",
+                  letterSpacing: "1px",
+                  textTransform: "none",
                 }}
               />
             </NavLink>
           </div>
-          <div 
+          <div
             className="  rounded-3xl p-5 flex w-4/6 text-black justify-center gap-16"
             style={{
-              boxShadow: '2px 2px 7px rgba(33, 42, 62, .3)' 
+              boxShadow: "2px 2px 7px rgba(33, 42, 62, .3)",
             }}
           >
             <div className=" flex flex-col justify-center items-center">
               <PieChart
-                series={[
-                  {
-                    data: [{label: 'Total De Eventos', value: 1, color: '#FEDB39'}] 
-                  },
-                ]}
-                slotProps={{
-                  legend: { hidden: true}
-                }}
-                width={170}
-              />
-              <Typography style={{ fontFamily: 'quicksand', fontWeight: 600}}>Total de Eventos</Typography>
-            </div>
-            <div className=" flex flex-col justify-center items-center">
-              <PieChart
+                sx={{ marginLeft: "5vw" }}
                 series={[
                   {
                     data: [
-                      {label: 'Total De Personas', value: 1, color: '#FEDB39'},
-                      {label: 'Cupos Faltantes', value: 2, color: '#394867'}
-                    ] 
+                      {
+                        label: "Total De Eventos",
+                        value: info.totalEvents,
+                        color: "#FEDB39",
+                      },
+                    ],
                   },
                 ]}
                 slotProps={{
-                  legend: { hidden: true}
+                  legend: { hidden: true },
                 }}
                 width={170}
               />
-              <Typography style={{ fontFamily: 'quicksand', fontWeight: 600}}>Total de Personas</Typography>
+              <Typography style={{ fontFamily: "quicksand", fontWeight: 600 }}>
+                Total de Eventos
+              </Typography>
             </div>
             <div className=" flex flex-col justify-center items-center">
               <PieChart
+                sx={{ marginLeft: "5vw" }}
                 series={[
                   {
                     data: [
-                      {label: 'Eventos Abiertos', value: 1, color: '#FEDB39'},
-                      {label: 'Eventos Cerrados', value: 2, color: '#394867'}
-                    ] 
+                      {
+                        label: "Total De Personas",
+                        value: info.totalPeople,
+                        color: "#FEDB39",
+                      },
+                      {
+                        label: "Total de Inscritos",
+                        value: info.totalPeopleSubscribe,
+                        color: "#394867",
+                      },
+                    ],
                   },
                 ]}
                 slotProps={{
-                  legend: { hidden: true}
+                  legend: { hidden: true },
                 }}
                 width={170}
               />
-              <Typography style={{ fontFamily: 'quicksand', fontWeight: 600}}>Eventos Abiertos</Typography>
+              <Typography style={{ fontFamily: "quicksand", fontWeight: 600 }}>
+                Total de Personas
+              </Typography>
+            </div>
+            <div className="flex flex-col justify-center items-center">
+              <PieChart
+                sx={{ marginLeft: "5vw" }}
+                series={[
+                  {
+                    data: [
+                      {
+                        label: "Eventos Abiertos",
+                        value: info.totalEventsOpen,
+                        color: "#FEDB39",
+                      },
+                      {
+                        label: "Eventos Cerrados",
+                        value: info.totalEventsClose,
+                        color: "#394867",
+                      },
+                    ],
+                  },
+                ]}
+                slotProps={{
+                  legend: { hidden: true },
+                }}
+                width={170}
+              />
+              <Typography style={{ fontFamily: "quicksand", fontWeight: 600 }}>
+                Eventos Abiertos
+              </Typography>
             </div>
           </div>
         </div>
@@ -265,15 +311,17 @@ function EventAdmin() {
           />
         </Paper>
       </div>
-      <div 
+      <div
         className=" pt-2 pl-3 w-1/4 pr-2 overflow-auto"
         style={{
-          borderRadius: '1.2rem 0 0 0',
-          border: '2px soolid',
-          boxShadow: '2px 2px 8px rgba(33, 42, 62, .8) '
+          borderRadius: "1.2rem 0 0 0",
+          border: "2px soolid",
+          boxShadow: "2px 2px 8px rgba(33, 42, 62, .8) ",
         }}
       >
-        <h2 className="font-quicksand text-xl font-semibold p-3">Notificaciones</h2>
+        <h2 className="font-quicksand text-xl font-semibold p-3">
+          Notificaciones
+        </h2>
         {notificaciones.map((n) => {
           const comentario = n.Comentario;
           return (
