@@ -131,7 +131,7 @@ export function HomePage() {
         onClick={isUnLogged ? handleClick : () => {}}
       >
         {isUnLogged && (
-          <div className="absolute bottom-0 w-full h-1/2 bg-black bg-opacity-85 flex items-center justify-center">
+          <div className="absolute bottom-0 w-full h-1/2 bg-black bg-opacity-40 flex items-center justify-center">
             <Ban
               size={50}
               color="#f0ad4e"
