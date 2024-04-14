@@ -11,7 +11,10 @@ const LayoutAuth = () => {
   return (
     <>
       <NavbarAuth />
-      {user == null && pathname != "/login" && pathname != "/register" ? (
+      {user == null &&
+      pathname != "/login" &&
+      pathname != "/register" &&
+      !pathname.startsWith("/reset-password") ? (
         <main
           className="w-full"
           style={{ marginTop: "3.5rem", height: "92.5vh" }}

@@ -18,7 +18,9 @@ const RequestHelper = {
       if (!response.ok) {
         if (response.status === 400) {
           const responseData = await response.json();
-          throw new Error(responseData.msg || "Error de solicitud");
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
         } else {
           throw new Error("Error de solicitud");
         }
@@ -66,7 +68,9 @@ const RequestHelper = {
       if (!response.ok) {
         if (response.status === 400) {
           const responseData = await response.json();
-          throw new Error(responseData.msg || "Error de solicitud");
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
         } else {
           throw new Error("Error de solicitud");
         }
@@ -98,7 +102,9 @@ const RequestHelper = {
       if (!response.ok) {
         if (response.status === 400) {
           const responseData = await response.json();
-          throw new Error(responseData.msg || "Error de solicitud");
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
         } else {
           throw new Error("Error de solicitud");
         }
@@ -125,7 +131,9 @@ const RequestHelper = {
       if (!response.ok) {
         if (response.status === 400) {
           const responseData = await response.json();
-          throw new Error(responseData.msg || "Error de solicitud");
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
         } else {
           throw new Error("Error de solicitud");
         }
