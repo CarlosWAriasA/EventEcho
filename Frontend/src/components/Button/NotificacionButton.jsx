@@ -90,6 +90,7 @@ function NotificacionButton() {
         style={{
           left: isEventDetail && notificaciones.length > 0 ? "-21vw" : "-11vw",
         }}
+        key={"list"}
       >
         {notificaciones.length > 0 ? (
           notificaciones.map((n) => {

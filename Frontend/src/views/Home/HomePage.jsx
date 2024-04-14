@@ -21,6 +21,7 @@ export function HomePage() {
   const navigate = useNavigate();
   const [ascendingOrder, setAscendingOrder] = useState(true);
   const isUnLogged = user === null;
+  const [firstEvent, setFirstEvent] = useState({});
 
   const loadEvents = async () => {
     try {
@@ -63,6 +64,9 @@ export function HomePage() {
           } else if (page == 1 && loadedEvents.length < 6) {
             setShowMoreButton(false);
           }
+          if (page === 1) {
+            setFirstEvent(loadedEvents[0]);
+          }
           setEvents([...(events ?? []), ...loadedEvents]);
         })
         .catch((error) => {
@@ -81,25 +85,25 @@ export function HomePage() {
     }
   };
   const sortByDate = () => {
-    const sortedEvents = events.slice(1);
+    const sortedEvents = events;
     sortedEvents.sort((a, b) => {
       const dateComparison = new Date(a.date) - new Date(b.date);
       return ascendingOrder ? dateComparison : -dateComparison;
     });
 
     setAscendingOrder(!ascendingOrder);
-    setEvents([events[0], ...sortedEvents]);
+    setEvents([...sortedEvents]);
   };
 
   const sortByName = () => {
-    const sortedEvents = events.slice(1);
+    const sortedEvents = events;
     sortedEvents.sort((a, b) => {
       const nameComparison = a.name.localeCompare(b.name);
       return ascendingOrder ? nameComparison : -nameComparison;
     });
 
-    setAscendingOrder(!ascendingOrder); // Invertir el indicador de orden
-    setEvents([events[0], ...sortedEvents]);
+    setAscendingOrder(!ascendingOrder);
+    setEvents([...sortedEvents]);
   };
 
   const handleShowMore = () => {
@@ -124,16 +128,10 @@ export function HomePage() {
         className={`bg-white h-full overflow-y-auto text-black pb-36 ${
           isUnLogged && "select-none"
         }`}
-        onClick={isUnLogged && handleClick}
+        onClick={isUnLogged ? handleClick : () => {}}
       >
         {isUnLogged && (
-          <div 
-            className="absolute bottom-0 w-full bg-opacity-50 flex items-center justify-center"
-            style={{
-              backgroundColor: "rgba(33, 42, 62, 0.2)",
-              height: '45%'
-            }}
-          >
+          <div className="absolute bottom-0 w-full h-1/2 bg-black bg-opacity-85 flex items-center justify-center">
             <Ban
               size={50}
               color="#f0ad4e"
@@ -175,16 +173,14 @@ export function HomePage() {
                     onClick={() =>
                       navigate(
                         `${
-                          events.length > 0
-                            ? `event-detail/${events[0].id}`
-                            : ""
+                          firstEvent?.id ? `event-detail/${firstEvent?.id}` : ""
                         }`
                       )
                     }
                     className="rounded-lg mt-5 hover:cursor-pointer"
                     src={
-                      events.length > 0 && events[0]?.image
-                        ? URL.createObjectURL(events[0].image)
+                      firstEvent?.image
+                        ? URL.createObjectURL(firstEvent?.image)
                         : "/icons/emptyIllustration.svg"
                     }
                     style={{ width: "90%", height: "90%", margin: "0" }}
@@ -204,8 +200,8 @@ export function HomePage() {
                   borderRadius: "1.5em",
                 }}
               >
-                {events.length > 0 ? (
-                  events[0]?.name
+                {firstEvent?.name ? (
+                  firstEvent?.name
                 ) : (
                   <p className="font-quicksand font-medium text-xl tracking-wide">
                     Sé el primer evento
@@ -225,7 +221,7 @@ export function HomePage() {
             </h2>
             <div className="flex gap-3">
               <Button
-                onClick={sortByDate}
+                onClick={isUnLogged ? () => {} : sortByDate}
                 variant="contained"
                 style={{
                   borderRadius: ".7em",
@@ -237,12 +233,13 @@ export function HomePage() {
                   color: "#394867",
                   textTransform: "none",
                 }}
+                disabled={isUnLogged}
                 endIcon={<DownFilterIcon sx={{ fontSize: 24 }} />}
               >
                 Fecha
               </Button>
               <Button
-                onClick={sortByName}
+                onClick={isUnLogged ? () => {} : sortByName}
                 variant="contained"
                 style={{
                   borderRadius: ".7em",
@@ -254,6 +251,7 @@ export function HomePage() {
                   color: "#394867",
                   textTransform: "none",
                 }}
+                disabled={isUnLogged}
                 endIcon={<DownFilterIcon sx={{ fontSize: 24 }} />}
               >
                 Nombre
@@ -288,8 +286,8 @@ export function HomePage() {
               <button
                 type="button"
                 className="bg-yellow-400 text-white py-2 px-4 rounded-md"
-                onClick={handleShowMore}
-                disabled={isLoadingMore}
+                onClick={isUnLogged ? () => {} : handleShowMore}
+                disabled={isLoadingMore || isUnLogged}
               >
                 Mostrar Mas
               </button>

@@ -137,7 +137,7 @@ const NavbarApp = () => {
               </div>
               {showOptions && (
                 <div
-                  className="absolute right-9 w-44 top-9 bg-gray-800 rounded-md"
+                  className="absolute right-8 w-44 top-11 bg-gray-800 rounded-md"
                   style={{ zIndex: 100 }}
                 >
                   <ul>

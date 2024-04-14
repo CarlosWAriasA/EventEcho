@@ -6,9 +6,9 @@ import { router as appRouter } from "./routes/AppRoutes.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-tooltip/dist/react-tooltip.css";
-import Loading from "./components/Loading/Loading.jsx";
 import "leaflet/dist/leaflet.css";
 import "react-loading-skeleton/dist/skeleton.css";
+import Loading from "./components/Loading/Loading.jsx";
 
 function App() {
   const { userToken, isLoading } = useContext(AuthContext);
@@ -22,7 +22,7 @@ function App() {
       <RouterProvider
         router={
           userToken !== null && userToken !== "null" ? appRouter : authRouter
-                  }
+        }
       />
       <ToastContainer />
     </div>

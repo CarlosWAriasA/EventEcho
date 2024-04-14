@@ -1,13 +1,11 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
 
 const NavbarAuth = () => {
   const location = useLocation();
 
-  const { userLogged, _ } = useContext(AuthContext); // El underscore significa que la variable asignada no se usará
   const isRegisterPage = location.pathname === "/register";
   const isLoginPage = location.pathname === "/login";
+  const isResetPasswordPage = location.pathname.startsWith("/reset-password");
 
   return (
     <nav
@@ -15,15 +13,20 @@ const NavbarAuth = () => {
       style={{
         width: "100%",
         height: "3.5rem",
-        backgroundColor: isLoginPage || isRegisterPage ? "#222a3f" : "white",
+        backgroundColor:
+          isLoginPage || isRegisterPage || isResetPasswordPage
+            ? "#222a3f"
+            : "white",
       }}
     >
       <ul className="flex justify-between">
         <li>
-          <NavLink to={userLogged ? '/' : '/login' }>
+          <NavLink to="/">
             <div
               className={`font-quicksand font-bold  ml-10 text-2xl mt-4 ${
-                isLoginPage || isRegisterPage ? "text-white" : "text-black"
+                isLoginPage || isResetPasswordPage || isRegisterPage
+                  ? "text-white"
+                  : "text-black"
               }`}
             >
               EventEcho
@@ -44,29 +47,28 @@ const NavbarAuth = () => {
               </div>
             </NavLink>
           ) : (
-            <li className="flex mt-4">
+            <div className="flex mt-4">
               <NavLink to="/register">
-                <div 
-                  className="font-quicksand font-semibold  mr-10 text-lg mt-4"
-                  style={{ color: 'rgba(33, 42, 62, 1)' }}
+                <div
+                  className={`mr-10 text-lg mt-2 ${
+                    isResetPasswordPage ? "text-white" : "text-black"
+                  } `}
                 >
                   Registrarse
                 </div>
               </NavLink>
               <NavLink to="/login">
-                <div 
-                  className="flex items-center justify-center font-quicksand font-semibold text-white mr-10 text-lg mt-4"
-                  style={{
-                    width: '8rem',
-                    color: 'rgba(33, 42, 62, 1)',
-                    borderRadius: '.5rem',
-                    backgroundColor: 'rgba(254, 219, 57, 0.7)'
-                  }}
-                 >
-                  Iniciar Sesión
+                <div
+                  className={
+                    isResetPasswordPage
+                      ? "mr-10 text-lg mt-2"
+                      : "bg-yellow-400 pl-2 pr-2 rounded-md mr-10 text-lg mt-2 text-black"
+                  }
+                >
+                  Login
                 </div>
               </NavLink>
-            </li>
+            </div>
           )}
         </li>
       </ul>
