@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import express from 'express';
-import { PORT } from './config/constants.js';
-=======
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -21,21 +17,8 @@ const forgotPasswordRouter = require("./router/forgotPasswordRouter");
 const resetPasswordRouter = require("./router/resetPasswordRouter");
 
 dotenv.config();
->>>>>>> 49cc586a594a342a07bf6274dfdce045c81984b3
 
 const app = express();
-
-<<<<<<< HEAD
-// Definimos una ruta
-app.get('/', (req, res) => {
-  res.send('Home Page!');
-});
-
-// Iniciamos el servidor en el puerto 3000
-app.listen(PORT, () => {
-  console.log(`Servidor activo en http://localhost:${PORT}`);
-});
-=======
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -74,4 +57,3 @@ sequelize.sync().then(() => {
 });
 
 module.exports = app;
->>>>>>> 49cc586a594a342a07bf6274dfdce045c81984b3
