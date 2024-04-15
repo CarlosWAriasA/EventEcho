@@ -6,6 +6,7 @@ export default function ButtonForm({
   style = {},
   className,
   variant,
+  sx,
 }) {
   return (
     <Button
@@ -14,6 +15,7 @@ export default function ButtonForm({
       className={className}
       variant={variant}
       style={style}
+      sx={sx}
     >
       {label}
     </Button>

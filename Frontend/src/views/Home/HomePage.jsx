@@ -1,26 +1,44 @@
-import { LayoutGrid } from "lucide-react";
 import Card from "../../components/Card/Card";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import RequestHelper from "../../utils/requestHelper";
 import ToastHelper from "../../utils/toastHelper";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
+import { Container, Button, Icon } from "@mui/material";
+import { DownFilterIcon } from "../../components/icons/iconComponents";
+import { AuthContext } from "../../context/AuthContext";
+import { Ban } from "lucide-react";
+import { Typography } from "@mui/material";
 
 export function HomePage() {
+  const { user } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [showMoreButton, setShowMoreButton] = useState(true);
+  const navigate = useNavigate();
+  const [ascendingOrder, setAscendingOrder] = useState(true);
+  const isUnLogged = user === null;
+  const [firstEvent, setFirstEvent] = useState({});
 
   const loadEvents = async () => {
     try {
-      setIsLoading(true);
-      const result = await RequestHelper.get("events");
-      const events = result?.map(async (e) => {
+      const loadingState = page === 1 ? setIsLoading : setIsLoadingMore;
+      loadingState(true);
+      const result = await RequestHelper.get("events", {
+        isPageable: true,
+        page: page,
+        pageSize: pageSize,
+      });
+      const loadedEvents = result?.map(async (e) => {
         let image;
         const imageUrls = e.image ? e.image : [];
 
         if (imageUrls.length > 0) {
           try {
-            const blob = await RequestHelper.get(imageUrls[0], "image");
+            const blob = await RequestHelper.get(imageUrls[0], {}, "image");
             image = new File([blob], `image_.jpg`, {
               type: "image/jpeg",
             });
@@ -39,9 +57,17 @@ export function HomePage() {
           image: image,
         };
       });
-      Promise.all(events)
-        .then((events) => {
-          setEvents(events);
+      Promise.all(loadedEvents)
+        .then((loadedEvents) => {
+          if (page > 1 && loadedEvents.length < 6) {
+            setShowMoreButton(false);
+          } else if (page == 1 && loadedEvents.length < 6) {
+            setShowMoreButton(false);
+          }
+          if (page === 1) {
+            setFirstEvent(loadedEvents[0]);
+          }
+          setEvents([...(events ?? []), ...loadedEvents]);
         })
         .catch((error) => {
           console.error("Error al obtener eventos:", error);
@@ -49,102 +75,227 @@ export function HomePage() {
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      if (page === 1) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+      } else {
+        setIsLoadingMore(false);
+      }
     }
   };
-
   const sortByDate = () => {
-    const sortedEvents = [...events];
-    sortedEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
-    setEvents([events[0], ...sortedEvents.slice(1)]);
+    const sortedEvents = events;
+    sortedEvents.sort((a, b) => {
+      const dateComparison = new Date(a.date) - new Date(b.date);
+      return ascendingOrder ? dateComparison : -dateComparison;
+    });
+
+    setAscendingOrder(!ascendingOrder);
+    setEvents([...sortedEvents]);
   };
 
   const sortByName = () => {
-    const sortedEvents = [...events];
-    sortedEvents.sort((a, b) => a.name.localeCompare(b.name));
-    setEvents([events[0], ...sortedEvents.slice(1)]);
+    const sortedEvents = events;
+    sortedEvents.sort((a, b) => {
+      const nameComparison = a.name.localeCompare(b.name);
+      return ascendingOrder ? nameComparison : -nameComparison;
+    });
+
+    setAscendingOrder(!ascendingOrder);
+    setEvents([...sortedEvents]);
+  };
+
+  const handleShowMore = () => {
+    setPage(page + 1);
+  };
+
+  const handleClick = () => {
+    ToastHelper.warning(
+      <Typography className="font-quicksand font-medium">
+        Por favor, iniciar sesión
+      </Typography>
+    );
   };
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [page, pageSize]);
 
   return (
-    <div className="bg-white h-full overflow-y-auto text-black">
-      <NavLink
-        to={`${events.length > 0 ? `event-detail/${events[0].id}` : ""}`}
+    <>
+      <div
+        className={`bg-white h-full overflow-y-auto text-black pb-36 ${
+          isUnLogged && "select-none"
+        }`}
+        onClick={isUnLogged ? handleClick : () => {}}
       >
+        {isUnLogged && (
+          <div className="absolute bottom-0 w-full h-1/2 bg-black bg-opacity-40 flex items-center justify-center">
+            <Ban
+              size={50}
+              color="#f0ad4e"
+              className="text-gray-500 absolute bg-blue-900 p-2"
+              style={{ zIndex: 1000, top: -25, borderRadius: "50%" }}
+            />
+          </div>
+        )}
         <div
-          className="flex flex-col items-center"
+          className="flex flex-col items-center cursor-default"
           style={{ height: "500px", maxHeight: "500px" }}
         >
           {isLoading ? (
-            <div style={{ width: "80%", height: "400px" }}>
+            <div style={{ width: "80%", height: "400px", marginTop: "20px" }}>
               <Skeleton height={400} />
             </div>
           ) : (
             <>
-              {" "}
-              <img
-                className="rounded-md mt-5 border-4 border-black"
-                src={
-                  events.length > 0 && events[0]?.image
-                    ? URL.createObjectURL(events[0].image)
-                    : "/images/default-image.jpg"
-                }
-                style={{ width: "80%", height: "400px" }}
-                alt="Description of your image"
-              />
-              <div className="relative bg-blue-950 text-white bottom-9 w-96 text-center rounded-lg p-6 overflow-hidden whitespace-nowrap">
-                {events.length > 0 ? events[0]?.name : "Crea el primer evento"}
-              </div>
+              <Container
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "90%",
+                  width: "90%",
+                  padding: "3rem",
+                }}
+              >
+                <Icon
+                  sx={{
+                    display: "inherit",
+                    justifyContent: "inherit",
+                    alignItems: "inherit",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <img
+                    onClick={() =>
+                      navigate(
+                        `${
+                          firstEvent?.id ? `event-detail/${firstEvent?.id}` : ""
+                        }`
+                      )
+                    }
+                    className="rounded-lg mt-5 hover:cursor-pointer"
+                    src={
+                      firstEvent?.image
+                        ? URL.createObjectURL(firstEvent?.image)
+                        : "/icons/emptyIllustration.svg"
+                    }
+                    style={{ width: "90%", height: "90%", margin: "0" }}
+                    alt="Description of your image"
+                  />
+                </Icon>
+              </Container>
+              <Container
+                className="relative text-white bottom-9 text-center p-6 overflow-hidden whitespace-nowrap"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 350,
+                  backgroundColor: "#212A3E",
+                  boxShadow: "2px 1px 5px rgba(33, 42, 62, .5)",
+                  borderRadius: "1.5em",
+                }}
+              >
+                {firstEvent?.name ? (
+                  firstEvent?.name
+                ) : (
+                  <p className="font-quicksand font-medium text-xl tracking-wide">
+                    Sé el primer evento
+                  </p>
+                )}
+              </Container>
             </>
           )}
         </div>
-      </NavLink>
-      <div className="ml-36 mr-36">
-        <div className="flex justify-between">
-          <h2 className="text-black text-lg">Eventos</h2>
-          <div className="flex gap-3">
-            <div
-              onClick={sortByDate}
-              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white"
+        <div className="ml-36 mr-36">
+          <div className="flex justify-between">
+            <h2
+              className="font-quicksand font-medium text-2xl"
+              style={{ color: "#212A3E" }}
             >
-              Fecha
-              <LayoutGrid size={18} />
-            </div>
-            <div
-              onClick={sortByName}
-              className="flex items-center bg-gray-400 p-2 rounded-md gap-2 hover:cursor-pointer hover:text-white"
-            >
-              Nombre
-              <LayoutGrid size={18} />
+              Eventos
+            </h2>
+            <div className="flex gap-3">
+              <Button
+                onClick={isUnLogged ? () => {} : sortByDate}
+                variant="contained"
+                style={{
+                  borderRadius: ".7em",
+                  width: "5.7rem",
+                  height: "2.6rem",
+                  fontFamily: "quicksand",
+                  fontWeight: 600,
+                  backgroundColor: "rgba(252, 252, 252, 0.8)",
+                  color: "#394867",
+                  textTransform: "none",
+                }}
+                disabled={isUnLogged}
+                endIcon={<DownFilterIcon sx={{ fontSize: 24 }} />}
+              >
+                Fecha
+              </Button>
+              <Button
+                onClick={isUnLogged ? () => {} : sortByName}
+                variant="contained"
+                style={{
+                  borderRadius: ".7em",
+                  width: "6.2rem",
+                  height: "2.6rem",
+                  fontFamily: "quicksand",
+                  fontWeight: 600,
+                  backgroundColor: "rgba(252, 252, 252, 0.8)",
+                  color: "#394867",
+                  textTransform: "none",
+                }}
+                disabled={isUnLogged}
+                endIcon={<DownFilterIcon sx={{ fontSize: 24 }} />}
+              >
+                Nombre
+              </Button>
             </div>
           </div>
-        </div>
-        <div className="mt-10 mb-36 grid grid-cols-3 gap-4 mr-10 ml-10">
-          {isLoading ? (
-            Array.from({ length: 6 }).map((_, index) => (
-              <Card key={index} loading />
-            ))
-          ) : (
-            <>
-              {events.slice(1).map((card) => (
-                <Card
-                  key={card.id}
-                  id={card.id}
-                  title={card.name}
-                  content={card.location}
-                  image={card.image && URL.createObjectURL(card.image)}
-                />
+          <div className="mt-10 grid grid-cols-3 gap-4 mr-10 ml-10">
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, index) => (
+                <Card key={index} loading />
+              ))
+            ) : (
+              <>
+                {events.map((card) => (
+                  <Card
+                    key={card.id}
+                    id={card.id}
+                    title={card.name}
+                    content={card.location}
+                    image={card.image && URL.createObjectURL(card.image)}
+                  />
+                ))}
+              </>
+            )}
+            {isLoadingMore &&
+              Array.from({ length: 6 }).map((_, index) => (
+                <Card key={index} loading />
               ))}
-            </>
+          </div>
+          {showMoreButton && (
+            <div className="flex justify-center mt-10">
+              <button
+                type="button"
+                className="bg-yellow-400 text-white py-2 px-4 rounded-md"
+                onClick={isUnLogged ? () => {} : handleShowMore}
+                disabled={isLoadingMore || isUnLogged}
+              >
+                Mostrar Mas
+              </button>
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

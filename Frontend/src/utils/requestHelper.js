@@ -1,16 +1,29 @@
 import { URL_BASE, USER_TOKEN } from "./constants";
 
 const RequestHelper = {
-  get: async function (url, responseType = "json") {
+  get: async function (url, queryParams = {}, responseType = "json") {
     try {
       const token = localStorage.getItem(USER_TOKEN);
-      const response = await fetch(URL_BASE + url, {
+
+      // Serialize query parameters
+      const queryString = new URLSearchParams(queryParams).toString();
+      const queryUrl = queryString ? `${url}?${queryString}` : url;
+
+      const response = await fetch(URL_BASE + queryUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
 
       const contentType = response.headers.get("content-type");
@@ -53,9 +66,15 @@ const RequestHelper = {
       });
 
       if (!response.ok) {
-        throw response;
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
-
       return await response.json();
     } catch (error) {
       console.error("Error making POST request:", error);
@@ -81,7 +100,14 @@ const RequestHelper = {
       });
 
       if (!response.ok) {
-        throw response;
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
 
       return await response.json();
@@ -103,7 +129,14 @@ const RequestHelper = {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.status === 400) {
+          const responseData = await response.json();
+          throw new Error(
+            responseData.msg || responseData.message || "Error de solicitud"
+          );
+        } else {
+          throw new Error("Error de solicitud");
+        }
       }
       return await response.json();
     } catch (error) {

@@ -14,8 +14,9 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     loading(true);
-    localStorage.setItem(USER_TOKEN, null);
     setTimeout(() => {
+      localStorage.setItem(USER_TOKEN, null);
+      setUser(null);
       setUserToken(null);
       loading(false);
     }, 1000);
@@ -27,7 +28,11 @@ export function AuthProvider({ children }) {
       if (result) {
         if (result.profileImage) {
           try {
-            const blob = await RequestHelper.get(result.profileImage, "image");
+            const blob = await RequestHelper.get(
+              result.profileImage,
+              {},
+              "image"
+            );
             result.image = new File([blob], `image_user.jpg`, {
               type: "image/jpeg",
             });
@@ -38,7 +43,7 @@ export function AuthProvider({ children }) {
       }
       setUser(result);
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.error(error.message ?? "Ha ocurrido un error");
     }
   };
 
@@ -53,6 +58,7 @@ export function AuthProvider({ children }) {
             try {
               const blob = await RequestHelper.get(
                 result.profileImage,
+                {},
                 "image"
               );
               result.image = new File([blob], `image_user.jpg`, {

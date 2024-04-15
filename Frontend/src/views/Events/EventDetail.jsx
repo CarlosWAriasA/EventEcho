@@ -1,4 +1,4 @@
-import { CircleUserRound, Clock, MapPin, UserRound } from "lucide-react";
+import { Clock, MapPin, UserRound } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { LoadingContext } from "../../context/LoadingContext";
@@ -11,6 +11,8 @@ import "./Event.css";
 import useKeypress from "react-use-keypress";
 import { KEY_ESCAPE } from "../../utils/constants";
 import { useNavigate } from "react-router";
+import Comentarios from "../../components/Comentarios/Comentarios";
+import Skeleton from "react-loading-skeleton";
 
 function EventDetail() {
   const { Id } = useParams();
@@ -30,7 +32,6 @@ function EventDetail() {
   const navigate = useNavigate();
 
   const loadEvent = async (id) => {
-    const startTime = Date.now();
     try {
       setIsLoading(true);
       const result = await RequestHelper.get(`events/${id}`);
@@ -55,7 +56,7 @@ function EventDetail() {
       }));
       if (imageUrls.length > 0) {
         for (const imageUrl of imageUrls) {
-          const blob = await RequestHelper.get(imageUrl, "image");
+          const blob = await RequestHelper.get(imageUrl, {}, "image");
           images.push(
             new File([blob], `image_${images.length}.jpg`, {
               type: "image/jpeg",
@@ -67,14 +68,7 @@ function EventDetail() {
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     } finally {
-      const remainingTime = 200 - (Date.now() - startTime);
-      if (remainingTime > 0) {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, remainingTime);
-      } else {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   };
 
@@ -104,8 +98,6 @@ function EventDetail() {
     }
   }, [Id]);
 
-  const defaultImageUrl = "/images/default-image.jpg";
-
   useKeypress(KEY_ESCAPE, () => {
     navigate("/");
   });
@@ -113,36 +105,34 @@ function EventDetail() {
   return (
     <main className="bg-white h-full pl-16 pt-16 text-black overflow-y-auto">
       <div className="flex gap-6">
-        {images.length > 0 ? (
-          <div
-            className="h-56 sm:h-64 xl:h-80 2xl:h-96"
-            style={{ width: "50%" }}
-          >
-            <Carousel slideInterval={5000}>
-              {images.map((image, i) => (
-                <img
-                  key={image.name + i}
-                  src={URL.createObjectURL(image)}
-                  className="object-cover w-full h-auto mb-4"
-                  alt={image.name}
-                />
-              ))}
-            </Carousel>
+        <div style={{ width: "50%" }}>
+          {images.length > 0 ? (
+            <div style={{ height: "70%" }}>
+              <Carousel slideInterval={5000}>
+                {images.map((image, i) => (
+                  <img
+                    key={image.name + i}
+                    src={URL.createObjectURL(image)}
+                    className="object-cover w-full h-auto mb-4"
+                    alt={image.name}
+                  />
+                ))}
+              </Carousel>
+            </div>
+          ) : (
+            <div style={{ width: "100%", maxHeight: "22em", height: "400px" }}>
+              <Skeleton height={400} />
+            </div>
+          )}
+          <div>
+            <Comentarios eventId={event.id} />
           </div>
-        ) : (
-          <img
-            src={defaultImageUrl}
-            alt="Imagen por defecto"
-            className="object-cover mb-4"
-            style={{ width: "50%", maxHeight: "22em", height: "25em" }}
-          />
-        )}
-        <div>
+        </div>
+        <div style={{ maxWidth: "45%", marginRight: "20px" }}>
           <h2
             style={{
               fontSize: "4em",
               paddingBottom: "5px",
-              paddingTop: "-5px",
             }}
           >
             {event.name.length > 20
@@ -154,9 +144,9 @@ function EventDetail() {
               className="hover:cursor-pointer select-none"
               color="white"
               fill="yellow"
-              size={35}
+              size={45}
             />
-            <p className="text-gray-400 m-0 pt-1 max-w-72">{event.location}</p>
+            <p className="text-gray-400 m-0 pt-1">{event.location}</p>
           </div>
           <div className="flex gap-2 mt-3">
             <Clock
@@ -203,31 +193,19 @@ function EventDetail() {
                 onClick={registerUserToEvent}
                 label={isRegister ? "Desinscribirse" : "Inscribirse"}
                 className={`p-2 pl-5 pr-5 rounded-lg text-white w-36 ${
-                  isRegister
-                    ? "bg-red-800"
-                    : "bg-yellow-300 hover:bg-yellow-400"
+                  isRegister ? "bg-red-800" : "bg-yellow-500"
                 }`}
               />
             </div>
           )}
-          <p className="m-0 pt-3 text-black" style={{ fontSize: "2em" }}>
-            {event.desc}
+          <p
+            className="m-0 pt-3 text-black text-justify"
+            style={{ fontSize: "1em" }}
+          >
+            {event.desc.length > 800
+              ? `${event.desc.substring(0, 800)}...`
+              : event.desc}
           </p>
-        </div>
-      </div>
-      <div className="mb-2 mt-10" style={{ fontSize: "2em" }}>
-        Comentarios
-      </div>
-      <div
-        className="mb-10 p-8"
-        style={{ width: "50%", height: "22em", backgroundColor: "#394867" }}
-      >
-        <div className="flex gap-2">
-          <CircleUserRound size={25} style={{ marginTop: "3px" }} />
-          <div>
-            <p className="m-0 p-0 text-lg">Lorem ipsum</p>
-            <p className="m-0 p-0">Lorem ipsum</p>
-          </div>
         </div>
       </div>
     </main>

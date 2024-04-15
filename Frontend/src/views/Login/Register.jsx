@@ -30,7 +30,7 @@ function Register() {
   const roles = ["Usuario", "Organizador"];
 
   const sx = {
-    background: "rgb(248, 250, 229, 0.8)",
+    background: "rgb(248, 250, 229, 0.9)",
     "& .MuiFilledInput-underline:after": {
       borderBottomColor: "#FAEF5D",
       height: "5rem",
@@ -57,6 +57,11 @@ function Register() {
 
     if (!newUser.email) {
       ToastHelper.error("El Correo Electronico es requerido.", "top-center");
+      return false;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
+      ToastHelper.error("El Correo Electronico es invalido.", "top-center");
       return false;
     }
 
@@ -97,18 +102,16 @@ function Register() {
       if (validateUser()) {
         const result = await RequestHelper.post("register", {
           name: newUser.userName,
-          lastName: newUser.userName,
-          username: newUser.userName,
           email: newUser.email,
           password: newUser.password,
           tipo_usuario: newUser.role.toLowerCase(),
         });
         ToastHelper.success(result.msg);
         cleanUser();
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
-      ToastHelper.error("Ha ocurrido un error");
+      ToastHelper.warning(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -135,7 +138,7 @@ function Register() {
           borderRadius: "2px",
         }}
       ></div>
-      <h1 className="text-4xl text-white font-bold mb-6 text-start">
+      <h1 className="font-quicksand text-4xl text-white font-bold mb-6 text-start">
         Registro
       </h1>
       <TextInput
@@ -192,18 +195,19 @@ function Register() {
           setNewUser((prev) => ({ ...prev, role: e.target.value }))
         }
         className="rounded-lg w-72"
+        style={{backgroundColor: 'rgb(248, 250, 229, 0.9)'}}
         sx={sx}
       >
         {roles.map((role) => (
           <MenuItem key={role} value={role}>
-            {role}
+            <p className="font-quicksand font-medium">{role}</p>
           </MenuItem>
         ))}
       </Select>
       <ButtonForm
         onClick={registerUser}
-        label={"Registrarse"}
-        style={{ backgroundColor: "#FAEF5D", color: "#212A3E" }}
+        label={<span className="font-quicksand font-semibold tracking-normal">Registrarse</span>}
+        style={{ backgroundColor: "#FEDB39", color: "#212A3E" }}
       />
     </Box>
   );

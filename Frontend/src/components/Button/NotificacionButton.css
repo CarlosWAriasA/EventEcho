@@ -1,0 +1,23 @@
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  max-height: 60vh;
+  overflow: auto;
+  z-index: 100;
+  padding: 14px;
+  border-radius: 100px;
+  display: none;
+  position: absolute;
+  top: 100%;
+  margin-top: 5px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content.active {
+  display: block;
+}

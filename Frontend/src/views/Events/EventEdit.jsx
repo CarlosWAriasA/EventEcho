@@ -18,7 +18,9 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import UploadImageModal from "../../components/Modal/UploadImageModal";
 import Mapa from "../../components/Mapa/Mapa";
 import useKeypress from "react-use-keypress";
-import { KEY_ENTER, KEY_ESCAPE } from "../../utils/constants";
+import { KEY_ESCAPE } from "../../utils/constants";
+import ButtonForm from "../../components/Button/ButtonForm";
+import { Textarea } from "@mui/joy";
 
 function EventEdit() {
   const { setIsLoading } = useContext(LoadingContext);
@@ -64,7 +66,7 @@ function EventEdit() {
 
       if (imageUrls.length > 0) {
         imageUrls.forEach(async (i) => {
-          const blob = await RequestHelper.get(i, "image");
+          const blob = await RequestHelper.get(i, {}, "image");
           images.push(
             new File([blob], `image_${images.length}.jpg`, {
               type: "image/jpeg",
@@ -95,7 +97,7 @@ function EventEdit() {
   async function fetchCity(lat, lng) {
     setIsLoading(true);
     try {
-      if (!clickedPosition) return;
+      if (!lat || !lng) return;
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
       );
@@ -187,12 +189,11 @@ function EventEdit() {
     }
   };
 
-  useKeypress([KEY_ENTER], saveEvent);
   useKeypress([KEY_ESCAPE], () => {
     navigate("/event-admin");
   });
   return (
-    <main className="bg-white h-full text-black pl-16 pt-16 overflow-y-auto">
+    <main className="bg-white h-full text-black pl-16 pt-8 overflow-y-auto">
       <div className="flex gap-52">
         {modalImageUpload && (
           <UploadImageModal
@@ -230,10 +231,10 @@ function EventEdit() {
         )}
         <div>
           <div>
-            <h1 className="font-bold" style={{ fontSize: "3em" }}>
+            <h4 className="font-quicksand font-semibold my-0" style={{ fontSize: "3em" }}>
               {Id ? "Actualizar Evento" : "Crea tu Propio Evento"}
-            </h1>
-            <div className="w-24 h-3 bg-yellow-400 rounded-sm"></div>
+            </h4>
+            <div className="w-20 h-2 rounded-full" style={{ backgroundColor: "#FEDB39"}}></div>
           </div>
           <div className="mt-14">
             <div className="flex gap-16">
@@ -246,6 +247,13 @@ function EventEdit() {
                   onChange={(e) =>
                     setEvent((prev) => ({ ...prev, name: e.target.value }))
                   }
+                sx={{
+                  background: "rgb(248, 250, 229, 0.9)",
+                  "& .MuiFilledInput-underline:after": {
+                    borderBottomColor: "#FEDB39",
+                    height: "5rem",
+                  },
+                }}
                 />
               </div>
               <div className="w-64">
@@ -262,6 +270,13 @@ function EventEdit() {
                         amountPeople: inputValue,
                       }));
                     }
+                  }}
+                  sx={{
+                    background: "rgb(248, 250, 229, 0.9)",
+                    "& .MuiFilledInput-underline:after": {
+                      borderBottomColor: "#FEDB39",
+                      height: "5rem",
+                    },
                   }}
                   icon={<BoyIcon />}
                 />
@@ -290,10 +305,10 @@ function EventEdit() {
               </div>
             </div>
             <div className="mt-5">
-              <TextInput
-                className="rounded-lg "
-                style={{ width: "38em" }}
-                label={"Descripción"}
+              <Textarea
+                id="description"
+                maxRows={5}
+                variant="solid"
                 value={event.description}
                 onChange={(e) =>
                   setEvent((prev) => ({
@@ -301,22 +316,57 @@ function EventEdit() {
                     description: e.target.value,
                   }))
                 }
-                multiline
-                rows={6}
+                placeholder="Describe tu evento"
+                sx={{
+                  "&::before": {
+                    display: "none",
+                  },
+                  "&:focus-within": {
+                    outline: "1px solid rgba(33, 42, 62, .6)",
+                  },
+                }}
+                style={{
+                  background: "rgba(0, 0, 0, 0.1)",
+                  color: "#394867",
+                  width: "100%",
+                  height: "9rem",
+                  fontFamily: "quicksand",
+                  fontWeight: "600",
+                }}
               />
             </div>
             <div className="flex justify-between gap-5 mt-5">
               <div className="flex gap-5">
-                <button
+                <ButtonForm 
+                  label={'Guardar'}
                   onClick={saveEvent}
-                  className="bg-blue-950 p-2 pl-5 pr-5 rounded-lg text-white hover:bg-blue-900 w-36"
-                >
-                  Guardar
-                </button>
+                  style={{
+                    backgroundColor: 'rgba(33, 42, 62, 1)',
+                    width: '6rem',
+                    borderRadius: '.7rem',
+                    color: '#FCFCFC ',
+                    fontFamily: 'quicksand',
+                    fontWeight: 500,
+                    letterSpacing: '.3px',
+                    textTransform: 'none',
+                    fontSize: 17
+                  }}
+                />
                 <NavLink to={"/event-admin"}>
-                  <button className="border border-blue-950 p-2 w-36 rounded-lg hover:bg-blue-950 hover:text-white">
-                    Cancelar
-                  </button>
+                  <ButtonForm 
+                    label={'Cancelar'}
+                    style={{
+                      backgroundColor: 'rgba(33, 42, 62, .2)',
+                      width: '6rem',
+                      borderRadius: '.7rem',
+                      color: '#212A3E ',
+                      fontFamily: 'quicksand',
+                      fontWeight: 500,
+                      letterSpacing: '.3px',
+                      textTransform: 'none',
+                      fontSize: 17
+                  }}
+                />
                 </NavLink>
               </div>
               {parseInt(Id) > 0 && (
@@ -336,6 +386,7 @@ function EventEdit() {
               Localización
             </p>
             <Mapa
+              initialValue={{ lat: event.latitude, lng: event.longitude }}
               value={clickedPosition}
               setValue={setClickedPosition}
               onClick={fetchCity}
