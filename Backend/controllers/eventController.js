@@ -15,11 +15,21 @@ const { enviarCorreo } = require("./correoControlador");
 const getEventById = async (req, res) => {
   try {
     const eventId = req.params.eventId;
-    const event = await Event.findByPk(eventId);
+    const event = await Event.findByPk(eventId, {
+      include: [{ model: UserEvent, include: [Usuario] }],
+    });
 
     if (!event) {
       return res.status(400).json({ message: "Evento no encontrado" });
     }
+
+    event.dataValues.UserEvents.map((userEvent) => {
+      const usuario = userEvent.Usuario.dataValues;
+      if (usuario.profileImage && fs.existsSync(usuario.profileImage)) {
+        const imageData = fs.readFileSync(usuario.profileImage);
+        userEvent.Usuario.dataValues.image64 = imageData.toString("base64");
+      }
+    });
 
     res.status(200).json(event);
   } catch (error) {
