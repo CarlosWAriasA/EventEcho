@@ -126,12 +126,18 @@ export function HomePage() {
     <>
       <div
         className={`bg-white h-full overflow-y-auto text-black pb-36 ${
-          isUnLogged && "select-none"
+          isUnLogged ? "select-none" : ""
         }`}
         onClick={isUnLogged ? handleClick : () => {}}
       >
         {isUnLogged && (
-          <div className="absolute bottom-0 w-full h-1/2 bg-black bg-opacity-40 flex items-center justify-center">
+          <div
+            className="absolute bottom-0 w-full h-1/2 bg-black flex items-center justify-center"
+            style={{
+              background: "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(10px)",
+            }}
+          >
             <Ban
               size={50}
               color="#f0ad4e"
