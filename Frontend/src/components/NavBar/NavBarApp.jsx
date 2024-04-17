@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Tooltip } from "react-tooltip";
 import { EventIcon } from "../icons/iconComponents";
 import NotificacionButton from "../Button/NotificacionButton";
+import { CircleUserRound } from "lucide-react";
 
 const NavbarApp = () => {
   const optionsRef = useRef(null);
@@ -44,7 +45,11 @@ const NavbarApp = () => {
   return (
     <nav
       className="absolute top-0"
-      style={{ width: "100%", backgroundColor: "rgba(252, 252, 252, 0.9)", height: "3.5rem" }}
+      style={{
+        width: "100%",
+        backgroundColor: "rgba(252, 252, 252, 0.9)",
+        height: "3.5rem",
+      }}
     >
       <ul className="flex justify-between h-full ">
         <li className="flex items-center">
@@ -127,12 +132,12 @@ const NavbarApp = () => {
                     }}
                   />
                 ) : (
-                  <span></span>
-                  // <CircleUserRound
-                  //   className="hover:cursor-pointer bg-gray-300 p-1"
-                  //   color="black"
-                  //   style={{ borderRadius: "50%" }}
-                  //   size={25} />
+                  <CircleUserRound
+                    className="hover:cursor-pointer bg-gray-300 p-1"
+                    color="black"
+                    style={{ borderRadius: "50%" }}
+                    size={25}
+                  />
                 )}
               </div>
               {showOptions && (

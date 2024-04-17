@@ -25,11 +25,16 @@ function EventDetail() {
     people: "",
     desc: "",
     userId: "",
+    inscritos: [],
   });
   const { setIsLoading } = useContext(LoadingContext);
   const [isRegister, setIsRegister] = useState(false);
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(event);
+  }, [event]);
 
   const loadEvent = async (id) => {
     try {
@@ -38,7 +43,6 @@ function EventDetail() {
       const isRegister = await RequestHelper.get(`events/events-user/${id}`);
       const imageUrls = result.image ? result.image : [];
       const images = [];
-
       if (isRegister.isRegister) {
         setIsRegister(true);
       } else {
@@ -53,6 +57,7 @@ function EventDetail() {
         date: new Date(result.date).toLocaleString(),
         location: result.location,
         userId: result.userId,
+        inscritos: result.UserEvents,
       }));
       if (imageUrls.length > 0) {
         for (const imageUrl of imageUrls) {
@@ -120,7 +125,7 @@ function EventDetail() {
               </Carousel>
             </div>
           ) : (
-            <div style={{ width: "100%", maxHeight: "22em", height: "400px" }}>
+            <div style={{ width: "100%", maxHeight: "28em", height: "500px" }}>
               <Skeleton height={400} />
             </div>
           )}
@@ -142,7 +147,7 @@ function EventDetail() {
           <div className="flex gap-2">
             <MapPin
               className="hover:cursor-pointer select-none"
-              color="white"
+              color="black"
               fill="yellow"
               size={45}
             />
@@ -151,50 +156,70 @@ function EventDetail() {
           <div className="flex gap-2 mt-3">
             <Clock
               className="hover:cursor-pointer select-none"
-              color="white"
-              size={35}
+              color="black"
+              size={45}
               fill="yellow"
             />
             <p className="text-gray-400 m-0 pt-1">{event.date}</p>
           </div>
           <div className="flex gap-2 mt-4 ml-1">
             <div className="flex">
-              <UserRound
-                className="hover:cursor-pointer select-none bg-gray-400"
-                size={25}
-                style={{ zIndex: 1, borderRadius: "50%", padding: "2px" }}
-              />
-              <UserRound
-                className="hover:cursor-pointer select-none bg-gray-400"
-                size={25}
-                style={{
-                  borderRadius: "50%",
-                  padding: "2px",
-                  marginLeft: "-10px",
-                  zIndex: 2,
-                }}
-              />
-              <UserRound
-                className="hover:cursor-pointer select-none bg-gray-400"
-                size={25}
-                style={{
-                  borderRadius: "50%",
-                  padding: "2px",
-                  marginLeft: "-10px",
-                  zIndex: 3,
-                }}
-              />
+              {event.inscritos?.length > 0
+                ? event.inscritos.slice(0, 2).map((i, index) => {
+                    return i.Usuario?.image64 ? (
+                      <img
+                        key={i.id}
+                        src={`data:image/png;base64,  ${i.Usuario.image64}`}
+                        alt="Profile"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          borderRadius: "50%",
+                          boxShadow: "0 0 5px rgba(0, 0, 0, 0.4)",
+                          objectFit: "cover",
+                          cursor: "pointer",
+                          marginLeft: index > 0 ? "-10px" : "",
+                        }}
+                      />
+                    ) : (
+                      <UserRound
+                        key={i.id}
+                        className="hover:cursor-pointer select-none bg-gray-400"
+                        size={25}
+                        style={{
+                          zIndex: index + 1,
+                          borderRadius: "50%",
+                          padding: "2px",
+                          marginLeft: index > 0 ? "-10px" : "",
+                        }}
+                      />
+                    );
+                  })
+                : Array.from({ length: 3 }).map((_, index) => {
+                    return (
+                      <UserRound
+                        key={index}
+                        className="hover:cursor-pointer select-none bg-gray-400"
+                        size={30}
+                        style={{
+                          zIndex: index + 1,
+                          borderRadius: "50%",
+                          padding: "2px",
+                          marginLeft: index > 0 ? "-10px" : "",
+                        }}
+                      />
+                    );
+                  })}
             </div>
-            <p className="m-0">+{event.people}</p>
+            <p className="m-0 text-lg">+{event.inscritos?.length ?? 0}</p>
           </div>
           {user.id !== event.userId && (
             <div className="mt-4">
               <Button
                 onClick={registerUserToEvent}
                 label={isRegister ? "Desinscribirse" : "Inscribirse"}
-                className={`p-2 pl-5 pr-5 rounded-lg text-white w-36 ${
-                  isRegister ? "bg-red-800" : "bg-yellow-500"
-                }`}
+                className={`p-2 pl-5 pr-5 rounded-lg text-white w-36`}
+                style={{ backgroundColor: isRegister ? "red" : "#FEDB39" }}
               />
             </div>
           )}
