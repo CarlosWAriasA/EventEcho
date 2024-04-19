@@ -71,7 +71,7 @@ const NavbarApp = () => {
                 <ListChecks
                   className="hover:cursor-pointer select-none"
                   color="black"
-                  size={25}
+                  size={28}
                 />
               </div>
             </NavLink>
