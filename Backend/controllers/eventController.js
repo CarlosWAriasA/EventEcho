@@ -240,12 +240,12 @@ const updateEvent = async (req, res) => {
     event.longitud = longitud;
     event.latitud = latitud;
 
-    // Actualizar las imágenes si se proporcionan nuevas imágenes
     if (req.files && req.files.length > 0) {
-      // Eliminar las imágenes antiguas si existen
       if (event.image && Array.isArray(event.image)) {
         event.image.forEach((imagePath) => {
-          fs.unlinkSync(imagePath);
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+          }
         });
       }
 
