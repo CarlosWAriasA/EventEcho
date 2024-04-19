@@ -137,8 +137,8 @@ function EventDetail() {
               paddingBottom: "5px",
             }}
           >
-            {event.name.length > 20
-              ? `${event.name.substring(0, 20)}...`
+            {event.name.length > 50
+              ? `${event.name.substring(0, 50)}...`
               : event.name}
           </h2>
           <div className="flex gap-2 justify-start">
