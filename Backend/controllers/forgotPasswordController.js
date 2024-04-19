@@ -27,7 +27,7 @@ const forgotPassword = async (req, res, next) => {
     usuario.resetPasswordExpires = Date.now() + 3600000; // La fecha de expiración es en una hora
 
     await usuario.save();
-    console.log(req.headers);
+
     // Enviar un correo electrónico con el enlace de restablecimiento de contraseña
     const resetURL = `${req.headers.origin}/reset-password/${resetToken}`;
 

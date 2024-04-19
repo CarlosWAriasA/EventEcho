@@ -32,10 +32,6 @@ function EventDetail() {
   const [images, setImages] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(event);
-  }, [event]);
-
   const loadEvent = async (id) => {
     try {
       setIsLoading(true);
@@ -92,6 +88,7 @@ function EventDetail() {
         setIsRegister(true);
         ToastHelper.success("Inscrito exitosamente");
       }
+      loadEvent(Id);
     } catch (error) {
       ToastHelper.error("Ha ocurrido un error");
     }
