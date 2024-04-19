@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
@@ -8,18 +7,29 @@ const path = require("path");
 const Event = require("../models/eventModel");
 const Usuario = require("../models/usuarioModel");
 const UserEvent = require("../models/UserEvent");
+const Comentario = require("../models/Comentario");
+const Notificacion = require("../models/Notificacion");
 const { enviarCorreo } = require("./correoControlador");
-const { where } = require("sequelize");
 
 // Obtener un evento por su ID
 const getEventById = async (req, res) => {
   try {
     const eventId = req.params.eventId;
-    const event = await Event.findByPk(eventId);
+    const event = await Event.findByPk(eventId, {
+      include: [{ model: UserEvent, include: [Usuario] }],
+    });
 
     if (!event) {
-      return res.status(404).json({ message: "Evento no encontrado" });
+      return res.status(400).json({ message: "Evento no encontrado" });
     }
+
+    event.dataValues.UserEvents.map((userEvent) => {
+      const usuario = userEvent.Usuario.dataValues;
+      if (usuario.profileImage && fs.existsSync(usuario.profileImage)) {
+        const imageData = fs.readFileSync(usuario.profileImage);
+        userEvent.Usuario.dataValues.image64 = imageData.toString("base64");
+      }
+    });
 
     res.status(200).json(event);
   } catch (error) {
@@ -32,7 +42,20 @@ const getEventById = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     // Obtener todos los eventos con la información de los usuarios asociados
-    const events = await Event.findAll({});
+    const { isPageable, page, pageSize } = req.query;
+
+    const offset = page
+      ? (parseInt(page) - 1) * (parseInt(pageSize) || 10)
+      : null;
+
+    const events = await Event.findAll(
+      isPageable
+        ? {
+            offset,
+            limit: pageSize && parseInt(pageSize),
+          }
+        : {}
+    );
 
     res.status(200).json(events);
   } catch (error) {
@@ -136,7 +159,7 @@ const createEvent = async (req, res) => {
   // Verificar si el usuario es un organizador
   if (tipoUsuario !== "organizador") {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "No tienes permiso para crear eventos" });
   }
 
@@ -202,8 +225,6 @@ const updateEvent = async (req, res) => {
     const { title, description, date, attendees, location, longitud, latitud } =
       req.body;
 
-    console.log(req.files);
-
     // Buscar el evento en la base de datos
     const event = await Event.findByPk(eventId);
     if (!event) {
@@ -250,7 +271,7 @@ const deleteEvent = async (req, res) => {
   // Verificar si el usuario es un organizador
   if (tipoUsuario !== "organizador") {
     return res
-      .status(403)
+      .status(400)
       .json({ message: "No tienes permiso para eliminar eventos" });
   }
 
@@ -299,6 +320,12 @@ const deleteEvent = async (req, res) => {
       await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
     }
 
+    // Eliminar el evento de la base de datos
+    await UserEvent.destroy({ where: { eventId: eventId } });
+    await Comentario.destroy({ where: { eventId: eventId } });
+    await Notificacion.destroy({ where: { eventId: eventId } });
+    await event.destroy();
+
     // Enviar un correo electrónico al organizador
     const organizer = await Usuario.findByPk(event.userId);
     const destinatarioOrganizador = organizer.email;
@@ -318,10 +345,6 @@ const deleteEvent = async (req, res) => {
       plantillaNombreOrganizador,
       datosOrganizador
     );
-
-    // Eliminar el evento de la base de datos
-    await UserEvent.destroy({ where: { eventId: eventId } });
-    await event.destroy();
 
     res.status(200).json({ message: "Evento eliminado exitosamente" });
   } catch (error) {

@@ -12,21 +12,16 @@ const Usuario = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
       validate: {
-        isEmail: true,
+        isEmail: {
+          msg: "El campo email debe ser un correo electrónico válido",
+        },
       },
     },
     password: {
@@ -47,6 +42,15 @@ const Usuario = sequelize.define(
     age: {
       type: DataTypes.INTEGER,
     },
+    // Otros campos de usuario...
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
   },
   {
     tableName: "tbl_usuario",

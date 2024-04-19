@@ -6,7 +6,7 @@ const Usuario = require("../models/usuarioModel");
 const { enviarCorreo } = require("./correoControlador");
 
 const registrarUsuario = async (req, res) => {
-  const { name, lastName, username, email, password, tipo_usuario } = req.body;
+  const { name, email, password, tipo_usuario } = req.body;
 
   try {
     // Verificar si el usuario ya existe en la base de datos
@@ -15,7 +15,18 @@ const registrarUsuario = async (req, res) => {
     if (usuarioExistente) {
       return res.status(400).json({
         ok: false,
-        msg: "El usuario ya existe",
+        msg: "Este correo ya esta registrado",
+      });
+    }
+
+    const usuarioExistenteNombre = await Usuario.findOne({
+      where: { name },
+    });
+
+    if (usuarioExistenteNombre) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Este nombre ya esta registrado",
       });
     }
 
@@ -25,8 +36,6 @@ const registrarUsuario = async (req, res) => {
     // Insertar el nuevo usuario en la base de datos
     await Usuario.create({
       name,
-      lastName,
-      username,
       email,
       password: hashedPassword,
       tipo_usuario, // Añadir el nuevo campo userType
@@ -42,7 +51,6 @@ const registrarUsuario = async (req, res) => {
 
     await enviarCorreo(destinatario, asunto, plantillaNombre, datos);
 
-    console.log("Registrado");
     return res.status(200).json({
       ok: true,
       msg: "El usuario ha sido registrado con éxito",
@@ -107,16 +115,27 @@ const editarUsuario = async (req, res) => {
   // Extraer el ID del usuario desde el token JWT
   const id = req.user.userId;
 
-  const { name, lastName, username, email, description, age } = req.body;
+  const { name, email, description, age } = req.body;
 
   try {
     // Verificar si el usuario existe en la base de datos
     const usuarioExistente = await Usuario.findByPk(id);
 
     if (!usuarioExistente) {
-      return res.status(404).json({
+      return res.status(400).json({
         ok: false,
         msg: "El usuario no fue encontrado",
+      });
+    }
+
+    const usuarioExistenteNombre = await Usuario.findOne({
+      where: { name },
+    });
+
+    if (usuarioExistenteNombre && usuarioExistenteNombre.id !== id) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Este nombre ya esta registrado",
       });
     }
 
@@ -126,8 +145,6 @@ const editarUsuario = async (req, res) => {
     // Actualizar los campos del usuario
     await usuarioExistente.update({
       name,
-      lastName,
-      username,
       email,
       description,
       age,
@@ -135,7 +152,7 @@ const editarUsuario = async (req, res) => {
     });
 
     // Eliminar la imagen anterior del servidor si existe y se proporciona una nueva imagen
-    if (req.file && imagenAnterior) {
+    if (req.file && imagenAnterior && fs.existsSync(imagenAnterior)) {
       fs.unlinkSync(imagenAnterior);
     }
 

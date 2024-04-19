@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import express from 'express';
-import { PORT } from './config/constants.js';
-=======
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -11,27 +7,18 @@ const registerRoutes = require("./router/register");
 const homeRouter = require("./router/homeRouter");
 const eventRouter = require("./router/eventRouter");
 const profileRouter = require("./router/profileRouter");
+const comentarioRouter = require("./router/comentarioRouter");
+const notificacionRouter = require("./router/notificacionRouter");
 const userEventsRouter = require("./router/userEventsRouter");
 const sequelize = require("./connection/connection");
 const defineAssociations = require("./connection/associations");
 const userRoutes = require("./router/userRouter");
+const forgotPasswordRouter = require("./router/forgotPasswordRouter");
+const resetPasswordRouter = require("./router/resetPasswordRouter");
 
 dotenv.config();
->>>>>>> 49cc586a594a342a07bf6274dfdce045c81984b3
 
 const app = express();
-
-<<<<<<< HEAD
-// Definimos una ruta
-app.get('/', (req, res) => {
-  res.send('Home Page!');
-});
-
-// Iniciamos el servidor en el puerto 3000
-app.listen(PORT, () => {
-  console.log(`Servidor activo en http://localhost:${PORT}`);
-});
-=======
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -42,11 +29,14 @@ app.use("/api/", registerRoutes);
 app.use("/", homeRouter);
 app.use("/api/events/", eventRouter);
 app.use("/api/profile/", profileRouter);
-
+app.use("/api/comentarios/", comentarioRouter);
+app.use("/api/notificaciones/", notificacionRouter);
 app.use("/api/", userEventsRouter);
 
 //Ruta de los usuarios
 app.use("/api/", userRoutes);
+app.use("/api/forgot-password/", forgotPasswordRouter);
+app.use("/api/reset-password/", resetPasswordRouter);
 
 // para servir imagenes estaticas
 app.use("/api/uploads/", express.static(path.join(__dirname, "uploads")));
@@ -67,4 +57,3 @@ sequelize.sync().then(() => {
 });
 
 module.exports = app;
->>>>>>> 49cc586a594a342a07bf6274dfdce045c81984b3
