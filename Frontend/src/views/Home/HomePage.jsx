@@ -141,7 +141,7 @@ export function HomePage() {
             <Ban
               size={50}
               color="#f0ad4e"
-              className="text-gray-500 absolute bg-blue-900 p-2"
+              className="text-gray-500 mb-10 bg-blue-900 p-2 absolute"
               style={{ zIndex: 1000, top: -25, borderRadius: "50%" }}
             />
           </div>
@@ -164,6 +164,7 @@ export function HomePage() {
                   height: "90%",
                   width: "90%",
                   padding: "3rem",
+                  paddingBottom: "0rem",
                 }}
               >
                 <Icon
@@ -195,7 +196,7 @@ export function HomePage() {
                 </Icon>
               </Container>
               <Container
-                className="relative text-white bottom-9 text-center p-6 overflow-hidden whitespace-nowrap"
+                className="text-white bottom-9 text-center p-6 overflow-hidden whitespace-nowrap"
                 sx={{
                   display: "flex",
                   justifyContent: "center",
