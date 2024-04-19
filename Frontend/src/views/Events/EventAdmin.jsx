@@ -129,7 +129,7 @@ function EventAdmin() {
       />
     ),
     TableHead,
-    TableRow: ({ item: _item, ...props }) => <TableRow {...props} />,
+    TableRow: ({ ...props }) => <TableRow {...props} />,
     TableBody: forwardRef((props, ref) => <TableBody {...props} ref={ref} />),
   };
 

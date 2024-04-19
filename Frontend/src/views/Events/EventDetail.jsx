@@ -144,23 +144,23 @@ function EventDetail() {
               ? `${event.name.substring(0, 20)}...`
               : event.name}
           </h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-start">
             <MapPin
-              className="hover:cursor-pointer select-none"
+              className="hover:cursor-pointer select-none justify-start"
               color="black"
               fill="yellow"
-              size={45}
+              size={40}
             />
-            <p className="text-gray-400 m-0 pt-1">{event.location}</p>
+            <p className="text-gray-400 m-0 pt-1 w-full">{event.location}</p>
           </div>
           <div className="flex gap-2 mt-3">
             <Clock
-              className="hover:cursor-pointer select-none"
+              className="hover:cursor-pointer select-none justify-start"
               color="black"
-              size={45}
+              size={38}
               fill="yellow"
             />
-            <p className="text-gray-400 m-0 pt-1">{event.date}</p>
+            <p className="text-gray-400 m-0 pt-1 w-full">{event.date}</p>
           </div>
           <div className="flex gap-2 mt-4 ml-1">
             <div className="flex">
@@ -205,7 +205,7 @@ function EventDetail() {
                           zIndex: index + 1,
                           borderRadius: "50%",
                           padding: "2px",
-                          marginLeft: index > 0 ? "-10px" : "",
+                          marginLeft: index > 0 ? "-12px" : "",
                         }}
                       />
                     );

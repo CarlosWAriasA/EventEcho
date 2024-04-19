@@ -32,32 +32,45 @@ const CardEventList = ({
   return (
     <CardFlowbite className="border-3 border-gray-300 rounded-3xl">
       <div className="flex h-40">
-          <img
-            src={imageUrl || defaultImageUrl}
-            alt="Card"
-            className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
-          />
-          <div className="flex-columns ml-10">
-            <h4 className="mb-5">{title.length > 40 ? `${title.substring(0, 40)}...` : title}</h4>
-            <h5 className="font-normal text-gray-700 dark:text-gray-400">
-              {content.length > 78 ? `${content.substring(0, 78)}...` : content}
-            </h5>
+        <img
+          src={imageUrl || defaultImageUrl}
+          alt="Card"
+          className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
+        />
+        <div className="flex flex-col justify-between ml-10">
+          <div className="flex">
+            <div>
+              <h4 className="mb-5">
+                {title.length > 40 ? `${title.substring(0, 40)}...` : title}
+              </h4>
+              <h5 className="font-normal text-gray-700 dark:text-gray-400">
+                {content.length > 78
+                  ? `${content.substring(0, 78)}...`
+                  : content}
+              </h5>
+            </div>
+            <button
+              style={{ color: "yellow", borderRadius: "50%" }}
+              className="ml-auto bg-black h-10 p-2"
+              onClick={DesinscribirEvento}
+            >
+              <Trash2 />
+            </button>
           </div>
-          <button style={{ color: "yellow", borderRadius: "50%" }} className="ml-auto bg-black h-10 p-2" onClick={DesinscribirEvento}>
-            <Trash2 />
-          </button>
-        </div>  
-          <div className="flex ml-5 w-full justify-center">
+          <div className="flex w-full justify-end">
             <AccessTimeIcon sx={{ color: "yellow", fontSize: "20px" }} />
             <h3 className="mr-35 ml-2 w-60">{time}</h3>
-            <LocationOnOutlinedIcon sx={{ color: "yellow", fontSize: "20px" }}/>
-                <h3 className="mr-35 ml-2 w-60">
-                  <h3>{place}</h3>
-                </h3>
+            <LocationOnOutlinedIcon
+              sx={{ color: "yellow", fontSize: "20px" }}
+            />
+            <h3 className="mr-35 ml-2">
+              <h3>{place}</h3>
+            </h3>
           </div>
-          </CardFlowbite>
-      //</NavLink>
-    );
+        </div>
+      </div>
+    </CardFlowbite>
+  );
 };
 
 export default CardEventList;

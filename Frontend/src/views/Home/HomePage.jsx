@@ -235,7 +235,9 @@ export function HomePage() {
                   height: "2.6rem",
                   fontFamily: "quicksand",
                   fontWeight: 600,
-                  backgroundColor: "rgba(252, 252, 252, 0.8)",
+                  backgroundColor: isUnLogged
+                    ? "transparent"
+                    : "rgba(252, 252, 252, 0.8)",
                   color: "#394867",
                   textTransform: "none",
                 }}
@@ -253,7 +255,9 @@ export function HomePage() {
                   height: "2.6rem",
                   fontFamily: "quicksand",
                   fontWeight: 600,
-                  backgroundColor: "rgba(252, 252, 252, 0.8)",
+                  backgroundColor: isUnLogged
+                    ? "transparent"
+                    : "rgba(252, 252, 252, 0.8)",
                   color: "#394867",
                   textTransform: "none",
                 }}

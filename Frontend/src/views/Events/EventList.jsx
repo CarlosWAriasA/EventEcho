@@ -1,15 +1,9 @@
-import { blue } from "@mui/material/colors";
-import { color } from "@mui/system";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Card from "../../components/Card/CardEventList";
-import CardEventList from "../../components/Card/CardEventList";
-import { forwardRef, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LoadingContext } from "../../context/LoadingContext";
-import { NavLink, useNavigate } from "react-router-dom";
 import ToastHelper from "../../utils/toastHelper";
 import RequestHelper from "../../utils/requestHelper";
-import { Skeleton, Icon, Container, Typography } from "@mui/material";
+import { Icon, Container, Typography } from "@mui/material";
 import { LocationIcon, TimeIcon } from "../../components/icons/iconComponents";
 import { Trash2 } from "lucide-react";
 
@@ -85,14 +79,6 @@ const EventList = () => {
             className="flex flex-col columns-6  w-3/4 bg-blue-500 p-8 rounded-3xl ml-10 mt-10 text-white"
             style={{ backgroundColor: "#394867" }}
           >
-            {/* {firstEvent?.photo && (
-              <img
-                src={firstEvent?.photo ? URL.createObjectURL(firstEvent.photo) : defaultImageUrl}
-                alt="Card"
-                className="text-black-500 w-60 h-44 object-cover mb-4 rounded-3xl"
-              />
-            )} */}
-
             <div className="flex mb-2">
               <h1
                 className="font-quicksand font-semibold mb-3"
@@ -110,34 +96,38 @@ const EventList = () => {
                 </button>
               )}
             </div>
-            <div className="flex mb-2 items-center pb-3">
-              <h3 className="pr-2">
-                <LocationIcon
-                  sx={{
-                    fontSize: 24,
-                  }}
-                />
-              </h3>
-              <Skeleton variant="rounded" width={130} height={15} />
-            </div>
-            <div className="flex mb-2 items-center">
-              <h3 className="pr-2">
-                <TimeIcon
-                  sx={{
-                    fontSize: 24,
-                  }}
-                />
-              </h3>
-              <Skeleton variant="rounded" width={100} height={15} />
-            </div>
+            {firstEvent?.location && (
+              <div className="flex mb-2 items-center pb-3">
+                <h3 className="pr-2">
+                  <LocationIcon
+                    sx={{
+                      fontSize: 24,
+                    }}
+                  />
+                </h3>
+                {firstEvent?.location ?? ""}
+              </div>
+            )}
+            {firstEvent?.date && (
+              <div className="flex mb-2 items-center">
+                <h3 className="pr-2">
+                  <TimeIcon
+                    sx={{
+                      fontSize: 24,
+                    }}
+                  />
+                </h3>
+                <span>{firstEvent?.date ?? ""}</span>
+              </div>
+            )}
           </div>
         </div>
 
         <div
-          className="flex flex-col columns-6 max-w-screen-xl bg-blue-500 p-8 ml-10 mt-10"
+          className="flex flex-col columns-6 max-w-screen-xl bg-blue-500 p-8 ml-10 mt-10 gap-5"
           style={{
             width: "75%",
-            height: "27rem",
+            height: "25rem",
             overflow: "scroll",
             backgroundColor: "#FCFCFC",
             boxShadow: "1px 0 8px rgba(57, 72, 103, 0.4)",
@@ -159,7 +149,6 @@ const EventList = () => {
                 ></Card>
               ))
           ) : (
-            // <h1 className="">No tiene ningun evento inscrito.</h1>
             <Container
               sx={{
                 display: "grid",
