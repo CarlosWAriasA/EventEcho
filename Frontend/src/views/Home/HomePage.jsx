@@ -163,8 +163,6 @@ export function HomePage() {
                   alignItems: "center",
                   height: "90%",
                   width: "90%",
-                  padding: "3rem",
-                  paddingBottom: "0rem",
                 }}
               >
                 <Icon
@@ -218,7 +216,7 @@ export function HomePage() {
             </>
           )}
         </div>
-        <div className="ml-36 mr-36">
+        <div className="ml-36 mr-36 mt-8">
           <div className="flex justify-between">
             <h2
               className="font-quicksand font-medium text-2xl"
